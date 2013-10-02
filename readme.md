@@ -2,6 +2,8 @@ Interfake is a tool which allows developers of client-side applications to creat
 
 Interfake gives you two ways to create new endpoints for your APIs: using a JSON file, or using an HTTP interface.
 
+**Once you've cloned it please** run `npm install`.
+
 ## JSON File
 
 Create a file from this template:
@@ -88,3 +90,5 @@ curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response"
 ## Plans for this module
 
 The plan is to turn this into a global node module which can be run from anywhere, using any template it is given. Furthermore, more complex endpoints will be able to be created.
+
+It will also be put onto our public GitHub.
