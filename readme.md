@@ -6,7 +6,7 @@ Interfake gives you two ways to create new endpoints for your APIs: using a JSON
 
 Create a file from this template:
 
-```JSON template.json
+```JSON
 [
 	{
 		"request": {
@@ -27,7 +27,7 @@ What you see there is an array of endpoints. An endpoint needs the `request` and
 
 The following examples assume that Interfake is running at http://localhost:3000, so replace where appropriate.
 
-```JSON example.json
+```JSON
 [
 	{
 		"request": {
