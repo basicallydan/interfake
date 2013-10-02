@@ -84,3 +84,7 @@ Then make the request:
 ```
 curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_request --header "Content-Type:application/json"
 ```
+
+## Plans for this module
+
+The plan is to turn this into a global node module which can be run from anywhere, using any template it is given. Furthermore, more complex endpoints will be able to be created.
