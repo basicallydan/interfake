@@ -1,0 +1,28 @@
+{
+  "name": "mock-api",
+  "preferGlobal": false,
+  "version": "0.1.0",
+  "author": "Daniel Hough <daniel.hough@gmail.com>",
+  "description": "A simple way to create fake APIs for testing purposes",
+  "contributors": [ 
+    {
+      "name": "Daniel Hough",
+      "email": "daniel.hough@gmail.com"
+    } 
+  ],
+  "scripts": {
+    "start": "node ./server.js"
+  },
+  "keywords": [
+    "cli",
+    "http",
+    "server"
+  ],
+  "dependencies" : {
+    "express"  :  "*"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.6"
+  }
+}

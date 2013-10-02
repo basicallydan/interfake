@@ -1,0 +1,40 @@
+[
+	{
+		"request": {
+			"url": "/files/users/1/offlineitems",
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body": {
+				"offlineitems": {
+					"links": {
+						"rel": "self",
+						"href": "/files/users/1/offlineitems"
+					},
+					"items": [
+						{
+							"type": "document",
+							"links": [
+								{
+									"rel": "self",
+									"href": "/files/documents/123"
+								},
+								{
+									"rel": "delete",
+									"href": "/files/documents/123"
+								}
+							],
+							"target": {
+								"document": {
+									"title": "TPS report May 2010",
+									"description": "relentlessly mundane and enervating."
+								}
+							}
+						}
+					]
+				}
+			}
+		}
+	}
+]
