@@ -23,9 +23,17 @@ Create a file from this template:
 
 What you see there is an array of endpoints. An endpoint needs the `request` and `response` properties, which are JSON objects. The first one, `request` respectively needs the `url` and `method` properties, which are both strings. The second, `response`, needs the `code` property which is an integer which corresponds to an HTTP status code, and `body` which corresponds to a JSON-structured response body. See below for some relevant examples.
 
-### Examples
+Then, run the server like so:
+
+```
+node server.js -f ./path/to/file.json
+```
+
+### Example
 
 The following examples assume that Interfake is running at http://localhost:3000, so replace where appropriate.
+
+Create a file called `adventuretime.json`:
 
 ```JSON
 [
@@ -49,11 +57,29 @@ The following examples assume that Interfake is running at http://localhost:3000
 ]
 ```
 
-The above example will create a  endpoint at `http://localhost:3000/whattimeisit` which returns a `200`
+Then run the server:
+
+```
+node server.js -f ./adventuretime.json
+```
+
+The above example will create a endpoint at `http://localhost:3000/whattimeisit` which returns a `200`
 
 ## HTTP
 
 While this thing is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with a string containing the same JSON structure as above. If you were using `curl`, this is an example (smaller, for brevity).
+
+In this instance, we don't need to specify a file.
+
+### Example
+
+Run the server:
+
+```
+node server.js
+```
+
+Then make the request:
 
 ```
 curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_request --header "Content-Type:application/json"

@@ -19,7 +19,8 @@
     "server"
   ],
   "dependencies" : {
-    "express"  :  "*"
+    "express"  :  "*",
+    "commander"  :  "*"
   },
   "license": "MIT",
   "engines": {
