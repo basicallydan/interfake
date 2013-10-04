@@ -1,40 +1,208 @@
 [
-	{
-		"request": {
-			"url": "/files/users/1/offlineitems",
-			"method": "get"
-		},
-		"response": {
-			"code": 200,
-			"body": {
-				"offlineitems": {
-					"links": {
-						"rel": "self",
-						"href": "/files/users/1/offlineitems"
-					},
-					"items": [
-						{
-							"type": "document",
-							"links": [
-								{
-									"rel": "self",
-									"href": "/files/documents/123"
-								},
-								{
-									"rel": "delete",
-									"href": "/files/documents/123"
-								}
-							],
-							"target": {
-								"document": {
-									"title": "TPS report May 2010",
-									"description": "relentlessly mundane and enervating."
-								}
-							}
-						}
-					]
-				}
-			}
-		}
-	}
+  {
+    "request": {
+      "url": "/files/users/1/offlineitems",
+      "method": "get"
+    },
+    "response": {
+      "code": 200,
+      "body": {
+        "offlineitems": {
+          "links": [
+            {
+              "rel": "self",
+              "href": "http://files/users/123/offlineitems"
+            }
+          ],
+          "items": [
+            {
+              "type": "document",
+              "links": [
+                {
+                  "rel": "self",
+                  "href": "..."
+                },
+                {
+                  "rel": "delete",
+                  "href": "..."
+                }
+              ],
+              "target": {
+                "document": {
+                  "title": "Parawhale",
+                  "description": "",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "href": "https://api.huddle.dev/files/documents/2264375"
+                    },
+                    {
+                      "rel": "version-history",
+                      "href": "https://api.huddle.dev/files/documents/2264375/versions"
+                    },
+                    {
+                      "rel": "comments",
+                      "href": "https://api.huddle.dev/files/documents/2264375/comments",
+                      "count": "7"
+                    },
+                    {
+                      "rel": "approvals",
+                      "href": "https://api.huddle.dev/files/documents/2264375/approvals"
+                    },
+                    {
+                      "rel": "permissions",
+                      "href": "https://api.huddle.dev/files/folders/2264362/permissions"
+                    },
+                    {
+                      "rel": "share",
+                      "href": "https://api.huddle.dev/files/documents/2264375/share"
+                    },
+                    {
+                      "rel": "audittrail",
+                      "href": "https://api.huddle.dev/files/documents/2264375/audittrail"
+                    },
+                    {
+                      "rel": "printed",
+                      "href": "https://api.huddle.dev/files/documents/2264375/audittrail/printed"
+                    },
+                    {
+                      "rel": "bulk-delete",
+                      "href": "https://api.huddle.dev/files/bulkprocess/delete/"
+                    },
+                    {
+                      "rel": "previews",
+                      "href": "https://api.huddle.dev/files/documents/versions/240603/previews"
+                    },
+                    {
+                      "rel": "alternate",
+                      "href": "huddle://files/documents/2264375"
+                    },
+                    {
+                      "rel": "alternate",
+                      "href": "https://my.huddle.dev/workspaces/2264357/files/2264375",
+                      "type": "text/html"
+                    },
+                    {
+                      "rel": "content",
+                      "href": "https://api.huddle.dev/files/documents/240603/content",
+                      "type": "image/png",
+                      "title": "Parawhale.png"
+                    },
+                    {
+                      "rel": "parent",
+                      "href": "https://api.huddle.dev/files/folders/2264362",
+                      "title": "Awesome Workspace"
+                    },
+                    {
+                      "rel": "edit",
+                      "href": "https://api.huddle.dev/files/documents/2264375/edit"
+                    },
+                    {
+                      "rel": "create-version",
+                      "href": "https://api.huddle.dev/files/documents/2264375/version"
+                    },
+                    {
+                      "rel": "lock",
+                      "href": "https://api.huddle.dev/files/documents/2264375/lock"
+                    },
+                    {
+                      "rel": "delete",
+                      "href": "https://api.huddle.dev/files/documents/2264375"
+                    },
+                    {
+                      "rel": "move",
+                      "href": "https://api.huddle.dev/files/documents/2264375/edit"
+                    },
+                    {
+                      "rel": "copy",
+                      "href": "https://api.huddle.dev/files/documents/2264375/copy"
+                    }
+                  ],
+                  "actors": [
+                    {
+                      "name": "Dan Dan",
+                      "email": "daniel.hough@huddle.com",
+                      "rel": "owner",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "href": "https://api.huddle.dev/users/26904"
+                        },
+                        {
+                          "rel": "avatar",
+                          "href": "https://api.huddle.dev/files/users/26904/avatar",
+                          "type": "image/jpeg"
+                        },
+                        {
+                          "rel": "alternate",
+                          "href": "https://my.huddle.dev/user/dandan",
+                          "type": "text/html"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Dan Dan",
+                      "email": "daniel.hough@huddle.com",
+                      "rel": "updated-by",
+                      "links": [
+                        {
+                          "rel": "self",
+                          "href": "https://api.huddle.dev/users/26904"
+                        },
+                        {
+                          "rel": "avatar",
+                          "href": "https://api.huddle.dev/files/users/26904/avatar",
+                          "type": "image/jpeg"
+                        },
+                        {
+                          "rel": "alternate",
+                          "href": "https://my.huddle.dev/user/dandan",
+                          "type": "text/html"
+                        }
+                      ]
+                    }
+                  ],
+                  "version": 1,
+                  "size": 172008,
+                  "updated": "Mon, 12 Aug 2013 12:55:32 GMT",
+                  "created": "Mon, 12 Aug 2013 12:55:32 GMT",
+                  "processingStatus": "Complete",
+                  "views": 21,
+                  "workspace": {
+                    "title": "Awesome Workspace",
+                    "links": [
+                      {
+                        "rel": "self",
+                        "href": "https://api.huddle.dev/workspaces/2264357"
+                      }
+                    ]
+                  },
+                  "thumbnails": [
+                    {
+                      "links": [
+                        {
+                          "rel": "content",
+                          "href": "https://api.huddle.dev/files/documents/versions/240603/thumbnails/medium/content"
+                        }
+                      ],
+                      "type": "medium"
+                    }
+                  ]
+                },
+                "workspace": {
+                  "title": "Awesome Workspace",
+                  "links": [
+                    {
+                      "rel": "self",
+                      "href": "https://api.huddle.dev/workspaces/2264357"
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
 ]

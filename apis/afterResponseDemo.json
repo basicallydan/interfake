@@ -1,0 +1,49 @@
+[
+	{
+		"request": {
+			"url": "/items",
+			"method": "get"
+		},
+		"response": {
+			"code":200,
+			"body": {
+				"items": [{
+					"id":1
+				}]
+			}
+		}
+	},
+	{
+		"request": {
+			"url": "/items",
+			"method": "post"
+		},
+		"response": {
+			"code":201,
+			"body": {}
+		},
+		"afterResponse": {
+			"endpoints": [
+				{
+					"request": {
+						"url": "/items",
+						"method": "get"
+					},
+					"response": {
+						"code":200,
+						"body": {
+							"items": [
+								{
+									"id":1
+								},
+								{
+									"id":2
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	}
+]
