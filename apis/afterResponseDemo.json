@@ -1,21 +1,22 @@
 [
 	{
 		"request": {
-			"url": "/items",
+			"url": "/books",
 			"method": "get"
 		},
 		"response": {
 			"code":200,
 			"body": {
-				"items": [{
-					"id":1
+				"books": [{
+					"id":1,
+					"title":"The War of the Worlds"
 				}]
 			}
 		}
 	},
 	{
 		"request": {
-			"url": "/items",
+			"url": "/books",
 			"method": "post"
 		},
 		"response": {
@@ -26,18 +27,20 @@
 			"endpoints": [
 				{
 					"request": {
-						"url": "/items",
+						"url": "/books",
 						"method": "get"
 					},
 					"response": {
 						"code":200,
 						"body": {
-							"items": [
+							"books": [
 								{
-									"id":1
+									"id":1,
+									"title":"The War of the Worlds"
 								},
 								{
-									"id":2
+									"id":2,
+									"title":"Ender's Game"
 								}
 							]
 						}

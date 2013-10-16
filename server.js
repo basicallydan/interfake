@@ -35,7 +35,7 @@ function createRoute(data) {
 	}
 
 	console.log('Setting up ' + data.request.method + ' ' + data.request.url + ' to return ' + data.response.code + ' with a body of length ' + JSON.stringify(data.response.body).length);
-	console.log('ROUTER obj: \n' + JSON.stringify(app._router.map));
+	// console.log('ROUTER obj: \n' + JSON.stringify(app._router.map));
 
 	specifiedRequest = data.request;
 	specifiedResponse = data.response;
@@ -45,6 +45,9 @@ function createRoute(data) {
 
 	app[specifiedRequest.method](specifiedRequest.url, function (req, res) {
 		console.log('Request to ' + specifiedRequest.url);
+
+		res.setHeader('Content-Type', 'application/json');
+		
 		res.send(specifiedResponse.code, specifiedResponse.body);
 
 		if (afterSpecifiedResponse && afterSpecifiedResponse.endpoints) {
