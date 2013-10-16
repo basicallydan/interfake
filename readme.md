@@ -90,5 +90,3 @@ curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response"
 ## Plans for this module
 
 The plan is to turn this into a global node module which can be run from anywhere, using any template it is given. Furthermore, more complex endpoints will be able to be created.
-
-It will also be put onto our public GitHub.
