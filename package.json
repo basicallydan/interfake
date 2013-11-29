@@ -1,7 +1,7 @@
 {
   "name": "interfake",
   "preferGlobal": true,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
   "description": "A simple way to create dummy APIs",
   "contributors": [ 
@@ -12,7 +12,9 @@
     } 
   ],
   "files": [
-    "example-apis"
+    "example-apis",
+    "index.js",
+    "lib"
   ],
   "keywords": [
     "cli",
