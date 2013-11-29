@@ -102,13 +102,15 @@ For situations where the API needs to react to mutated data, such as after a POS
 		},
 		"afterResponse": {
 			"endpoints": [
-				"request": {
-					"url": "",
-					"method": ""
-				},
-				"response": {
-					"code": 200,
-					"body": {}
+				{
+					"request": {
+						"url": "",
+						"method": ""
+					},
+					"response": {
+						"code": 200,
+						"body": {}
+					}
 				}
 			]
 		}
@@ -143,6 +145,10 @@ You can use Interfake to create dummy APIs which use data from your test setup w
 ### Creating a static API
 
 Perhaps you have a website or mobile application which only needs static data? Deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
+
+## Compatibility
+
+I tested this on my Mac. If you have trouble on Windows or any other platform, [raise an issue](https://github.com/basicallydan/interfake/issues).
 
 ## Plans for this module
 
