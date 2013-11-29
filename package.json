@@ -1,29 +1,41 @@
 {
-  "name": "mock-api",
-  "preferGlobal": false,
+  "name": "interfake",
+  "preferGlobal": true,
   "version": "0.1.0",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
-  "description": "A simple way to create fake APIs for testing purposes",
+  "description": "A simple way to create dummy APIs",
   "contributors": [ 
     {
       "name": "Daniel Hough",
-      "email": "daniel.hough@gmail.com"
+      "email": "daniel.hough@gmail.com",
+      "url": "http://danielhough.co.uk"
     } 
   ],
-  "scripts": {
-    "start": "node ./server.js"
-  },
+  "files": [
+    "example-apis"
+  ],
   "keywords": [
     "cli",
     "http",
-    "server"
+    "server",
+    "mocking",
+    "mocks",
+    "testing",
+    "api",
+    "rest"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:basicallydan/interfake.git"
+  },
   "dependencies" : {
-    "express"  :  "*",
-    "commander"  :  "*"
+    "express"  :  "3.4.5",
+    "commander"  :  "2.1.0"
   },
   "license": "MIT",
   "engines": {
     "node": ">=0.6"
-  }
+  },
+  "main": "./lib/server.js",
+  "bin": "./index.js"
 }
