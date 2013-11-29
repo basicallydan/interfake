@@ -1,10 +1,62 @@
-Interfake is a tool which allows developers of client-side applications to create fake APIs to test against.
+# Interfake: Just-add-JSON HTTP API
 
-Interfake gives you two ways to create new endpoints for your APIs: using a JSON file, or using an HTTP interface.
+Interfake is a tool which allows developers of client-side applications to easily create dummy APIs to develop against. Let's get started with a simple example.
 
-**Once you've cloned it please** run `npm install`.
+## Get Started
 
-## JSON File
+Install Interfake globally:
+
+```
+npm install interfake -g
+```
+
+Create a file called `adventuretime.json`:
+
+```JSON
+[
+	{
+		"request": {
+			"url": "/whattimeisit",
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body" {
+				"theTime": "Adventure Time!",
+				"starring": [
+					"Finn",
+					"Jake"
+				],
+				"location": "ooo"
+			}
+		}
+	}
+]
+```
+
+Then run Interfake against it:
+
+```
+interfake --file ./adventuretime.json
+```
+
+Then using [`curl`](http://curl.haxx.se):
+
+```
+curl http://localhost:3000/whattimeisit --verbose
+```
+
+Or go to http://localhost:3000/whattimeisit in your web browser.
+
+The above example will create a endpoint at `http://localhost:3000/whattimeisit` which returns a `200` and the body specified in the `response` object.
+
+Run `interfake -?` for a full list of command-line options.
+
+-----
+
+Interfake allows for more complex API structures, post-response endpoints and two different methods of mocking up new endpoints: by loading the file as above, or on-the-fly using an HTTP meta-API.
+
+## Method 1: JSON File
 
 Create a file from this template:
 
@@ -23,70 +75,82 @@ Create a file from this template:
 ]
 ```
 
-What you see there is an array of endpoints. An endpoint needs the `request` and `response` properties, which are JSON objects. The first one, `request` respectively needs the `url` and `method` properties, which are both strings. The second, `response`, needs the `code` property which is an integer which corresponds to an HTTP status code, and `body` which corresponds to a JSON-structured response body. See below for some relevant examples.
+The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
+
+You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/example-apis` for some more complex examples.
 
 Then, run the server like so:
 
 ```
-node server.js -f ./path/to/file.json
+interfake ./path/to/file.json
 ```
 
-### Example
+### Post-Response Endpoints
 
-The following examples assume that Interfake is running at http://localhost:3000, so replace where appropriate.
-
-Create a file called `adventuretime.json`:
+For situations where the API needs to react to mutated data, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint. In this object, create another array of endpoints to be created after the original one has been created, like so:
 
 ```JSON
 [
 	{
 		"request": {
-			"url": "/whattimeisit",
-			"method": "get"
+			"url": "",
+			"method": ""
 		},
 		"response": {
 			"code": 200,
-			"body" {
-				"theTime": "Adventure Time!"
-				"starring": [
-					"Finn",
-					"Jake"
-				],
-				"location": "ooo"
-			}
+			"body": {}
+		},
+		"afterResponse": {
+			"endpoints": [
+				"request": {
+					"url": "",
+					"method": ""
+				},
+				"response": {
+					"code": 200,
+					"body": {}
+				}
+			]
 		}
 	}
 ]
 ```
 
-Then run the server:
+The `afterResponse` property can be used as deep as you like in the endpoint hierarchy. For a complex example of the use of post-response endpoints, see the `/example-apis/crud.json` file in this repository.
 
-```
-node server.js -f ./adventuretime.json
-```
+## Method 2: HTTP
 
-The above example will create a endpoint at `http://localhost:3000/whattimeisit` which returns a `200`
-
-## HTTP
-
-While this thing is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with a string containing the same JSON structure as above. If you were using `curl`, this is an example (smaller, for brevity).
-
-In this instance, we don't need to specify a file.
+While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with a string containing the same JSON structure as above. If you were using `curl`, this is an example (smaller, for brevity).
 
 ### Example
 
-Run the server:
-
-```
-node server.js
-```
-
-Then make the request:
+While Interfake is running, make this request using `curl`.
 
 ```
 curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_request --header "Content-Type:application/json"
 ```
 
+## Use Cases
+
+### Backend for a Mobile Application
+
+If you'd like to develop a backend-driven mobile application for iOS, Android, Windows phone or a cross-platform solution you might not yet know exactly what the backend API looks like. This is a perfect example of where Interfake is useful. You can quickly mock up some dummy APIs and work on the mobile application. In parallel, perhaps another developer will be creating the real API, or you could do something with it later.
+
+### Automated Testing
+
+You can use Interfake to create dummy APIs which use data from your test setup with the HTTP method above, or by using a static set of test data. This is particularly useful for developing iOS Applications which uses Automated tests written in JavaScript, or developing Node.js applications which rely on external APIs.
+
+### Creating a static API
+
+Perhaps you have a website or mobile application which only needs static data? Deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
+
 ## Plans for this module
 
-The plan is to turn this into a global node module which can be run from anywhere, using any template it is given. Furthermore, more complex endpoints will be able to be created.
+* Write some bloody tests
+* Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
+* Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
+* Create a way to add static files in case you'd like to run a JavaScript application against it
+
+## Contributing
+
+Please feel free to make pull requests to fix bugs or add new features, and please report issues as you come across them.

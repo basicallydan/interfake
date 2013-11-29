@@ -1,0 +1,99 @@
+[
+	{
+		"request": {
+			"url": "/posts/1",
+			"method": "get"
+		},
+		"response": {
+			"code": 404
+		}
+	},
+	{
+		"request": {
+			"url": "/posts",
+			"method": "post"
+		},
+		"response": {
+			"code": 201,
+			"body" : {
+				"title": "First post",
+				"version": 1,
+				"links": {
+					"self": "/posts/1"
+				}
+			}
+		},
+		"afterResponse": {
+			"endpoints": [
+				{
+					"request": {
+						"url": "/posts/1",
+						"method": "get"
+					},
+					"response": {
+						"code": 200,
+						"body": {
+							"title": "First post",
+							"version": 1,
+							"links": {
+								"self": "/posts/1"
+							}
+						}
+					}
+				},
+				{
+					"request": {
+						"url": "/posts/1",
+						"method": "put"
+					},
+					"response": {
+						"code": 200
+					},
+					"afterResponse": {
+						"endpoints": [
+							{
+								"request": {
+									"url": "/posts/1",
+									"method": "get"
+								},
+								"response": {
+									"code": 200,
+									"body": {
+										"title": "Modified First post",
+										"version": 2,
+										"links": {
+											"self": "/posts/1"
+										}
+									}
+								}
+							}
+						]
+					}
+				},
+				{
+					"request": {
+						"url": "/posts/1",
+						"method": "delete"
+					},
+					"response": {
+						"code": 210,
+						"body": {}
+					},
+					"afterResponse": {
+						"endpoints": [
+							{
+								"request": {
+									"url": "/posts/1",
+									"method": "get"
+								},
+								"response": {
+									"code": 410
+								}
+							}
+						]
+					}
+				}
+			]
+		}
+	}
+]
