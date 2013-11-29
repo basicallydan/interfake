@@ -21,7 +21,7 @@ Create a file called `adventuretime.json`:
 		},
 		"response": {
 			"code": 200,
-			"body" {
+			"body": {
 				"theTime": "Adventure Time!",
 				"starring": [
 					"Finn",
