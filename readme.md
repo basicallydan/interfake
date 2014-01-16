@@ -132,6 +132,16 @@ While Interfake is running, make this request using `curl`.
 curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_request --header "Content-Type:application/json"
 ```
 
+## JSONP
+
+If you'd like the response to come back as [JSONP](http://en.wikipedia.org/wiki/JSONP) (so, for example you are trying to make a cross-origin request without using CORS) then specify a `callback` query parameter, like so:
+
+```
+curl http://localhost:3000/whattimeisit?callback=handleSomeJson --verbose
+```
+
+If you inject this code into your webpage the `handleSomeJson` method will be called with the data.
+
 ## Use Cases
 
 ### Backend for a Mobile Application
