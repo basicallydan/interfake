@@ -160,6 +160,12 @@ Perhaps you have a website or mobile application which only needs static data? D
 
 I tested this on my Mac. If you have trouble on Windows or any other platform, [raise an issue](https://github.com/basicallydan/interfake/issues).
 
+## Contribute
+
+Interfake is a labour of love, created for front-end and mobile developers to increase their prototyping and development speeds. If you can contribute by getting through some issues, I would be very grateful. <3 Open Source!
+
+[![I Love Open Source](http://www.iloveopensource.io/images/logo-lightbg.png)](http://www.iloveopensource.io/projects/5319884587659fce66000943)
+
 ## Plans for this module
 
 * Write some bloody tests
