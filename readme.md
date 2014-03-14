@@ -54,7 +54,33 @@ Run `interfake -?` for a full list of command-line options.
 
 -----
 
-Interfake allows for more complex API structures, post-response endpoints and two different methods of mocking up new endpoints: by loading the file as above, or on-the-fly using an HTTP meta-API.
+Interfake allows for more complex API structures, post-response endpoints and three different methods of mocking up new endpoints: the JavaScript API (useful for tests), by loading a file (like above), or on-the-fly using an HTTP meta-API.
+
+## Method 3: JavaScript
+
+Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
+
+```javascript
+var interfake = require('interfake');
+var request = require('request'); // Let's use request for this example
+
+interfake.createRoute({
+	request: {
+		url: '/endpoint',
+		method: 'get'
+	},
+	response: {
+		code: 200,
+		body: {}
+	}
+});
+
+interfake.listen(3030); // The server listens on port 3030
+
+request('http://localhost:3030/endpoint', function (error, response, body) {
+	console.log(response.statusCode); // prints 200
+});
+```
 
 ## Method 1: JSON File
 
