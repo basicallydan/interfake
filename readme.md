@@ -56,7 +56,7 @@ Run `interfake -?` for a full list of command-line options.
 
 Interfake allows for more complex API structures, post-response endpoints and three different methods of mocking up new endpoints: the JavaScript API (useful for tests), by loading a file (like above), or on-the-fly using an HTTP meta-API.
 
-## Method 3: JavaScript
+## Method 1: JavaScript
 
 Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
 
@@ -82,7 +82,7 @@ request('http://localhost:3030/endpoint', function (error, response, body) {
 });
 ```
 
-## Method 1: JSON File
+## Method 2: JSON File
 
 Create a file from this template:
 
@@ -146,7 +146,7 @@ For situations where the API needs to react to mutated data, such as after a POS
 
 The `afterResponse` property can be used as deep as you like in the endpoint hierarchy. For a complex example of the use of post-response endpoints, see the `/example-apis/crud.json` file in this repository.
 
-## Method 2: HTTP
+## Method 3: HTTP
 
 While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with a string containing the same JSON structure as above. If you were using `curl`, this is an example (smaller, for brevity).
 
