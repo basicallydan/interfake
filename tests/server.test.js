@@ -165,48 +165,106 @@ describe('Interfake', function () {
 				done();
 			});
 		});
-	});
 	
-	describe('#status()', function () {
-		it('should create one GET endpoint with a particular status code', function (done) {
-			var interfake = new Interfake();
-			interfake.get('/fluent').status(300);
-			interfake.listen(3000);
+		describe('#status()', function () {
+			it('should create one GET endpoint with a particular status code', function (done) {
+				var interfake = new Interfake();
+				interfake.get('/fluent').status(300);
+				interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-				assert.equal(response.statusCode, 300);
-				interfake.stop();
-				done();
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 300);
+					interfake.stop();
+					done();
+				});
+			});
+		});
+		
+		describe('#body()', function () {
+			it('should create one GET endpoint with a particular body', function (done) {
+				var interfake = new Interfake();
+				interfake.get('/fluent').body({ fluency : 'isgreat' });
+				interfake.listen(3000);
+
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.fluency, 'isgreat');
+					interfake.stop();
+					done();
+				});
+			});
+		
+			describe('#status()', function () {
+				it('should create one GET endpoint with a particular body and particular status', function (done) {
+					var interfake = new Interfake();
+					interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300);
+					interfake.listen(3000);
+
+					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+						assert.equal(response.statusCode, 300);
+						assert.equal(body.fluency, 'isgreat');
+						interfake.stop();
+						done();
+					});
+				});
 			});
 		});
 	});
-	
-	describe('#body()', function () {
-		it('should create one GET endpoint with a particular body', function (done) {
+	describe('#post()', function () {
+		it('should create one POST endpoint', function (done) {
 			var interfake = new Interfake();
-			interfake.get('/fluent').body({ fluency : 'isgreat' });
+			interfake.post('/fluent');
 			interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+			request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
-				assert.equal(body.fluency, 'isgreat');
 				interfake.stop();
 				done();
 			});
 		});
-	});
 	
-	// describe('#status()#method()', function () {
-	// 	it('should create one GET endpoint with a particular status code', function (done) {
-	// 		var interfake = new Interfake();
-	// 		interfake.get('/fluent').status(300).method('post');
-	// 		interfake.listen(3000);
+		describe('#status()', function () {
+			it('should create one POST endpoint with a particular status code', function (done) {
+				var interfake = new Interfake();
+				interfake.post('/fluent').status(300);
+				interfake.listen(3000);
 
-	// 		request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-	// 			assert.equal(response.statusCode, 300);
-	// 			interfake.stop();
-	// 			done();
-	// 		}.bind(this));
-	// 	});
-	// });
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 300);
+					interfake.stop();
+					done();
+				});
+			});
+		});
+		
+		describe('#body()', function () {
+			it('should create one POST endpoint with a particular body', function (done) {
+				var interfake = new Interfake();
+				interfake.post('/fluent').body({ fluency : 'isgreat' });
+				interfake.listen(3000);
+
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.fluency, 'isgreat');
+					interfake.stop();
+					done();
+				});
+			});
+		
+			describe('#status()', function () {
+				it('should create one POST endpoint with a particular body and particular status', function (done) {
+					var interfake = new Interfake();
+					interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300);
+					interfake.listen(3000);
+
+					request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+						assert.equal(response.statusCode, 300);
+						assert.equal(body.fluency, 'isgreat');
+						interfake.stop();
+						done();
+					});
+				});
+			});
+		});
+	});
 });
