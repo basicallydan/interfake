@@ -2,13 +2,23 @@
 
 var program = require('commander');
 var Interfake = require('./lib/server');
-var interfake = new Interfake();
+var packageInfo = require('./package.json');
 program
-	.version('0.0.2')
+	.version(packageInfo.version)
 	.option('-f, --file [file]', 'Load an API from a JSON file [file]')
 	.option('-p --port [port]', 'Specify a port for Interfake to listen on', 3000)
+	.option('-d --debug', 'Debug mode, turns on console messages')
 	.parse(process.argv);
-var file;
+
+var opts = {
+	debug: false
+};
+
+if (program.debug) {
+	opts.debug = true;
+}
+
+var interfake = new Interfake(opts);
 
 if (program.file) {
 	interfake.loadFile(program.file);

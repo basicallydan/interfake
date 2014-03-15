@@ -1,19 +1,43 @@
-var vows = require('vows');
 var assert = require('assert');
 var request = require('request');
-var exec = require('child_process').exec;
+var Q = require('q');
+var get = Q.denodeify(request.get);
+var post = Q.denodeify(request.post);
 
 // The thing we're testing
 var Interfake = require('..');
 
-// Create a Test Suite
-vows.describe('new Interfake').addBatch({
-	'when creating only one endpoint programmatically': {
-		topic: function () {
-			interfake = new Interfake();
+describe('Interfake', function () {
+	describe('#createRoute()', function () {
+		it('should create one GET endpoint', function (done) {
+			var interfake = new Interfake();
 			interfake.createRoute({
 				request: {
-					url: '/endpoint',
+					url: '/test',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					body: {
+						hi: 'there'
+					}
+				}
+			});
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				assert.equal(body.hi, 'there');
+				interfake.stop();
+				done();
+			}.bind(this));
+		});
+
+		it('should create three GET endpoints with different status codes', function (done) {
+			var interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/test1',
 					method: 'get'
 				},
 				response: {
@@ -21,15 +45,110 @@ vows.describe('new Interfake').addBatch({
 					body: {}
 				}
 			});
+			interfake.createRoute({
+				request: {
+					url: '/test2',
+					method: 'get'
+				},
+				response: {
+					code: 304,
+					body: {}
+				}
+			});
+			interfake.createRoute({
+				request: {
+					url: '/test3',
+					method: 'get'
+				},
+				response: {
+					code: 500,
+					body: {}
+				}
+			});
 			interfake.listen(3000);
 
-			request('http://localhost:3000/endpoint', function (error, response, body) {
-				this.callback(null, response.statusCode);
-			}.bind(this));
-		},
+			Q.all([get('http://localhost:3000/test1'), get('http://localhost:3000/test2'), get('http://localhost:3000/test3')])
+				.then(function (results) {
+					assert.equal(results[0][0].statusCode, 200);
+					assert.equal(results[1][0].statusCode, 304);
+					assert.equal(results[2][0].statusCode, 500);
+					interfake.stop();
+					done();
+				});
+		});
 
-		'we get 200': function (topic) {
-			assert.equal(topic, 200);
-		}
-	}
-}).export(module);
+		it('should create a dynamic endpoint', function (done) {
+			var interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/dynamic',
+					method: 'post'
+				},
+				response: {
+					code: 201,
+					body: {}
+				},
+				afterResponse: {
+					endpoints: [
+						{
+							request: {
+								url: '/dynamic/1',
+								method: 'get'
+							},
+							response: {
+								code:200,
+								body: {}
+							}
+						}
+					]
+				}
+			});
+			interfake.listen(3000);
+
+			get('http://localhost:3000/dynamic/1')
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 404);
+					return post('http://localhost:3000/dynamic');
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 201);
+					return get('http://localhost:3000/dynamic/1');
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					interfake.stop();
+					done();
+				});
+		});
+
+		it('should return JSONP if requested', function (done) {
+			var interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					body: {
+						stuff: 'hello'
+					}
+				}
+			});
+			interfake.listen(3000);
+
+			get('http://localhost:3000/stuff?callback=yo')
+				.then(function (results) {
+					assert.equal('hello', 'yo(' + JSON.stringify({ stuff : 'hello' }) + ');');
+					interfake.stop();
+					done();
+				});
+
+			request('http://localhost:3000/stuff?callback=yo', function (error, response, body) {
+				assert.equal(body, 'yo(' + JSON.stringify({ stuff : 'hello' }) + ');');
+				interfake.stop();
+				done();
+			}.bind(this));
+		});
+	});
+});

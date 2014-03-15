@@ -86,6 +86,14 @@ request('http://localhost:3030/whats-next', function (error, response, body) {
 });
 ```
 
+### API
+
+* `new Interfake(options)`: creates an Interfake object. Options are:
+  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
+* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
+* `#listen(port)`: Takes a port and starts the server
+* `#stop()`: Stops the server if it's been started
+
 ## Method 2: Command line
 
 Create a file from this template:

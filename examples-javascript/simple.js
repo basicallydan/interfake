@@ -1,7 +1,7 @@
 var Interfake = require('..');
 var request = require('request'); // Let's use request for this example
 
-var interfake = new Interfake();
+var interfake = new Interfake({ debug: true });
 interfake.createRoute({
     request: {
         url: '/whats-next',
