@@ -4,13 +4,16 @@
   "version": "0.2.0",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
   "description": "A simple way to create dummy APIs",
-  "contributors": [ 
+  "contributors": [
     {
       "name": "Daniel Hough",
       "email": "daniel.hough@gmail.com",
       "url": "http://danielhough.co.uk"
-    } 
+    }
   ],
+  "scripts": {
+    "test":"vows tests/test.js"
+  },
   "files": [
     "example-apis",
     "index.js",
@@ -30,14 +33,19 @@
     "type": "git",
     "url": "git@github.com:basicallydan/interfake.git"
   },
-  "dependencies" : {
-    "express"  :  "3.4.5",
-    "commander"  :  "2.1.0"
+  "dependencies": {
+    "express": "3.4.5",
+    "commander": "2.1.0"
   },
   "license": "MIT",
   "engines": {
     "node": ">=0.6"
   },
   "main": "./lib/server.js",
-  "bin": "./index.js"
+  "bin": "./index.js",
+  "devDependencies": {
+    "api-easy": "^0.3.8",
+    "vows": "^0.7.0",
+    "request": "^2.34.0"
+  }
 }
