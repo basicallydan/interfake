@@ -151,4 +151,47 @@ describe('Interfake', function () {
 			}.bind(this));
 		});
 	});
+	
+	// Testing the fluent interface
+	describe('#get()', function () {
+		it('should create one GET endpoint', function (done) {
+			var interfake = new Interfake();
+			interfake.get('/fluent');
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				interfake.stop();
+				done();
+			}.bind(this));
+		});
+	});
+	
+	describe('#status()', function () {
+		it('should create one GET endpoint with a particular status code', function (done) {
+			var interfake = new Interfake();
+			interfake.get('/fluent').status(300);
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 300);
+				interfake.stop();
+				done();
+			}.bind(this));
+		});
+	});
+	
+	describe('#method()', function () {
+		it('should create one GET endpoint with a particular status code', function (done) {
+			var interfake = new Interfake();
+			interfake.get('/fluent').method('post');
+			interfake.listen(3000);
+
+			request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				interfake.stop();
+				done();
+			}.bind(this));
+		});
+	});
 });
