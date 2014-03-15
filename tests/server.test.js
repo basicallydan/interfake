@@ -30,7 +30,7 @@ describe('Interfake', function () {
 				assert.equal(body.hi, 'there');
 				interfake.stop();
 				done();
-			}.bind(this));
+			});
 		});
 
 		it('should create three GET endpoints with different status codes', function (done) {
@@ -148,7 +148,7 @@ describe('Interfake', function () {
 				assert.equal(body, 'yo(' + JSON.stringify({ stuff : 'hello' }) + ');');
 				interfake.stop();
 				done();
-			}.bind(this));
+			});
 		});
 	});
 	
@@ -163,7 +163,7 @@ describe('Interfake', function () {
 				assert.equal(response.statusCode, 200);
 				interfake.stop();
 				done();
-			}.bind(this));
+			});
 		});
 	});
 	
@@ -177,21 +177,36 @@ describe('Interfake', function () {
 				assert.equal(response.statusCode, 300);
 				interfake.stop();
 				done();
-			}.bind(this));
+			});
 		});
 	});
 	
-	describe('#method()', function () {
-		it('should create one GET endpoint with a particular status code', function (done) {
+	describe('#body()', function () {
+		it('should create one GET endpoint with a particular body', function (done) {
 			var interfake = new Interfake();
-			interfake.get('/fluent').method('post');
+			interfake.get('/fluent').body({ fluency : 'isgreat' });
 			interfake.listen(3000);
 
-			request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
+				assert.equal(body.fluency, 'isgreat');
 				interfake.stop();
 				done();
-			}.bind(this));
+			});
 		});
 	});
+	
+	// describe('#status()#method()', function () {
+	// 	it('should create one GET endpoint with a particular status code', function (done) {
+	// 		var interfake = new Interfake();
+	// 		interfake.get('/fluent').status(300).method('post');
+	// 		interfake.listen(3000);
+
+	// 		request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+	// 			assert.equal(response.statusCode, 300);
+	// 			interfake.stop();
+	// 			done();
+	// 		}.bind(this));
+	// 	});
+	// });
 });
