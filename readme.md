@@ -54,7 +54,7 @@ Run `interfake -?` for a full list of command-line options.
 
 -----
 
-Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for tests), the [command line](#method-2-command-line) (like above), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line).
+Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for tests), the [command line](#method-2-command-line) (like above), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line). Based on [express](https://github.com/visionmedia/express).
 
 ## Method 1: JavaScript
 
@@ -93,6 +93,12 @@ request('http://localhost:3030/whats-next', function (error, response, body) {
 * `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
 * `#listen(port)`: Takes a port and starts the server
 * `#stop()`: Stops the server if it's been started
+
+#### Fluent Interface
+
+* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
+  * `#status(statusCode)`: Set the response status code for the endpoint
+  * `#body(body)`: Set the JSON response body of the end point
 
 ## Method 2: Command line
 

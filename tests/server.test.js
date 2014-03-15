@@ -1,8 +1,14 @@
 var assert = require('assert');
 var request = require('request');
 var Q = require('q');
+
+request.defaults({
+	json:true
+});
+
 var get = Q.denodeify(request.get);
 var post = Q.denodeify(request.post);
+var head = Q.denodeify(request.head);
 
 // The thing we're testing
 var Interfake = require('..');
@@ -42,7 +48,9 @@ describe('Interfake', function () {
 				},
 				response: {
 					code: 200,
-					body: {}
+					body: {
+						its: 'one'
+					}
 				}
 			});
 			interfake.createRoute({
@@ -51,8 +59,10 @@ describe('Interfake', function () {
 					method: 'get'
 				},
 				response: {
-					code: 304,
-					body: {}
+					code: 300,
+					body: {
+						its: 'two'
+					}
 				}
 			});
 			interfake.createRoute({
@@ -62,16 +72,21 @@ describe('Interfake', function () {
 				},
 				response: {
 					code: 500,
-					body: {}
+					body: {
+						its: 'three'
+					}
 				}
 			});
 			interfake.listen(3000);
 
-			Q.all([get('http://localhost:3000/test1'), get('http://localhost:3000/test2'), get('http://localhost:3000/test3')])
+			Q.all([get({url:'http://localhost:3000/test1',json:true}), get({url:'http://localhost:3000/test2',json:true}), get({url:'http://localhost:3000/test3',json:true})])
 				.then(function (results) {
 					assert.equal(results[0][0].statusCode, 200);
-					assert.equal(results[1][0].statusCode, 304);
+					assert.equal(results[0][1].its, 'one');
+					assert.equal(results[1][0].statusCode, 300);
+					assert.equal(results[1][1].its, 'two');
 					assert.equal(results[2][0].statusCode, 500);
+					assert.equal(results[2][1].its, 'three');
 					interfake.stop();
 					done();
 				});
@@ -210,6 +225,7 @@ describe('Interfake', function () {
 			});
 		});
 	});
+
 	describe('#post()', function () {
 		it('should create one POST endpoint', function (done) {
 			var interfake = new Interfake();
@@ -266,5 +282,30 @@ describe('Interfake', function () {
 				});
 			});
 		});
+		
+		// describe('#then', function () {
+		// 	describe('#get()', function () {
+		// 		it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
+		// 			var interfake = new Interfake({debug:true});
+		// 			interfake.post('/fluent').then.get('/fluent/1');
+		// 			interfake.listen(3000);
+
+		// 			get('http://localhost:3000/fluent/1')
+		// 				.then(function (results) {
+		// 					assert.equal(results[0].statusCode, 404);
+		// 					return post('http://localhost:3000/fluent');
+		// 				})
+		// 				.then(function (results) {
+		// 					assert.equal(results[0].statusCode, 200);
+		// 					return get('http://localhost:3000/fluent/1');
+		// 				})
+		// 				.then(function (results) {
+		// 					assert.equal(results[0].statusCode, 200);
+		// 					interfake.stop();
+		// 					done();
+		// 				});
+		// 		});
+		// 	});
+		// });
 	});
 });
