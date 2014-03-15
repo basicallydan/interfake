@@ -8,7 +8,7 @@ request.defaults({
 
 var get = Q.denodeify(request.get);
 var post = Q.denodeify(request.post);
-var head = Q.denodeify(request.head);
+var put = Q.denodeify(request.put);
 
 // The thing we're testing
 var Interfake = require('..');
@@ -131,6 +131,91 @@ describe('Interfake', function () {
 				})
 				.then(function (results) {
 					assert.equal(results[0].statusCode, 200);
+					interfake.stop();
+					done();
+				});
+		});
+
+		it('should create a dynamic endpoint within a dynamic endpoint', function (done) {
+			var interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/dynamic',
+					method: 'post'
+				},
+				response: {
+					code: 201,
+					body: {
+						all:'done'
+					}
+				},
+				afterResponse: {
+					endpoints: [
+						{
+							request: {
+								url: '/dynamic/1',
+								method: 'get'
+							},
+							response: {
+								code:200,
+								body: {
+									yes: 'indeedy'
+								}
+							}
+						},
+						{
+							request: {
+								url: '/dynamic/1',
+								method: 'put'
+							},
+							response: {
+								code:200,
+								body: {}
+							},
+							afterResponse: {
+								endpoints: [
+									{
+										request: {
+											url: '/dynamic/1',
+											method: 'get'
+										},
+										response: {
+											code:200,
+											body: {
+												yes: 'indiddly'
+											}
+										}
+									}
+								]
+							}
+						}
+					]
+				}
+			});
+			interfake.listen(3000);
+
+			get({url:'http://localhost:3000/dynamic/1', json:true})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 404);
+					return post({url:'http://localhost:3000/dynamic', json:true});
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 201);
+					assert.equal(results[1].all, 'done');
+					return get({url:'http://localhost:3000/dynamic/1', json:true});
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					assert.equal(results[1].yes, 'indeedy');
+					return put({url:'http://localhost:3000/dynamic/1', json:true});
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					return get({url:'http://localhost:3000/dynamic/1', json:true});
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					assert.equal(results[1].yes, 'indiddly');
 					interfake.stop();
 					done();
 				});
