@@ -1,14 +1,16 @@
 var vows = require('vows');
 var assert = require('assert');
 var request = require('request');
+var exec = require('child_process').exec;
 
 // The thing we're testing
-var interfake = require('..');
+var Interfake = require('..');
 
 // Create a Test Suite
-vows.describe('new EventedLoop').addBatch({
-	'when setting only one interval': {
+vows.describe('new Interfake').addBatch({
+	'when creating only one endpoint programmatically': {
 		topic: function () {
+			interfake = new Interfake();
 			interfake.createRoute({
 				request: {
 					url: '/endpoint',

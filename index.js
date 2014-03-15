@@ -1,7 +1,8 @@
 #! /usr/bin/env node
 
 var program = require('commander');
-var interfake = require('./lib/server');
+var Interfake = require('./lib/server');
+var interfake = new Interfake();
 program
 	.version('0.0.2')
 	.option('-f, --file [file]', 'Load an API from a JSON file [file]')
