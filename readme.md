@@ -1,4 +1,4 @@
-# Interfake: Just-add-JSON HTTP API
+# Interfake: Mocked JSON APIs for any platform
 
 Interfake is a tool which allows developers of client-side applications to easily create dummy APIs to develop against. Let's get started with a simple example.
 
@@ -54,35 +54,39 @@ Run `interfake -?` for a full list of command-line options.
 
 -----
 
-Interfake allows for more complex API structures, post-response endpoints and three different methods of mocking up new endpoints: the JavaScript API (useful for tests), by loading a file (like above), or on-the-fly using an HTTP meta-API.
+Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for tests), the [command line](#method-2-command-line) (like above), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line).
 
 ## Method 1: JavaScript
 
 Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
 
 ```javascript
-var interfake = require('interfake');
+var Interfake = require('interfake');
 var request = require('request'); // Let's use request for this example
 
+var interfake = new Interfake();
 interfake.createRoute({
 	request: {
-		url: '/endpoint',
+		url: '/whats-next',
 		method: 'get'
 	},
 	response: {
 		code: 200,
-		body: {}
+		body: {
+			next:'more stuff'
+		}
 	}
 });
 
-interfake.listen(3030); // The server listens on port 3030
+interfake.listen(3030); // The server will listen on port 3030
 
-request('http://localhost:3030/endpoint', function (error, response, body) {
+request('http://localhost:3030/whats-next', function (error, response, body) {
 	console.log(response.statusCode); // prints 200
+	console.log(body); // prints { next: "more stuff" }
 });
 ```
 
-## Method 2: JSON File
+## Method 2: Command line
 
 Create a file from this template:
 
@@ -103,7 +107,7 @@ Create a file from this template:
 
 The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
 
-You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/example-apis` for some more complex examples.
+You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
 
 Then, run the server like so:
 
@@ -111,7 +115,7 @@ Then, run the server like so:
 interfake ./path/to/file.json
 ```
 
-### Post-Response Endpoints
+### Dynamic Response Endpoints
 
 For situations where the API needs to react to mutated data, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint. In this object, create another array of endpoints to be created after the original one has been created, like so:
 
@@ -172,19 +176,27 @@ If you inject this code into your webpage the `handleSomeJson` method will be ca
 
 ### Backend for a Mobile Application
 
-If you'd like to develop a backend-driven mobile application for iOS, Android, Windows phone or a cross-platform solution you might not yet know exactly what the backend API looks like. This is a perfect example of where Interfake is useful. You can quickly mock up some dummy APIs and work on the mobile application. In parallel, perhaps another developer will be creating the real API, or you could do something with it later.
+If you'd like to develop an API-driven mobile application you might not yet have a finished API available. This is a perfect example of where Interfake is useful. You can quickly mock up some dummy APIs and work on the mobile application. In parallel, perhaps another developer will be creating the real API, or you could create it later.
 
 ### Automated Testing
 
-You can use Interfake to create dummy APIs which use data from your test setup with the HTTP method above, or by using a static set of test data. This is particularly useful for developing iOS Applications which uses Automated tests written in JavaScript, or developing Node.js applications which rely on external APIs.
+You can use Interfake to create dummy APIs which use data from your test setup with the HTTP method above, or by using a static set of test data. If you're writing your test suite using a NodeJS library, you can use the JavaScript API.
+
+The HTTP API is particularly useful for developing iOS Applications which uses Automated tests written in JavaScript, or developing Node.js applications which rely on external APIs.
 
 ### Creating a static API
 
-Perhaps you have a website or mobile application which only needs static data? Deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
+If you have a website or mobile application which only needs static data, deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
 
 ## Compatibility
 
 I tested this on my Mac. If you have trouble on Windows or any other platform, [raise an issue](https://github.com/basicallydan/interfake/issues).
+
+## Version History
+
+* 1.0.0: Backwards-incompatible changes for JavaScript API, now creating an `Interfake` instance
+* 0.2.0: Added JSONP support
+* 0.1.0: Support for creating mocked JSON APIs using HTTP, JavaScript or command line
 
 ## Contribute
 
@@ -194,11 +206,7 @@ Interfake is a labour of love, created for front-end and mobile developers to in
 
 ## Plans for this module
 
-* Write some bloody tests
+* Better test coverage
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
 * Create a way to add static files in case you'd like to run a JavaScript application against it
-
-## Contributing
-
-Please feel free to make pull requests to fix bugs or add new features, and please report issues as you come across them.
