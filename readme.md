@@ -106,9 +106,26 @@ For JavaScript developers
 
 Interfake can handle complex API structures, mutable endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
 
-## Method 1: JavaScript ([more examples](/examples-javascript))
+## Method 1: JavaScript
 
-Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
+Make sure you've install Interfake as a local module using `npm install interfake --save`. If you `var Interfake = require('interfake')` in your JavaScript file, you can use the following API to spin up the Interfake server.
+
+### API
+
+* `new Interfake(options)`: creates an Interfake object. Options are:
+  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
+* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
+* `#listen(port)`: Takes a port and starts the server
+* `#stop()`: Stops the server if it's been started
+
+#### Fluent Interface
+
+* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
+  * `#status(statusCode)`: Set the response status code for the endpoint
+  * `#body(body)`: Set the JSON response body of the end point
+  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+
+### Example ([more examples](/examples-javascript))
 
 ```javascript
 var Interfake = require('interfake');
@@ -134,21 +151,6 @@ interfake.createRoute({
 
 interfake.listen(3030); // The server will listen on port 3030
 ```
-
-### API
-
-* `new Interfake(options)`: creates an Interfake object. Options are:
-  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
-* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
-* `#listen(port)`: Takes a port and starts the server
-* `#stop()`: Stops the server if it's been started
-
-#### Fluent Interface
-
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
-  * `#status(statusCode)`: Set the response status code for the endpoint
-  * `#body(body)`: Set the JSON response body of the end point
-  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
 
 ## Method 2: Command line
 
