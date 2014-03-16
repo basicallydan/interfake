@@ -18,10 +18,10 @@ Let's write a simple fake API:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').body({ next : 'more stuff '});
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000); // The server will listen on port 3000
 ```
 
-Now go to http://localhost:3030/whats-next in your browser (or [`curl`](http://curl.haxx.se)), and you will see the following:
+Now go to http://localhost:3000/whats-next in your browser (or [`curl`](http://curl.haxx.se)), and you will see the following:
 
 ```json
 {
@@ -35,11 +35,11 @@ You can also chain response properties:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').status(400).body({ error : 'such a bad request'});
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3030/whats-next -X GET
+curl http://localhost:3000/whats-next -X GET
 # Response:
 400
 {
@@ -54,11 +54,11 @@ You can use different HTTP methods:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.post('/next-items').status(201).body({ created : true });
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3030/next-items -X POST
+curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -75,11 +75,11 @@ var interfake = new Interfake();
 var postResponse = interfake.post('/next-items').status(201).body({ created : true });
 postResponse.creates.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
 postResponse.creates.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3030/next-items -X POST
+curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -88,7 +88,7 @@ curl http://localhost:3030/next-items -X POST
 
 
 # Request:
-curl http://localhost:3030/items/1 -X GET
+curl http://localhost:3000/items/1 -X GET
 # Response:
 200
 {
@@ -149,7 +149,7 @@ interfake.createRoute({
 	}
 });
 
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000); // The server will listen on port 3000
 ```
 
 ## Method 2: Command line
