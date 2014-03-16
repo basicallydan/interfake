@@ -1,8 +1,8 @@
-# Interfake: Mocked JSON APIs for any platform
+# Interfake: Mocked JSON APIs
 
-Interfake is a tool which allows developers of client-side applications to easily create dummy APIs to develop against. Let's get started with a simple example.
+Interfake is a tool which allows developers of client-side applications of *any* platform to easily create dummy HTTP APIs to develop against. Let's get started with a simple example.
 
-## Get Started
+## Get started
 
 If you don't want to use the JavaScript method to create your Interfake API, go read up on [all the methods](#three-ways-to-use-interfake). Otherwise, read on.
 
