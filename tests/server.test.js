@@ -372,7 +372,7 @@ describe('Interfake', function () {
 			describe('#get()', function () {
 				it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
 					var interfake = new Interfake();
-					interfake.post('/fluent').then.get('/fluent/1');
+					interfake.post('/fluent').creates.get('/fluent/1');
 					interfake.listen(3000);
 
 					get('http://localhost:3000/fluent/1')
@@ -394,8 +394,8 @@ describe('Interfake', function () {
 				it('should create one POST endpoint with two afterResponse endpoints', function (done) {
 					var interfake = new Interfake();
 					var postEndpoint = interfake.post('/fluent');
-					postEndpoint.then.get('/fluent/1');
-					postEndpoint.then.put('/fluent/1');
+					postEndpoint.creates.get('/fluent/1');
+					postEndpoint.creates.put('/fluent/1');
 					interfake.listen(3000);
 
 					get('http://localhost:3000/fluent/1')
@@ -421,7 +421,7 @@ describe('Interfake', function () {
 				describe('#status()', function () {
 					it('should create a post-response GET with a particular status', function (done) {
 						var interfake = new Interfake();
-						interfake.post('/fluent').then.get('/fluent/1').status(300);
+						interfake.post('/fluent').creates.get('/fluent/1').status(300);
 						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')
@@ -444,7 +444,7 @@ describe('Interfake', function () {
 				describe('#body()', function () {
 					it('should create a post-response GET with a particular body', function (done) {
 						var interfake = new Interfake();
-						interfake.post('/fluent').then.get('/fluent/1').body({ fluency : 'is badass' });
+						interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' });
 						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')
@@ -466,7 +466,7 @@ describe('Interfake', function () {
 					describe('#status()', function() {
 						it('should create a post-response GET with a particular and body and status', function (done) {
 							var interfake = new Interfake();
-							interfake.post('/fluent').then.get('/fluent/1').body({ fluency : 'is badass' }).status(500);
+							interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' }).status(500);
 							interfake.listen(3000);
 
 							get('http://localhost:3000/fluent/1')
@@ -491,7 +491,7 @@ describe('Interfake', function () {
 				describe('#then()', function () {
 					it('should create a post-response GET with another post-response GET', function (done) {
 						var interfake = new Interfake();
-						interfake.post('/fluent').then.get('/fluent/1').then.get('/fluent/2');
+						interfake.post('/fluent').creates.get('/fluent/1').creates.get('/fluent/2');
 						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')

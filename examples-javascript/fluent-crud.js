@@ -8,22 +8,22 @@ interfake.get('/items').body({ items: [] });
 
 // When an item is created, update the items set request
 var postRequest = interfake.post('/items').status(201);
-postRequest.then.get('/items').body({ items: [
+postRequest.creates.get('/items').body({ items: [
 	{ id: 1, name: 'Item 1' }
 ]});
 // And also create an endpoint for our new item
-postRequest.then.get('/items/1').body({ id: 1, name: 'Item 1' });
+postRequest.creates.get('/items/1').body({ id: 1, name: 'Item 1' });
 // Also create a PUT request for our new item so we can edit it
-var putRequest = postRequest.then.put('/items/1').body({ items: [
+var putRequest = postRequest.creates.put('/items/1').body({ items: [
 	{ id: 1, name: 'Item One' }
 ]});
 
 // But when the put request is hit we need to edit both
-putRequest.then.get('/items').body({ items: [
+putRequest.creates.get('/items').body({ items: [
 	{ id: 1, name: 'Item One' }
 ]});
 // And also create an endpoint for our new item
-putRequest.then.get('/items/1').body({ id: 1, name: 'Item One' });
+putRequest.creates.get('/items/1').body({ id: 1, name: 'Item One' });
 
 interfake.listen(3030); // The server will listen on port 3030
 

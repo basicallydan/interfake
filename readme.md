@@ -71,8 +71,8 @@ And you can specify endpoints which should only be created once other ones have 
 var Interfake = require('..');
 var interfake = new Interfake();
 var postResponse = interfake.post('/next-items').status(201).body({ created : true });
-postResponse.then.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
-postResponse.then.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
+postResponse.creates.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
+postResponse.creates.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
 interfake.listen(3030); // The server will listen on port 3030
 
 /*
