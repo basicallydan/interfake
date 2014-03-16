@@ -202,6 +202,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.0.2: Bugfix: Postresponse was removing the wrong old endpoint
 * 1.0.0: Backwards-incompatible changes for JavaScript API, now creating an `Interfake` instance
 * 0.2.0: Added JSONP support
 * 0.1.0: Support for creating mocked JSON APIs using HTTP, JavaScript or command line
