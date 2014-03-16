@@ -368,29 +368,29 @@ describe('Interfake', function () {
 			});
 		});
 		
-		// describe('#then', function () {
-		// 	describe('#get()', function () {
-		// 		it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
-		// 			var interfake = new Interfake({debug:true});
-		// 			interfake.post('/fluent').then.get('/fluent/1');
-		// 			interfake.listen(3000);
+		describe('#then', function () {
+			describe('#get()', function () {
+				it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
+					var interfake = new Interfake();
+					interfake.post('/fluent').then.get('/fluent/1');
+					interfake.listen(3000);
 
-		// 			get('http://localhost:3000/fluent/1')
-		// 				.then(function (results) {
-		// 					assert.equal(results[0].statusCode, 404);
-		// 					return post('http://localhost:3000/fluent');
-		// 				})
-		// 				.then(function (results) {
-		// 					assert.equal(results[0].statusCode, 200);
-		// 					return get('http://localhost:3000/fluent/1');
-		// 				})
-		// 				.then(function (results) {
-		// 					assert.equal(results[0].statusCode, 200);
-		// 					interfake.stop();
-		// 					done();
-		// 				});
-		// 		});
-		// 	});
-		// });
+					get('http://localhost:3000/fluent/1')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 404);
+							return post('http://localhost:3000/fluent');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent/1');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							interfake.stop();
+							done();
+						});
+				});
+			});
+		});
 	});
 });
