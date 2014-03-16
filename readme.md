@@ -1,8 +1,8 @@
-# Interfake: Quick APIs for any platform
+# Interfake: Quick JSON APIs
 
-Interfake is a tool which allows developers of client-side applications to easily create dummy APIs to develop against. Let's get started with a simple example.
+Interfake is a tool which allows developers of client-side applications of *any* platform to easily create dummy HTTP APIs to develop against. Let's get started with a simple example.
 
-## Get Started
+## Get started
 
 If you don't want to use the JavaScript method to create your Interfake API, go read up on [all the methods](#three-ways-to-use-interfake). Otherwise, read on.
 
@@ -18,10 +18,10 @@ Let's write a simple fake API:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').body({ next : 'more stuff '});
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000); // The server will listen on port 3000
 ```
 
-Now go to http://localhost:3030/whats-next in your browser (or [`curl`](http://curl.haxx.se)), and you will see the following:
+Now go to http://localhost:3000/whats-next in your browser (or [`curl`](http://curl.haxx.se)), and you will see the following:
 
 ```json
 {
@@ -35,11 +35,11 @@ You can also chain response properties:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').status(400).body({ error : 'such a bad request'});
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-GET http://localhost:3030/whats-next
+curl http://localhost:3000/whats-next -X GET
 # Response:
 400
 {
@@ -54,11 +54,11 @@ You can use different HTTP methods:
 var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.post('/next-items').status(201).body({ created : true });
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-POST http://localhost:3030/next-items
+curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -75,11 +75,11 @@ var interfake = new Interfake();
 var postResponse = interfake.post('/next-items').status(201).body({ created : true });
 postResponse.creates.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
 postResponse.creates.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3030/next-items -X POST
+curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -88,7 +88,7 @@ curl http://localhost:3030/next-items -X POST
 
 
 # Request:
-curl http://localhost:3030/items/1 -X GET
+curl http://localhost:3000/items/1 -X GET
 # Response:
 200
 {
@@ -106,9 +106,26 @@ For JavaScript developers
 
 Interfake can handle complex API structures, mutable endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
 
-## Method 1: JavaScript ([more examples](/examples-javascript))
+## Method 1: JavaScript
 
-Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
+Make sure you've install Interfake as a local module using `npm install interfake --save`. If you `var Interfake = require('interfake')` in your JavaScript file, you can use the following API to spin up the Interfake server.
+
+### API
+
+* `new Interfake(options)`: creates an Interfake object. Options are:
+  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
+* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
+* `#listen(port)`: Takes a port and starts the server
+* `#stop()`: Stops the server if it's been started
+
+#### Fluent Interface
+
+* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
+  * `#status(statusCode)`: Set the response status code for the endpoint
+  * `#body(body)`: Set the JSON response body of the end point
+  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+
+### Example ([more examples](/examples-javascript))
 
 ```javascript
 var Interfake = require('interfake');
@@ -118,7 +135,7 @@ var interfake = new Interfake();
 // Create endpoints using the fluent interface
 interfake.post('/items').status(201).body({ created: true }).creates.get('/next-items').status(200).body([ { id: 1, name: 'the thing' } ]);
 
-// Or using the more verbose functional interface which accepts a JSON object
+// Or using the more verbose JSON syntax (more on this below under 'command line')
 interfake.createRoute({
 	request: {
 		url: '/whats-next',
@@ -132,7 +149,7 @@ interfake.createRoute({
 	}
 });
 
-interfake.listen(3030); // The server will listen on port 3030
+interfake.listen(3000); // The server will listen on port 3000
 ```
 
 ### API
@@ -159,7 +176,7 @@ Interfake must be install globally for the command line interface to work:
 npm install interfake -g
 ```
 
-A JSON array of request/response pairs ("endpoints") you can write APIs and run them multiple times using the global `interfake` executable.
+A JSON array of request/response pairs ("endpoints") you can write APIs and run them multiple times using the global `interfake` executable, and the JSON syntax.
 
 ### Example ([more examples](/examples-command-line))
 
@@ -306,9 +323,11 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 ## Thank yous
 
-Alun for reading this readme.
+[Alun](https://github.com/4lun) for reading this readme.
 
 ## Future work
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
+* Allow custom headers to be set
+* Mimic slow responses
