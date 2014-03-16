@@ -390,6 +390,130 @@ describe('Interfake', function () {
 							done();
 						});
 				});
+
+				it('should create one POST endpoint with two afterResponse endpoints', function (done) {
+					var interfake = new Interfake();
+					var postEndpoint = interfake.post('/fluent');
+					postEndpoint.then.get('/fluent/1');
+					postEndpoint.then.put('/fluent/1');
+					interfake.listen(3000);
+
+					get('http://localhost:3000/fluent/1')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 404);
+							return post('http://localhost:3000/fluent');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent/1');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return put('http://localhost:3000/fluent/1');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							interfake.stop();
+							done();
+						});
+				});
+
+				describe('#status()', function () {
+					it('should create a post-response GET with a particular status', function (done) {
+						var interfake = new Interfake();
+						interfake.post('/fluent').then.get('/fluent/1').status(300);
+						interfake.listen(3000);
+
+						get('http://localhost:3000/fluent/1')
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 404);
+								return post('http://localhost:3000/fluent');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200);
+								return get('http://localhost:3000/fluent/1');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 300);
+								interfake.stop();
+								done();
+							});
+					});
+				});
+
+				describe('#body()', function () {
+					it('should create a post-response GET with a particular body', function (done) {
+						var interfake = new Interfake();
+						interfake.post('/fluent').then.get('/fluent/1').body({ fluency : 'is badass' });
+						interfake.listen(3000);
+
+						get('http://localhost:3000/fluent/1')
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 404);
+								return post('http://localhost:3000/fluent');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200);
+								return get({url:'http://localhost:3000/fluent/1', json:true});
+							})
+							.then(function (results) {
+								assert.equal(results[1].fluency, 'is badass');
+								interfake.stop();
+								done();
+							});
+					});
+
+					describe('#status()', function() {
+						it('should create a post-response GET with a particular and body and status', function (done) {
+							var interfake = new Interfake();
+							interfake.post('/fluent').then.get('/fluent/1').body({ fluency : 'is badass' }).status(500);
+							interfake.listen(3000);
+
+							get('http://localhost:3000/fluent/1')
+								.then(function (results) {
+									assert.equal(results[0].statusCode, 404);
+									return post('http://localhost:3000/fluent');
+								})
+								.then(function (results) {
+									assert.equal(results[0].statusCode, 200);
+									return get({url:'http://localhost:3000/fluent/1', json:true});
+								})
+								.then(function (results) {
+									assert.equal(results[0].statusCode, 500);
+									assert.equal(results[1].fluency, 'is badass');
+									interfake.stop();
+									done();
+								});
+						});
+					});
+				});
+
+				describe('#then()', function () {
+					it('should create a post-response GET with another post-response GET', function (done) {
+						var interfake = new Interfake();
+						interfake.post('/fluent').then.get('/fluent/1').then.get('/fluent/2');
+						interfake.listen(3000);
+
+						get('http://localhost:3000/fluent/1')
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 404);
+								return post('http://localhost:3000/fluent');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200);
+								return get('http://localhost:3000/fluent/1');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200);
+								return get('http://localhost:3000/fluent/2');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200);
+								interfake.stop();
+								done();
+							});
+					});
+				});
 			});
 		});
 	});
