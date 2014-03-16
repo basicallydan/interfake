@@ -13,7 +13,7 @@ npm install interfake --save
 Let's write a simple fake API:
 
 ```js
-var Interfake = require('..');
+var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').body({ next : 'more stuff '});
 interfake.listen(3030); // The server will listen on port 3030
@@ -30,7 +30,7 @@ Now go to http://localhost:3030/whats-next in your browser (or [`curl`](http://c
 You can also chain response properties:
 
 ```js
-var Interfake = require('..');
+var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.get('/whats-next').status(400).body({ error : 'such a bad request'});
 interfake.listen(3030); // The server will listen on port 3030
@@ -49,7 +49,7 @@ GET http://localhost:3030/whats-next
 You can use different HTTP methods
 
 ```js
-var Interfake = require('..');
+var Interfake = require('interfake');
 var interfake = new Interfake();
 interfake.post('/next-items').status(201).body({ created : true });
 interfake.listen(3030); // The server will listen on port 3030
@@ -68,7 +68,7 @@ POST http://localhost:3030/next-items
 And you can specify endpoints which should only be created once other ones have been hit
 
 ```js
-var Interfake = require('..');
+var Interfake = require('interfake');
 var interfake = new Interfake();
 var postResponse = interfake.post('/next-items').status(201).body({ created : true });
 postResponse.creates.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
@@ -96,9 +96,9 @@ curl http://localhost:3030/items/1 -X GET
 */
 ```
 
------
+---
 
-Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
+Interfake can handle complex API structures, mutable endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
 
 ## Method 1: JavaScript
 
@@ -234,7 +234,7 @@ The above example will create a endpoint at `http://localhost:3000/whattimeisit`
 
 Run `interfake -?` for a full list of command-line options.
 
-### Dynamic Response Endpoints
+### Mutable endpoints
 
 For situations where the API needs to react to mutated data, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint. In this object, create another array of endpoints to be created after the original one has been created, like so:
 

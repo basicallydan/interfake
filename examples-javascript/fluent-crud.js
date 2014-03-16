@@ -17,6 +17,7 @@ postRequest.creates.get('/items/1').body({ id: 1, name: 'Item 1' });
 var putRequest = postRequest.creates.put('/items/1').body({ items: [
 	{ id: 1, name: 'Item One' }
 ]});
+var deleteRequest = postRequest.creates.delete('/items/1').status(204);
 
 // But when the put request is hit we need to edit both
 putRequest.creates.get('/items').body({ items: [
@@ -24,6 +25,8 @@ putRequest.creates.get('/items').body({ items: [
 ]});
 // And also create an endpoint for our new item
 putRequest.creates.get('/items/1').body({ id: 1, name: 'Item One' });
+
+deleteRequest.creates.get('/items/1').status(404);
 
 interfake.listen(3030); // The server will listen on port 3030
 
@@ -50,6 +53,14 @@ request('http://localhost:3030/items', function (error, response, body) {
 					request.get('http://localhost:3030/items/1', function () {
 						console.log('6. Updated item at GET /items/1.');
 						printStatusAndBody.apply(null, arguments);
+						request.del('http://localhost:3030/items/1', function () {
+							console.log('7. Deleted item at GET /items/1.');
+							printStatusAndBody.apply(null, arguments);
+							request.get('http://localhost:3030/items/1', function () {
+								console.log('7. Can no longer request item at GET /items/1.');
+								printStatusAndBody.apply(null, arguments);
+							});
+						});
 					});
 				});
 			});
