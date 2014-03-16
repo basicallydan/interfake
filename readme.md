@@ -321,6 +321,11 @@ If you make any pull requests, please do try to write tests, or at the very leas
 * [express](https://github.com/visionmedia/express)
 * [commander](https://github.com/visionmedia/commander.js/)
 
+## Works well with
+
+* [Mocha](http://visionmedia.github.io/mocha/) - the test framework
+* [Zombie.js](http://zombie.labnotes.org/) - the Node.js-powered headless web browser
+
 ## Thank yous
 
 [Alun](https://github.com/4lun) for reading this readme.
