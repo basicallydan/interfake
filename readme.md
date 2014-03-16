@@ -39,7 +39,7 @@ interfake.listen(3030); // The server will listen on port 3030
 
 /*
 # Request:
-GET http://localhost:3030/whats-next
+curl http://localhost:3030/whats-next -X GET
 # Response:
 400
 {
@@ -58,7 +58,7 @@ interfake.listen(3030); // The server will listen on port 3030
 
 /*
 # Request:
-POST http://localhost:3030/next-items
+curl http://localhost:3030/next-items -X POST
 # Response:
 201
 {
