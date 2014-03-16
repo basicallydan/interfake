@@ -13,7 +13,7 @@ var put = Q.denodeify(request.put);
 // The thing we're testing
 var Interfake = require('..');
 
-describe('Interfake', function () {
+describe('Interfake JavaScript API', function () {
 	describe('#createRoute()', function () {
 		it('should create one GET endpoint', function (done) {
 			var interfake = new Interfake();

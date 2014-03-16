@@ -271,14 +271,14 @@ The `afterResponse` property can be used as deep as you like in the endpoint hie
 
 ## Method 3: HTTP
 
-While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with the same JSON structure as what the command-line interface accepts.
+While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_requests` with the same JSON structure as what the command-line interface accepts.
 
 ### Example
 
 While Interfake is running, make this request using `curl`.
 
 ```
-curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_request --header "Content-Type:application/json"
+curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_requests --header "Content-Type:application/json"
 ```
 
 ## JSONP
@@ -313,6 +313,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.1.1: Fixed the response to `POST /_request` to be a 201, and `POST /_requests` is now the path used
 * 1.1.0: Added the fluent interface for easier creation of endpoints
 * 1.0.0: Backwards-incompatible changes for JavaScript API, now creating an `Interfake` instance
 * 0.2.0: Added JSONP support
