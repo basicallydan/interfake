@@ -135,7 +135,7 @@ var interfake = new Interfake();
 // Create endpoints using the fluent interface
 interfake.post('/items').status(201).body({ created: true }).creates.get('/next-items').status(200).body([ { id: 1, name: 'the thing' } ]);
 
-// Or using the more verbose functional interface which accepts a JSON object
+// Or using the more verbose JSON syntax (more on this below under 'command line')
 interfake.createRoute({
 	request: {
 		url: '/whats-next',
@@ -160,7 +160,7 @@ Interfake must be install globally for the command line interface to work:
 npm install interfake -g
 ```
 
-A JSON array of request/response pairs ("endpoints") you can write APIs and run them multiple times using the global `interfake` executable.
+A JSON array of request/response pairs ("endpoints") you can write APIs and run them multiple times using the global `interfake` executable, and the JSON syntax.
 
 ### Example ([more examples](/examples-command-line))
 
@@ -304,10 +304,12 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 ## Thank yous
 
-Alun for reading this readme.
+[Alun](https://github.com/4lun) for reading this readme.
 
 ## Future work
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
 * Create a way to add static files in case you'd like to run a JavaScript application against it
+* Allow custom headers to be set
+* Mimic slow responses
