@@ -19,7 +19,7 @@ interfake.get('/whats-next').body({ next : 'more stuff '});
 interfake.listen(3030); // The server will listen on port 3030
 ```
 
-Now go to http://localhost:3030/whats-next in your browser, and you will see the following:
+Now go to http://localhost:3030/whats-next in your browser (or [`curl`](http://curl.haxx.se)), and you will see the following:
 
 ```json
 {
@@ -96,13 +96,101 @@ curl http://localhost:3030/items/1 -X GET
 */
 ```
 
-### Get started on the command line (MOVE THIS)
+-----
 
-Install Interfake globally:
+Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
+
+## Method 1: JavaScript
+
+Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
+
+```javascript
+var Interfake = require('interfake');
+var request = require('request'); // Let's use request for this example
+
+var interfake = new Interfake();
+
+// Create endpoints using the fluent interface
+interfake.post('/items').status(201).body({ created: true }).creates.get('/next-items').status(200).body([ { id: 1, name: 'the thing' } ]);
+
+// Or using the more verbose functional interface which accepts a JSON object
+interfake.createRoute({
+	request: {
+		url: '/whats-next',
+		method: 'get'
+	},
+	response: {
+		code: 200,
+		body: {
+			next:'more stuff'
+		}
+	}
+});
+
+interfake.listen(3030); // The server will listen on port 3030
+
+request('http://localhost:3030/whats-next', function (error, response, body) {
+	console.log(response.statusCode); // prints 200
+	console.log(body); // prints { next: "more stuff" }
+});
+
+request.post('http://localhost:3030/items', function (error, response, body) {
+	console.log(response.statusCode); // prints 200
+	console.log(body); // prints { created: true }
+});
+```
+
+### API
+
+* `new Interfake(options)`: creates an Interfake object. Options are:
+  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
+* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
+* `#listen(port)`: Takes a port and starts the server
+* `#stop()`: Stops the server if it's been started
+
+#### Fluent Interface
+
+* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
+  * `#status(statusCode)`: Set the response status code for the endpoint
+  * `#body(body)`: Set the JSON response body of the end point
+  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+
+## Method 2: Command line
+
+Interfake must be install globally for this:
 
 ```
 npm install interfake -g
 ```
+
+Create a file from this template:
+
+```JSON
+[
+	{
+		"request": {
+			"url": "",
+			"method": ""
+		},
+		"response": {
+			"code": 200,
+			"body": {}
+		}
+	}
+]
+```
+
+The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
+
+You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
+
+Then, run the server like so:
+
+```
+interfake ./path/to/file.json
+```
+
+### Example
 
 Create a file called `adventuretime.json`:
 
@@ -146,83 +234,6 @@ The above example will create a endpoint at `http://localhost:3000/whattimeisit`
 
 Run `interfake -?` for a full list of command-line options.
 
------
-
-Interfake allows for complex API structures, dynamic response endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for tests), the [command line](#method-2-command-line) (like above), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line). Based on [express](https://github.com/visionmedia/express).
-
-## Method 1: JavaScript
-
-Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
-
-```javascript
-var Interfake = require('interfake');
-var request = require('request'); // Let's use request for this example
-
-var interfake = new Interfake();
-interfake.createRoute({
-	request: {
-		url: '/whats-next',
-		method: 'get'
-	},
-	response: {
-		code: 200,
-		body: {
-			next:'more stuff'
-		}
-	}
-});
-
-interfake.listen(3030); // The server will listen on port 3030
-
-request('http://localhost:3030/whats-next', function (error, response, body) {
-	console.log(response.statusCode); // prints 200
-	console.log(body); // prints { next: "more stuff" }
-});
-```
-
-### API
-
-* `new Interfake(options)`: creates an Interfake object. Options are:
-  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
-* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
-* `#listen(port)`: Takes a port and starts the server
-* `#stop()`: Stops the server if it's been started
-
-#### Fluent Interface
-
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
-  * `#status(statusCode)`: Set the response status code for the endpoint
-  * `#body(body)`: Set the JSON response body of the end point
-
-## Method 2: Command line
-
-Create a file from this template:
-
-```JSON
-[
-	{
-		"request": {
-			"url": "",
-			"method": ""
-		},
-		"response": {
-			"code": 200,
-			"body": {}
-		}
-	}
-]
-```
-
-The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
-
-You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
-
-Then, run the server like so:
-
-```
-interfake ./path/to/file.json
-```
-
 ### Dynamic Response Endpoints
 
 For situations where the API needs to react to mutated data, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint. In this object, create another array of endpoints to be created after the original one has been created, like so:
@@ -260,7 +271,7 @@ The `afterResponse` property can be used as deep as you like in the endpoint hie
 
 ## Method 3: HTTP
 
-While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with a string containing the same JSON structure as above. If you were using `curl`, this is an example (smaller, for brevity).
+While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_request` with the same JSON structure as what the command-line interface accepts.
 
 ### Example
 
@@ -302,6 +313,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.1.0: Added the fluent interface for easier creation of endpoints
 * 1.0.0: Backwards-incompatible changes for JavaScript API, now creating an `Interfake` instance
 * 0.2.0: Added JSONP support
 * 0.1.0: Support for creating mocked JSON APIs using HTTP, JavaScript or command line
@@ -312,9 +324,8 @@ Interfake is a labour of love, created for front-end and mobile developers to in
 
 [![I Love Open Source](http://www.iloveopensource.io/images/logo-lightbg.png)](http://www.iloveopensource.io/projects/5319884587659fce66000943)
 
-## Plans for this module
+## Future work
 
-* Better test coverage
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
 * Create a way to add static files in case you'd like to run a JavaScript application against it
