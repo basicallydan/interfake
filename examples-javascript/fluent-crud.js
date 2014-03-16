@@ -26,7 +26,7 @@ putRequest.creates.get('/items').body({ items: [
 // And also create an endpoint for our new item
 putRequest.creates.get('/items/1').body({ id: 1, name: 'Item One' });
 
-deleteRequest.creates.get('/items/1').status(404);
+deleteRequest.creates.get('/items/1').status(410);
 
 interfake.listen(3030); // The server will listen on port 3030
 

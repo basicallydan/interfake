@@ -4,7 +4,9 @@ Interfake is a tool which allows developers of client-side applications to easil
 
 ## Get Started
 
-Install Interfake in your project
+If you don't want to use the JavaScript method to create your Interfake API, go read up on [all the methods](#three-ways-to-use-interfake). Otherwise, read on.
+
+Install Interfake in your project.
 
 ```
 npm install interfake --save
@@ -46,7 +48,7 @@ GET http://localhost:3030/whats-next
 */
 ```
 
-You can use different HTTP methods
+You can use different HTTP methods:
 
 ```js
 var Interfake = require('interfake');
@@ -65,7 +67,7 @@ POST http://localhost:3030/next-items
 */
 ```
 
-And you can specify endpoints which should only be created once other ones have been hit
+And you can specify endpoints which should only be created once other ones have been hit (conditional endpoints):
 
 ```js
 var Interfake = require('interfake');
@@ -96,17 +98,20 @@ curl http://localhost:3030/items/1 -X GET
 */
 ```
 
+For JavaScript developers
+
 ---
+
+## Three ways to use Interfake
 
 Interfake can handle complex API structures, mutable endpoints and has three interfaces: the [JavaScript API](#method-1-javascript) (useful for NodeJS-based tests), the [command line](#method-2-command-line) (useful for non-NodeJS tests), or on-the-fly using Interfake's [HTTP meta-API](#method-2-command-line) (also useful for non-NodeJS tests). Based on [express](https://github.com/visionmedia/express).
 
-## Method 1: JavaScript
+## Method 1: JavaScript ([more examples](/examples-javascript))
 
 Make sure you've install Interfake as a local module using `npm install interfake --save`. Then, you can start doing things like this:
 
 ```javascript
 var Interfake = require('interfake');
-var request = require('request'); // Let's use request for this example
 
 var interfake = new Interfake();
 
@@ -128,16 +133,6 @@ interfake.createRoute({
 });
 
 interfake.listen(3030); // The server will listen on port 3030
-
-request('http://localhost:3030/whats-next', function (error, response, body) {
-	console.log(response.statusCode); // prints 200
-	console.log(body); // prints { next: "more stuff" }
-});
-
-request.post('http://localhost:3030/items', function (error, response, body) {
-	console.log(response.statusCode); // prints 200
-	console.log(body); // prints { created: true }
-});
 ```
 
 ### API
@@ -157,40 +152,15 @@ request.post('http://localhost:3030/items', function (error, response, body) {
 
 ## Method 2: Command line
 
-Interfake must be install globally for this:
+Interfake must be install globally for the command line interface to work:
 
 ```
 npm install interfake -g
 ```
 
-Create a file from this template:
+A JSON array of request/response pairs ("endpoints") you can write APIs and run them multiple times using the global `interfake` executable.
 
-```JSON
-[
-	{
-		"request": {
-			"url": "",
-			"method": ""
-		},
-		"response": {
-			"code": 200,
-			"body": {}
-		}
-	}
-]
-```
-
-The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
-
-You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
-
-Then, run the server like so:
-
-```
-interfake ./path/to/file.json
-```
-
-### Example
+### Example ([more examples](/examples-command-line))
 
 Create a file called `adventuretime.json`:
 
@@ -222,43 +192,41 @@ Then run Interfake against it:
 interfake --file ./adventuretime.json
 ```
 
-Then using [`curl`](http://curl.haxx.se):
-
-```
-curl http://localhost:3000/whattimeisit --verbose
-```
-
-Or go to http://localhost:3000/whattimeisit in your web browser.
+Now go to http://localhost:3000/whattimeisit in your web browser.
 
 The above example will create a endpoint at `http://localhost:3000/whattimeisit` which returns a `200` and the body specified in the `response` object.
 
+The top-level array should contain a list of endpoints (represented by request/response objects). The `request` object contains a URL and HTTP Method (GET/POST/PUT/DELETE/etc) to match against, and the `response` object contains an [HTTP Status Code](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes) (`code`) and `body` object, which is in itself a JSON object, and optional. This `body` is what will be returned in the body of the response for the request you're creating.
+
+You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
+
 Run `interfake -?` for a full list of command-line options.
 
-### Mutable endpoints
+### Conditional endpoints
 
-For situations where the API needs to react to mutated data, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint. In this object, create another array of endpoints to be created after the original one has been created, like so:
+When the API needs to mutate responses, such as after a POST, PUT or DELETE request, there is an `afterResponse` property available for any existing endpoint, which specifies endpoints to create after the parent has been hit for the first time.
 
 ```JSON
 [
 	{
 		"request": {
-			"url": "",
-			"method": ""
+			"url": "/items",
+			"method": "post"
 		},
 		"response": {
-			"code": 200,
+			"code": 201,
 			"body": {}
 		},
 		"afterResponse": {
 			"endpoints": [
 				{
 					"request": {
-						"url": "",
-						"method": ""
+						"url": "/items",
+						"method": "get"
 					},
 					"response": {
 						"code": 200,
-						"body": {}
+						"body": { items : [] }
 					}
 				}
 			]
@@ -267,11 +235,11 @@ For situations where the API needs to react to mutated data, such as after a POS
 ]
 ```
 
-The `afterResponse` property can be used as deep as you like in the endpoint hierarchy. For a complex example of the use of post-response endpoints, see the `/example-apis/crud.json` file in this repository.
+The `afterResponse` property can be used as deep as you like in the endpoint hierarchy. For a complex example of the use of post-response endpoints, see the `/examples-command-line/crud.json` file in this repository.
 
 ## Method 3: HTTP
 
-While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_requests` with the same JSON structure as what the command-line interface accepts.
+While the server is running, you can create new endpoints on-the-fly. You can make a POST request to `/_requests` with the same JSON structure that the command line interface accepts.
 
 ### Example
 
@@ -283,13 +251,11 @@ curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response"
 
 ## JSONP
 
-If you'd like the response to come back as [JSONP](http://en.wikipedia.org/wiki/JSONP) (so, for example you are trying to make a cross-origin request without using CORS) then specify a `callback` query parameter, like so:
+Interfake supports [JSONP](http://en.wikipedia.org/wiki/JSONP). Just put `?callback` on the end of the URLs being called.
 
 ```
-curl http://localhost:3000/whattimeisit?callback=handleSomeJson --verbose
+curl http://localhost:3000/whattimeisit?callback=handleSomeJson
 ```
-
-If you inject this code into your webpage the `handleSomeJson` method will be called with the data.
 
 ## Use Cases
 
@@ -321,9 +287,22 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Contribute
 
-Interfake is a labour of love, created for front-end and mobile developers to increase their prototyping and development speeds. If you can contribute by getting through some issues, I would be very grateful. <3 Open Source!
+Interfake is a labour of love, created for front-end and mobile developers to increase their prototyping and development speeds. If you can contribute by getting through some issues, I would be very grateful.
+
+If you make any pull requests, please do try to write tests, or at the very least ensure they're still passing by running `npm test` before you do so.
+
+<3 Open Source!
 
 [![I Love Open Source](http://www.iloveopensource.io/images/logo-lightbg.png)](http://www.iloveopensource.io/projects/5319884587659fce66000943)
+
+## Dependencies
+
+* [express](https://github.com/visionmedia/express)
+* [commander](https://github.com/visionmedia/commander.js/)
+
+## Thank yous
+
+Alun for reading this readme.
 
 ## Future work
 
