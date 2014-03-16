@@ -1,0 +1,21 @@
+<html>
+<head>
+	<title>Interfake it 'til you make it</title>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('#update').click(function (e) {
+				e.preventDefault();
+				$.getJSON('http://localhost:3000/update')
+					.done(function (data) {
+						$('#target').text(data.text)
+					});
+			});
+		});
+	</script>
+</head>
+<body>
+	<span id="target">Not updated!</span>
+	<a href="#" id="update">Update</a>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Interfake: Mocked JSON APIs for any platform
+# Interfake: Quick APIs for any platform
 
 Interfake is a tool which allows developers of client-side applications to easily create dummy APIs to develop against. Let's get started with a simple example.
 
@@ -142,6 +142,7 @@ interfake.listen(3030); // The server will listen on port 3030
 * `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
 * `#listen(port)`: Takes a port and starts the server
 * `#stop()`: Stops the server if it's been started
+* `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
 
 #### Fluent Interface
 
@@ -269,6 +270,8 @@ You can use Interfake to create dummy APIs which use data from your test setup w
 
 The HTTP API is particularly useful for developing iOS Applications which uses Automated tests written in JavaScript, or developing Node.js applications which rely on external APIs.
 
+For an example of how to do this, please see the [web page test example](/examples-javascript/fluent-web-page-test.js).
+
 ### Creating a static API
 
 If you have a website or mobile application which only needs static data, deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
@@ -308,4 +311,3 @@ Alun for reading this readme.
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
-* Create a way to add static files in case you'd like to run a JavaScript application against it
