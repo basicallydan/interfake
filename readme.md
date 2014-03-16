@@ -282,6 +282,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.2.0: Added ability to do static files
 * 1.1.1: Fixed the response to `POST /_request` to be a 201, and `POST /_requests` is now the path used
 * 1.1.0: Added the fluent interface for easier creation of endpoints
 * 1.0.0: Backwards-incompatible changes for JavaScript API, now creating an `Interfake` instance
