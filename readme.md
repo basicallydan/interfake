@@ -325,6 +325,10 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 [Alun](https://github.com/4lun) for reading this readme.
 
+## Author
+
+[Dan Hough](https://github.com/basicallydan) ([Twitter](https://twitter.com/basicallydan) | [Website](http://danielhough.co.uk))
+
 ## Future work
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
