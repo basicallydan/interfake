@@ -49,6 +49,10 @@
     "request": "^2.34.0",
     "q": "^1.0.1",
     "zombie": "^2.0.0-alpha31",
-    "connect": "^2.14.2"
+    "connect": "^2.14.2",
+    "phantom": "^0.5.7",
+    "node-phantom": "^0.2.5",
+    "zombie-phantom": "git://github.com/basicallydan/zombie-phantom.git",
+    "async": "^0.2.10"
   }
 }
