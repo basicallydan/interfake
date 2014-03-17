@@ -218,7 +218,7 @@ The top-level array should contain a list of endpoints (represented by request/r
 
 You can create as many HTTP request/response pairs as you like. I've put some simple examples below for your copy & paste pleasure, or you can look in `/examples-command-line` for some more complex examples.
 
-Run `interfake -?` for a full list of command-line options.
+Run `interfake --help` for a full list of command-line options.
 
 ### Conditional endpoints
 
