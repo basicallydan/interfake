@@ -250,6 +250,39 @@ describe('Interfake JavaScript API', function () {
 				done();
 			});
 		});
+
+		it('should create one GET endpoint with support for delaying the response', function (done) {
+			var interfake = new Interfake();
+			var enoughTimeHasPassed = false;
+			var _this = this;
+			this.slow(500)
+			interfake.createRoute({
+				request: {
+					url: '/test',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					delay: 200,
+					body: {
+						hi: 'there'
+					}
+				}
+			});
+			interfake.listen(3000);
+			timer = setTimeout(function() {
+				enoughTimeHasPassed = true;
+			}, 200)
+			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				assert.equal(body.hi, 'there');
+				interfake.stop();
+				if(!enoughTimeHasPassed) {
+					throw new Error('Response wasn\'t delay for long enough');
+				}
+				done();
+			});
+		});
 	});
 	
 	// Testing the fluent interface
