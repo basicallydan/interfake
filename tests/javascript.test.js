@@ -263,7 +263,7 @@ describe('Interfake JavaScript API', function () {
 				},
 				response: {
 					code: 200,
-					delay: 200,
+					delay: 50,
 					body: {
 						hi: 'there'
 					}
@@ -272,7 +272,7 @@ describe('Interfake JavaScript API', function () {
 			interfake.listen(3000);
 			timer = setTimeout(function() {
 				enoughTimeHasPassed = true;
-			}, 200)
+			}, 50)
 			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
@@ -346,11 +346,11 @@ describe('Interfake JavaScript API', function () {
 						var enoughTimeHasPassed = false;
 						var _this = this;
 						this.slow(500)
-						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(200);
+						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
 						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
-						}, 199)
+						}, 50)
 
 						request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 							assert.equal(response.statusCode, 300);
@@ -371,11 +371,11 @@ describe('Interfake JavaScript API', function () {
 				var enoughTimeHasPassed = false;
 				var _this = this;
 				this.slow(500)
-				interfake.get('/fluent').delay(200);
+				interfake.get('/fluent').delay(50);
 				interfake.listen(3000);
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
-				}, 199)
+				}, 50)
 
 				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					interfake.stop();
@@ -448,11 +448,11 @@ describe('Interfake JavaScript API', function () {
 						var enoughTimeHasPassed = false;
 						var _this = this;
 						this.slow(500)
-						interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(200);
+						interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
 						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
-						}, 199)
+						}, 50)
 
 						request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 							assert.equal(response.statusCode, 300);
@@ -474,11 +474,11 @@ describe('Interfake JavaScript API', function () {
 				var enoughTimeHasPassed = false;
 				var _this = this;
 				this.slow(500)
-				interfake.post('/fluent').delay(200);
+				interfake.post('/fluent').delay(50);
 				interfake.listen(3000);
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
-				}, 199)
+				}, 50)
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					interfake.stop();
