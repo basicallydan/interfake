@@ -340,6 +340,50 @@ describe('Interfake JavaScript API', function () {
 						done();
 					});
 				});
+				describe('#delay', function() {
+					it('should create one GET endpoint with a particular body, status and delay', function (done) {
+						var interfake = new Interfake();
+						var enoughTimeHasPassed = false;
+						var _this = this;
+						this.slow(500)
+						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(200);
+						interfake.listen(3000);
+						setTimeout(function() {
+							enoughTimeHasPassed = true;
+						}, 199)
+
+						request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+							assert.equal(response.statusCode, 300);
+							assert.equal(body.fluency, 'isgreat');
+							interfake.stop();
+							if(!enoughTimeHasPassed) {
+								throw new Error('Response wasn\'t delay for long enough');
+							}
+							done();
+						});
+					});
+				});
+			});
+		});
+		describe('#delay', function() {
+			it('should create one GET endpoint with a particular delay', function (done) {
+				var interfake = new Interfake();
+				var enoughTimeHasPassed = false;
+				var _this = this;
+				this.slow(500)
+				interfake.get('/fluent').delay(200);
+				interfake.listen(3000);
+				setTimeout(function() {
+					enoughTimeHasPassed = true;
+				}, 199)
+
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					interfake.stop();
+					if(!enoughTimeHasPassed) {
+						throw new Error('Response wasn\'t delay for long enough');
+					}
+					done();
+				});
 			});
 		});
 	});
@@ -397,6 +441,51 @@ describe('Interfake JavaScript API', function () {
 						interfake.stop();
 						done();
 					});
+				});
+				describe('#delay', function() {
+					it('should create one POST endpoint with a particular body, status and delay', function (done) {
+						var interfake = new Interfake();
+						var enoughTimeHasPassed = false;
+						var _this = this;
+						this.slow(500)
+						interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(200);
+						interfake.listen(3000);
+						setTimeout(function() {
+							enoughTimeHasPassed = true;
+						}, 199)
+
+						request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+							assert.equal(response.statusCode, 300);
+							assert.equal(body.fluency, 'isgreat');
+							interfake.stop();
+							if(!enoughTimeHasPassed) {
+								throw new Error('Response wasn\'t delay for long enough');
+							}
+							done();
+						});
+					});
+				});
+			});
+		});
+
+		describe('#delay', function() {
+			it('should create one POST endpoint with a particular delay', function (done) {
+				var interfake = new Interfake();
+				var enoughTimeHasPassed = false;
+				var _this = this;
+				this.slow(500)
+				interfake.post('/fluent').delay(200);
+				interfake.listen(3000);
+				setTimeout(function() {
+					enoughTimeHasPassed = true;
+				}, 199)
+
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					interfake.stop();
+					if(!enoughTimeHasPassed) {
+						throw new Error('Response wasn\'t delay for long enough');
+					}
+					done();
 				});
 			});
 		});
