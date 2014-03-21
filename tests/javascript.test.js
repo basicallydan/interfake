@@ -340,7 +340,7 @@ describe('Interfake JavaScript API', function () {
 						done();
 					});
 				});
-				describe('#delay', function() {
+				describe('#delay()', function() {
 					it('should create one GET endpoint with a particular body, status and delay', function (done) {
 						var interfake = new Interfake();
 						var enoughTimeHasPassed = false;
@@ -365,7 +365,7 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 		});
-		describe('#delay', function() {
+		describe('#delay()', function() {
 			it('should create one GET endpoint with a particular delay', function (done) {
 				var interfake = new Interfake();
 				var enoughTimeHasPassed = false;
@@ -442,7 +442,7 @@ describe('Interfake JavaScript API', function () {
 						done();
 					});
 				});
-				describe('#delay', function() {
+				describe('#delay()', function() {
 					it('should create one POST endpoint with a particular body, status and delay', function (done) {
 						var interfake = new Interfake();
 						var enoughTimeHasPassed = false;
@@ -468,7 +468,7 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		describe('#delay', function() {
+		describe('#delay()', function() {
 			it('should create one POST endpoint with a particular delay', function (done) {
 				var interfake = new Interfake();
 				var enoughTimeHasPassed = false;
