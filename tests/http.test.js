@@ -28,7 +28,10 @@ describe('Interfake HTTP API', function () {
 					code: 200,
 					body: {
 						hi: 'there'
-					}
+					},
+                    headers: {
+                      'foo': 'bar'
+                    }
 				}
 			};
 
@@ -39,6 +42,7 @@ describe('Interfake HTTP API', function () {
 					return get({url:'http://localhost:4000/test', json: true});
 				})
 				.then(function (results) {
+                    assert.equal(results[0].headers['foo'], 'bar');
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].hi, 'there');
 					interfake.stop();
