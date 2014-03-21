@@ -43,6 +43,7 @@ describe('Interfake HTTP API', function () {
 				})
 				.then(function (results) {
                     assert.equal(results[0].headers['foo'], 'bar');
+                    // console.log(results[0].cookies)
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].hi, 'there');
 					interfake.stop();
