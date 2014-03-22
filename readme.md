@@ -142,8 +142,9 @@ interfake.createRoute({
 		method: 'get'
 	},
 	response: {
-		code: 200,
-		body: {
+		code: 200, // HTTP Status Code
+		delay: 50, // Delay in milliseconds
+		body: { // JSON Body Response
 			next:'more stuff'
 		}
 	}
@@ -166,6 +167,7 @@ interfake.listen(3000); // The server will listen on port 3000
 * `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
+  * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
   * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
 
 ## Method 2: Command line
@@ -191,6 +193,7 @@ Create a file called `adventuretime.json`:
 		},
 		"response": {
 			"code": 200,
+			"delay": 100,
 			"body": {
 				"theTime": "Adventure Time!",
 				"starring": [
