@@ -302,6 +302,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))
 * 1.2.0: Added ability to do static files
 * 1.1.1: Fixed the response to `POST /_request` to be a 201, and `POST /_requests` is now the path used
 * 1.1.0: Added the fluent interface for easier creation of endpoints
@@ -333,13 +334,13 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 [Alun](https://github.com/4lun) for reading this readme.
 
-## Author
+## Author & Contributors
 
 [Dan Hough](https://github.com/basicallydan) ([Twitter](https://twitter.com/basicallydan) | [Website](http://danielhough.co.uk))
+[bruce-one](https://github.com/bruce-one)
 
 ## Future work
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
 * Allow custom headers to be set
-* Mimic slow responses
