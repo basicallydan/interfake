@@ -270,7 +270,7 @@ describe('Interfake JavaScript API', function () {
 				}
 			});
 			interfake.listen(3000);
-			timer = setTimeout(function() {
+			setTimeout(function() {
 				enoughTimeHasPassed = true;
 			}, 50)
 			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
@@ -279,6 +279,45 @@ describe('Interfake JavaScript API', function () {
 				interfake.stop();
 				if(!enoughTimeHasPassed) {
 					throw new Error('Response wasn\'t delay for long enough');
+				}
+				done();
+			});
+		});
+		it('should create one GET endpoint with support for delaying the response with a delay range', function (done) {
+			var interfake = new Interfake();
+			var enoughTimeHasPassed = false;
+			var _this = this;
+			var timeout;
+			var tookTooLong = false;
+			this.slow(500)
+			interfake.createRoute({
+				request: {
+					url: '/test',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					delay: "20..50",
+					body: {
+						hi: 'there'
+					}
+				}
+			});
+			interfake.listen(3000);
+			setTimeout(function() {
+				enoughTimeHasPassed = true;
+			}, 20)
+			timeout = setTimeout(function() {
+				tookTooLong = true;
+			}, 55)
+			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+				interfake.stop();
+				clearTimeout(timeout);
+				if(!enoughTimeHasPassed) {
+					throw new Error('Response wasn\'t delay for long enough');
+				}
+				if(tookTooLong) {
+					throw new Error('Response was delayed for too long');
 				}
 				done();
 			});
@@ -472,6 +511,7 @@ describe('Interfake JavaScript API', function () {
 			it('should create one POST endpoint with a particular delay', function (done) {
 				var interfake = new Interfake();
 				var enoughTimeHasPassed = false;
+				var tookTooLong = false;
 				var _this = this;
 				this.slow(500)
 				interfake.post('/fluent').delay(50);
@@ -484,6 +524,35 @@ describe('Interfake JavaScript API', function () {
 					interfake.stop();
 					if(!enoughTimeHasPassed) {
 						throw new Error('Response wasn\'t delay for long enough');
+					}
+					done();
+				});
+			});
+			it('should create one POST endpoint with a delay range', function (done) {
+				var interfake = new Interfake();
+				var enoughTimeHasPassed = false;
+				var _this = this;
+				var tookTooLong = false;
+				var timeout;
+				this.slow(500)
+				interfake.post('/fluent').delay("20..50");
+				interfake.listen(3000);
+
+				setTimeout(function() {
+					enoughTimeHasPassed = true;
+				}, 20)
+				timeout = setTimeout(function() {
+					tookTooLong = true;
+				}, 55)
+
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					interfake.stop();
+					clearTimeout(timeout);
+					if(!enoughTimeHasPassed) {
+						throw new Error('Response wasn\'t delay for long enough');
+					}
+					if(tookTooLong) {
+						throw new Error('Response was delayed for too long');
 					}
 					done();
 				});

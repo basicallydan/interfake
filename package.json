@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "express": "^3.4.8",
-    "commander": "2.1.0"
+    "commander": "2.1.0",
+    "lodash": "^2.4.1"
   },
   "license": "MIT",
   "engines": {
