@@ -283,6 +283,38 @@ describe('Interfake JavaScript API', function () {
 				done();
 			});
 		});
+		it('should create one GET endpoint with support for delaying the response with a delay range', function (done) {
+			var interfake = new Interfake();
+			var enoughTimeHasPassed = false;
+			var _this = this;
+			this.slow(500)
+			interfake.createRoute({
+				request: {
+					url: '/test',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					delay: "20..50",
+					body: {
+						hi: 'there'
+					}
+				}
+			});
+			interfake.listen(3000);
+			timer = setTimeout(function() {
+				enoughTimeHasPassed = true;
+			}, 20)
+			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				assert.equal(body.hi, 'there');
+				interfake.stop();
+				if(!enoughTimeHasPassed) {
+					throw new Error('Response wasn\'t delay for long enough');
+				}
+				done();
+			});
+		});
 	});
 	
 	// Testing the fluent interface
@@ -479,6 +511,25 @@ describe('Interfake JavaScript API', function () {
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
 				}, 50)
+
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					interfake.stop();
+					if(!enoughTimeHasPassed) {
+						throw new Error('Response wasn\'t delay for long enough');
+					}
+					done();
+				});
+			});
+			it('should create one POST endpoint with a delay range', function (done) {
+				var interfake = new Interfake();
+				var enoughTimeHasPassed = false;
+				var _this = this;
+				this.slow(500)
+				interfake.post('/fluent').delay("20..50");
+				interfake.listen(3000);
+				setTimeout(function() {
+					enoughTimeHasPassed = true;
+				}, 20)
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					interfake.stop();
