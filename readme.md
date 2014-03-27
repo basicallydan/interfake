@@ -168,6 +168,7 @@ interfake.listen(3000); // The server will listen on port 3000
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
+    * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
 
 ## Method 2: Command line
@@ -302,6 +303,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.4.0: Can specify delay range using `delay(10..50)` (by [bruce-one](https://github.com/bruce-one))
 * 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))
 * 1.2.0: Added ability to do static files
 * 1.1.1: Fixed the response to `POST /_request` to be a 201, and `POST /_requests` is now the path used
