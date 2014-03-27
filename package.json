@@ -36,7 +36,7 @@
   "dependencies": {
     "express": "^3.4.8",
     "commander": "2.1.0",
-    "lodash": "^2.4.1"
+    "core-util-is": "^1.0.1"
   },
   "license": "MIT",
   "engines": {

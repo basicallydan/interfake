@@ -272,7 +272,7 @@ describe('Interfake JavaScript API', function () {
 			interfake.listen(3000);
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
-			}, 50)
+			}, 50);
 			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
@@ -297,7 +297,7 @@ describe('Interfake JavaScript API', function () {
 				},
 				response: {
 					code: 200,
-					delay: "20..50",
+					delay: '20..50',
 					body: {
 						hi: 'there'
 					}
@@ -306,10 +306,10 @@ describe('Interfake JavaScript API', function () {
 			interfake.listen(3000);
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
-			}, 20)
+			}, 20);
 			timeout = setTimeout(function() {
 				tookTooLong = true;
-			}, 55)
+			}, 55);
 			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
 				interfake.stop();
 				clearTimeout(timeout);
@@ -513,12 +513,15 @@ describe('Interfake JavaScript API', function () {
 				var enoughTimeHasPassed = false;
 				var tookTooLong = false;
 				var _this = this;
-				this.slow(500)
+
+				this.slow(500);
+
 				interfake.post('/fluent').delay(50);
 				interfake.listen(3000);
+
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
-				}, 50)
+				}, 50);
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					interfake.stop();
@@ -534,16 +537,17 @@ describe('Interfake JavaScript API', function () {
 				var _this = this;
 				var tookTooLong = false;
 				var timeout;
-				this.slow(500)
-				interfake.post('/fluent').delay("20..50");
+				this.slow(500);
+				interfake.post('/fluent').delay('20..50');
 				interfake.listen(3000);
 
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
-				}, 20)
+				}, 20);
+
 				timeout = setTimeout(function() {
 					tookTooLong = true;
-				}, 55)
+				}, 55);
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					interfake.stop();
