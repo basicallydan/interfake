@@ -18,11 +18,11 @@ describe('Interfake JavaScript API', function () {
 	beforeEach(function () {
 		interfake = new Interfake();
 	});
-    afterEach(function () {
-        if (interfake) {
-            interfake.stop();
-        }
-    });
+	afterEach(function () {
+		if (interfake) {
+			interfake.stop();
+		}
+	});
 	describe('#createRoute()', function () {
 		it('should create one GET endpoint', function (done) {
 			interfake.createRoute({
@@ -46,74 +46,74 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-        it('should create a GET endpoint that accepts a query parameter', function (done) {
-            // interfake = new Interfake();
-            interfake.createRoute({
-                request: {
-                    url: '/wantsQueryParameter',
-                    query: { query: '1234' },
-                    method: 'get'
+		it('should create a GET endpoint that accepts a query parameter', function (done) {
+			// interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/wantsQueryParameter',
+					query: { query: '1234' },
+					method: 'get'
 
-                },
-                response: {
-                    code: 200,
-                    body: {
-                        high: 'hoe'
-                    }
-                }
-            });
-            interfake.listen(3000);
+				},
+				response: {
+					code: 200,
+					body: {
+						high: 'hoe'
+					}
+				}
+			});
+			interfake.listen(3000);
 
-            request({ url : 'http://localhost:3000/wantsQueryParameter?query=1234', json : true }, function (error, response, body) {
-                assert.equal(error, undefined);
-                assert.equal(response.statusCode, 200);
-                assert.equal(body.high, 'hoe');
-                done();
-            });
-        });
+			request({ url : 'http://localhost:3000/wantsQueryParameter?query=1234', json : true }, function (error, response, body) {
+				assert.equal(error, undefined);
+				assert.equal(response.statusCode, 200);
+				assert.equal(body.high, 'hoe');
+				done();
+			});
+		});
 
-        it('should create one GET endpoint accepting query parameters with different responses', function () {
-            // interfake = new Interfake();
-            interfake.createRoute({
-                request: {
-                    url: '/wantsQueryParameter',
-                    query: { query: '1234' },
-                    method: 'get'
+		it('should create one GET endpoint accepting query parameters with different responses', function () {
+			// interfake = new Interfake();
+			interfake.createRoute({
+				request: {
+					url: '/wantsQueryParameter',
+					query: { query: '1234' },
+					method: 'get'
 
-                },
-                response: {
-                    code: 200,
-                    body: {
-                        high: 'hoe'
-                    }
-                }
-            });
-            interfake.createRoute({
-                request: {
-                    url: '/wantsQueryParameter',
-                    query: { query: '5678', anotherQuery: '4321' },
-                    method: 'get'
-                },
-                response: {
-                    code: 200,
-                    body: {
-                        loan: 'shark'
-                    }
-                }
-            });
-            interfake.listen(3000);
+				},
+				response: {
+					code: 200,
+					body: {
+						high: 'hoe'
+					}
+				}
+			});
+			interfake.createRoute({
+				request: {
+					url: '/wantsQueryParameter',
+					query: { query: '5678', anotherQuery: '4321' },
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					body: {
+						loan: 'shark'
+					}
+				}
+			});
+			interfake.listen(3000);
 
-            return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234', json: true}),
-                   get({url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678', json: true}),
-                   get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
-            ]).then(function (results) {
-                assert.equal(results[0][0].statusCode, 200);
-                assert.equal(results[0][1].high, 'hoe');
-                assert.equal(results[1][0].statusCode, 200);
-                assert.equal(results[1][1].loan, 'shark');
-                assert.equal(results[2][0].statusCode, 404);
-            });
-        });
+			return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234', json: true}),
+				   get({url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678', json: true}),
+				   get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
+			]).then(function (results) {
+				assert.equal(results[0][0].statusCode, 200);
+				assert.equal(results[0][1].high, 'hoe');
+				assert.equal(results[1][0].statusCode, 200);
+				assert.equal(results[1][1].loan, 'shark');
+				assert.equal(results[2][0].statusCode, 404);
+			});
+		});
 
 		it('should create three GET endpoints with different status codes', function (done) {
 			interfake.createRoute({

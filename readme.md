@@ -108,22 +108,7 @@ Interfake can handle complex API structures, mutable endpoints and has three int
 
 ## Method 1: JavaScript
 
-Make sure you've install Interfake as a local module using `npm install interfake --save`. If you `var Interfake = require('interfake')` in your JavaScript file, you can use the following API to spin up the Interfake server.
-
-### API
-
-* `new Interfake(options)`: creates an Interfake object. Options are:
-  * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
-* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
-* `#listen(port)`: Takes a port and starts the server
-* `#stop()`: Stops the server if it's been started
-
-#### Fluent Interface
-
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
-  * `#status(statusCode)`: Set the response status code for the endpoint
-  * `#body(body)`: Set the JSON response body of the end point
-  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+Make sure you've installed Interfake as a local module using `npm install interfake --save`. If you `var Interfake = require('interfake')` in your JavaScript file, you can use the following API to spin up the Interfake server.
 
 ### Example ([more examples](/examples-javascript))
 
@@ -139,7 +124,10 @@ interfake.post('/items').status(201).body({ created: true }).creates.get('/next-
 interfake.createRoute({
 	request: {
 		url: '/whats-next',
-		method: 'get'
+		method: 'get',
+		query: { // Optional querystring parameters
+			page: 2
+		}
 	},
 	response: {
 		code: 200, // HTTP Status Code
@@ -157,7 +145,10 @@ interfake.listen(3000); // The server will listen on port 3000
 
 * `new Interfake(options)`: creates an Interfake object. Options are:
   * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
-* `#createRoute(route)`: Takes a JSON object with `request`, `response` and optionally `afterResponse` properties
+* `#createRoute(route)`: Takes a JSON object with the following:
+  * `request`
+  * `response`
+  * `afterResponse` (optional)
 * `#listen(port)`: Takes a port and starts the server
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
@@ -170,6 +161,7 @@ interfake.listen(3000); // The server will listen on port 3000
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+  * -`#query`- This is **not yet supported** in the fluent interface
 
 ## Method 2: Command line
 
