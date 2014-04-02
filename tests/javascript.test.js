@@ -321,7 +321,7 @@ describe('Interfake JavaScript API', function () {
 		it('should create one GET endpoint with support for delaying the response', function (done) {
 			var enoughTimeHasPassed = false;
 			var _this = this;
-			this.slow(500)
+			this.slow(500);
 			interfake.createRoute({
 				request: {
 					url: '/test',
