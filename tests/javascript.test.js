@@ -12,18 +12,20 @@ var put = Q.denodeify(request.put);
 
 // The thing we're testing
 var Interfake = require('..');
+var interfake;
 
 describe('Interfake JavaScript API', function () {
-    var self = this;
+	beforeEach(function () {
+		interfake = new Interfake();
+	});
     afterEach(function () {
-        if (self.interfake) {
-            self.interfake.stop();
+        if (interfake) {
+            interfake.stop();
         }
     });
 	describe('#createRoute()', function () {
 		it('should create one GET endpoint', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test',
 					method: 'get'
@@ -35,7 +37,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 
 			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
@@ -45,8 +47,8 @@ describe('Interfake JavaScript API', function () {
 		});
 
         it('should create a GET endpoint that accepts a query parameter', function (done) {
-            self.interfake = new Interfake();
-            self.interfake.createRoute({
+            // interfake = new Interfake();
+            interfake.createRoute({
                 request: {
                     url: '/wantsQueryParameter',
                     query: { query: '1234' },
@@ -60,7 +62,7 @@ describe('Interfake JavaScript API', function () {
                     }
                 }
             });
-            self.interfake.listen(3000);
+            interfake.listen(3000);
 
             request({ url : 'http://localhost:3000/wantsQueryParameter?query=1234', json : true }, function (error, response, body) {
                 assert.equal(error, undefined);
@@ -71,8 +73,8 @@ describe('Interfake JavaScript API', function () {
         });
 
         it('should create one GET endpoint accepting query parameters with different responses', function () {
-            self.interfake = new Interfake();
-            self.interfake.createRoute({
+            // interfake = new Interfake();
+            interfake.createRoute({
                 request: {
                     url: '/wantsQueryParameter',
                     query: { query: '1234' },
@@ -86,12 +88,11 @@ describe('Interfake JavaScript API', function () {
                     }
                 }
             });
-            self.interfake.createRoute({
+            interfake.createRoute({
                 request: {
                     url: '/wantsQueryParameter',
-                    query: { query: '5678' },
+                    query: { query: '5678', anotherQuery: '4321' },
                     method: 'get'
-
                 },
                 response: {
                     code: 200,
@@ -100,10 +101,10 @@ describe('Interfake JavaScript API', function () {
                     }
                 }
             });
-            self.interfake.listen(3000);
+            interfake.listen(3000);
 
             return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234', json: true}),
-                   get({url: 'http://localhost:3000/wantsQueryParameter?query=5678', json: true}),
+                   get({url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678', json: true}),
                    get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
             ]).then(function (results) {
                 assert.equal(results[0][0].statusCode, 200);
@@ -115,8 +116,7 @@ describe('Interfake JavaScript API', function () {
         });
 
 		it('should create three GET endpoints with different status codes', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test1',
 					method: 'get'
@@ -128,7 +128,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test2',
 					method: 'get'
@@ -140,7 +140,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test3',
 					method: 'get'
@@ -152,7 +152,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 
 			Q.all([get({url:'http://localhost:3000/test1',json:true}), get({url:'http://localhost:3000/test2',json:true}), get({url:'http://localhost:3000/test3',json:true})])
 				.then(function (results) {
@@ -167,8 +167,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create a dynamic endpoint', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/dynamic',
 					method: 'post'
@@ -192,7 +191,7 @@ describe('Interfake JavaScript API', function () {
 					]
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 
 			get('http://localhost:3000/dynamic/1')
 				.then(function (results) {
@@ -210,8 +209,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create a dynamic endpoint within a dynamic endpoint', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/dynamic',
 					method: 'post'
@@ -265,7 +263,7 @@ describe('Interfake JavaScript API', function () {
 					]
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 
 			get({url:'http://localhost:3000/dynamic/1', json:true})
 				.then(function (results) {
@@ -294,8 +292,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should return JSONP if requested', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/stuff',
 					method: 'get'
@@ -307,7 +304,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 
 			get('http://localhost:3000/stuff?callback=yo')
 				.then(function (results) {
@@ -322,11 +319,10 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint with support for delaying the response', function (done) {
-			self.interfake = new Interfake();
 			var enoughTimeHasPassed = false;
 			var _this = this;
 			this.slow(500)
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test',
 					method: 'get'
@@ -339,7 +335,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
 			}, 50);
@@ -353,13 +349,12 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 		it('should create one GET endpoint with support for delaying the response with a delay range', function (done) {
-			self.interfake = new Interfake();
 			var enoughTimeHasPassed = false;
 			var _this = this;
 			var timeout;
 			var tookTooLong = false;
 			this.slow(500)
-			self.interfake.createRoute({
+			interfake.createRoute({
 				request: {
 					url: '/test',
 					method: 'get'
@@ -372,7 +367,7 @@ describe('Interfake JavaScript API', function () {
 					}
 				}
 			});
-			self.interfake.listen(3000);
+			interfake.listen(3000);
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
 			}, 20);
@@ -395,9 +390,8 @@ describe('Interfake JavaScript API', function () {
 	// Testing the fluent interface
 	describe('#get()', function () {
 		it('should create one GET endpoint', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.get('/fluent');
-			self.interfake.listen(3000);
+			interfake.get('/fluent');
+			interfake.listen(3000);
 
 			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
@@ -407,9 +401,8 @@ describe('Interfake JavaScript API', function () {
 	
 		describe('#status()', function () {
 			it('should create one GET endpoint with a particular status code', function (done) {
-				self.interfake = new Interfake();
-				self.interfake.get('/fluent').status(300);
-				self.interfake.listen(3000);
+				interfake.get('/fluent').status(300);
+				interfake.listen(3000);
 
 				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					assert.equal(response.statusCode, 300);
@@ -420,9 +413,8 @@ describe('Interfake JavaScript API', function () {
 		
 		describe('#body()', function () {
 			it('should create one GET endpoint with a particular body', function (done) {
-				self.interfake = new Interfake();
-				self.interfake.get('/fluent').body({ fluency : 'isgreat' });
-				self.interfake.listen(3000);
+				interfake.get('/fluent').body({ fluency : 'isgreat' });
+				interfake.listen(3000);
 
 				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					assert.equal(response.statusCode, 200);
@@ -433,9 +425,8 @@ describe('Interfake JavaScript API', function () {
 		
 			describe('#status()', function () {
 				it('should create one GET endpoint with a particular body and particular status', function (done) {
-					self.interfake = new Interfake();
-					self.interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300);
-					self.interfake.listen(3000);
+					interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300);
+					interfake.listen(3000);
 
 					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 						assert.equal(response.statusCode, 300);
@@ -445,12 +436,11 @@ describe('Interfake JavaScript API', function () {
 				});
 				describe('#delay()', function() {
 					it('should create one GET endpoint with a particular body, status and delay', function (done) {
-						self.interfake = new Interfake();
 						var enoughTimeHasPassed = false;
 						var _this = this;
 						this.slow(500)
-						self.interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
-						self.interfake.listen(3000);
+						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
+						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
 						}, 50)
@@ -469,12 +459,11 @@ describe('Interfake JavaScript API', function () {
 		});
 		describe('#delay()', function() {
 			it('should create one GET endpoint with a particular delay', function (done) {
-				self.interfake = new Interfake();
 				var enoughTimeHasPassed = false;
 				var _this = this;
 				this.slow(500)
-				self.interfake.get('/fluent').delay(50);
-				self.interfake.listen(3000);
+				interfake.get('/fluent').delay(50);
+				interfake.listen(3000);
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
 				}, 50)
@@ -491,9 +480,8 @@ describe('Interfake JavaScript API', function () {
 
 	describe('#post()', function () {
 		it('should create one POST endpoint', function (done) {
-			self.interfake = new Interfake();
-			self.interfake.post('/fluent');
-			self.interfake.listen(3000);
+			interfake.post('/fluent');
+			interfake.listen(3000);
 
 			request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
@@ -503,9 +491,8 @@ describe('Interfake JavaScript API', function () {
 	
 		describe('#status()', function () {
 			it('should create one POST endpoint with a particular status code', function (done) {
-				self.interfake = new Interfake();
-				self.interfake.post('/fluent').status(300);
-				self.interfake.listen(3000);
+				interfake.post('/fluent').status(300);
+				interfake.listen(3000);
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					assert.equal(response.statusCode, 300);
@@ -516,9 +503,8 @@ describe('Interfake JavaScript API', function () {
 		
 		describe('#body()', function () {
 			it('should create one POST endpoint with a particular body', function (done) {
-				self.interfake = new Interfake();
-				self.interfake.post('/fluent').body({ fluency : 'isgreat' });
-				self.interfake.listen(3000);
+				interfake.post('/fluent').body({ fluency : 'isgreat' });
+				interfake.listen(3000);
 
 				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					assert.equal(response.statusCode, 200);
@@ -529,9 +515,8 @@ describe('Interfake JavaScript API', function () {
 		
 			describe('#status()', function () {
 				it('should create one POST endpoint with a particular body and particular status', function (done) {
-					self.interfake = new Interfake();
-					self.interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300);
-					self.interfake.listen(3000);
+					interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300);
+					interfake.listen(3000);
 
 					request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 						assert.equal(response.statusCode, 300);
@@ -541,12 +526,11 @@ describe('Interfake JavaScript API', function () {
 				});
 				describe('#delay()', function() {
 					it('should create one POST endpoint with a particular body, status and delay', function (done) {
-						self.interfake = new Interfake();
 						var enoughTimeHasPassed = false;
 						var _this = this;
 						this.slow(500)
-						self.interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
-						self.interfake.listen(3000);
+						interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
+						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
 						}, 50)
@@ -566,15 +550,14 @@ describe('Interfake JavaScript API', function () {
 
 		describe('#delay()', function() {
 			it('should create one POST endpoint with a particular delay', function (done) {
-				self.interfake = new Interfake();
 				var enoughTimeHasPassed = false;
 				var tookTooLong = false;
 				var _this = this;
 
 				this.slow(500);
 
-				self.interfake.post('/fluent').delay(50);
-				self.interfake.listen(3000);
+				interfake.post('/fluent').delay(50);
+				interfake.listen(3000);
 
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
@@ -588,14 +571,13 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 			it('should create one POST endpoint with a delay range', function (done) {
-				self.interfake = new Interfake();
 				var enoughTimeHasPassed = false;
 				var _this = this;
 				var tookTooLong = false;
 				var timeout;
 				this.slow(500);
-				self.interfake.post('/fluent').delay('20..50');
-				self.interfake.listen(3000);
+				interfake.post('/fluent').delay('20..50');
+				interfake.listen(3000);
 
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
@@ -621,9 +603,8 @@ describe('Interfake JavaScript API', function () {
 		describe('#then', function () {
 			describe('#get()', function () {
 				it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
-					self.interfake = new Interfake();
-					self.interfake.post('/fluent').creates.get('/fluent/1');
-					self.interfake.listen(3000);
+					interfake.post('/fluent').creates.get('/fluent/1');
+					interfake.listen(3000);
 
 					get('http://localhost:3000/fluent/1')
 						.then(function (results) {
@@ -641,11 +622,10 @@ describe('Interfake JavaScript API', function () {
 				});
 
 				it('should create one POST endpoint with two afterResponse endpoints', function (done) {
-					self.interfake = new Interfake();
-					var postEndpoint = self.interfake.post('/fluent');
+					var postEndpoint = interfake.post('/fluent');
 					postEndpoint.creates.get('/fluent/1');
 					postEndpoint.creates.put('/fluent/1');
-					self.interfake.listen(3000);
+					interfake.listen(3000);
 
 					get('http://localhost:3000/fluent/1')
 						.then(function (results) {
@@ -668,9 +648,8 @@ describe('Interfake JavaScript API', function () {
 
 				describe('#status()', function () {
 					it('should create a post-response GET with a particular status', function (done) {
-						self.interfake = new Interfake();
-						self.interfake.post('/fluent').creates.get('/fluent/1').status(300);
-						self.interfake.listen(3000);
+						interfake.post('/fluent').creates.get('/fluent/1').status(300);
+						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')
 							.then(function (results) {
@@ -690,9 +669,8 @@ describe('Interfake JavaScript API', function () {
 
 				describe('#body()', function () {
 					it('should create a post-response GET with a particular body', function (done) {
-						self.interfake = new Interfake();
-						self.interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' });
-						self.interfake.listen(3000);
+						interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' });
+						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')
 							.then(function (results) {
@@ -711,9 +689,8 @@ describe('Interfake JavaScript API', function () {
 
 					describe('#status()', function() {
 						it('should create a post-response GET with a particular and body and status', function (done) {
-							self.interfake = new Interfake();
-							self.interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' }).status(500);
-							self.interfake.listen(3000);
+							interfake.post('/fluent').creates.get('/fluent/1').body({ fluency : 'is badass' }).status(500);
+							interfake.listen(3000);
 
 							get('http://localhost:3000/fluent/1')
 								.then(function (results) {
@@ -735,9 +712,8 @@ describe('Interfake JavaScript API', function () {
 
 				describe('#then()', function () {
 					it('should create a post-response GET with another post-response GET', function (done) {
-						self.interfake = new Interfake();
-						self.interfake.post('/fluent').creates.get('/fluent/1').creates.get('/fluent/2');
-						self.interfake.listen(3000);
+						interfake.post('/fluent').creates.get('/fluent/1').creates.get('/fluent/2');
+						interfake.listen(3000);
 
 						get('http://localhost:3000/fluent/1')
 							.then(function (results) {
