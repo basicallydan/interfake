@@ -36,7 +36,8 @@
   "dependencies": {
     "express": "^3.4.8",
     "commander": "2.1.0",
-    "core-util-is": "^1.0.1"
+    "core-util-is": "^1.0.1",
+    "merge": "^1.1.2"
   },
   "license": "MIT",
   "engines": {

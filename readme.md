@@ -295,6 +295,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit))
 * 1.4.0: Can specify delay range using `delay(10..50)` (by [bruce-one](https://github.com/bruce-one))
 * 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))
 * 1.2.0: Added ability to do static files
