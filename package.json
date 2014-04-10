@@ -1,14 +1,22 @@
 {
   "name": "interfake",
   "preferGlobal": true,
-  "version": "1.4.0",
+  "version": "1.5.0",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
   "description": "A simple way to create dummy APIs",
   "contributors": [
     {
       "name": "Daniel Hough",
       "email": "daniel.hough@gmail.com",
-      "url": "http://danielhough.co.uk"
+      "url": "https://danielhough.co.uk"
+    },
+    {
+      "name": "rajit",
+      "url": "https://github.com/rajit"
+    },
+    {
+      "name": "bruce-one",
+      "url": "https://github.com/bruce-one"
     }
   ],
   "scripts": {

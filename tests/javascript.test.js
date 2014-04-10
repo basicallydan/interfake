@@ -496,6 +496,18 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		describe('#query()', function () {
+			it('should use the query object as priority', function (done) {
+				interfake.get('/fluent?query=1').query({ query: 2 }).status(200);
+				interfake.listen(3000);
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 404);
+						assert.equal(results[1][0].statusCode, 200);
+						done();
+					});
+			});
+
 			describe('#status()', function () {
 				it('should create a GET endpoint which accepts different querystrings using both methods of querystring specification', function (done) {
 					interfake.get('/fluent?query=1').query({ page: 1 }).status(400);

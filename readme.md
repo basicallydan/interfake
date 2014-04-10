@@ -155,12 +155,13 @@ interfake.listen(3000); // The server will listen on port 3000
 
 #### Fluent Interface
 
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().body().status().body()`
+* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
+  * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
-  * `#create#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+  * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
   * -`#query`- This is **not yet supported** in the fluent interface
 
 ## Method 2: Command line
@@ -295,7 +296,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
-* 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit))
+* 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit)). Massive.
 * 1.4.0: Can specify delay range using `delay(10..50)` (by [bruce-one](https://github.com/bruce-one))
 * 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))
 * 1.2.0: Added ability to do static files
