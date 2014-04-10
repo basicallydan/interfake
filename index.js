@@ -16,6 +16,7 @@ var opts = {
 
 if (program.debug) {
 	opts.debug = true;
+	console.log('Debugging is ON');
 }
 
 var interfake = new Interfake(opts);
@@ -24,4 +25,4 @@ if (program.file) {
 	interfake.loadFile(program.file);
 }
 
-interfake.listen(program.port);
+interfake.listen(program.port, function () { console.log('Listening'); });
