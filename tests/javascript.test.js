@@ -492,6 +492,60 @@ describe('Interfake JavaScript API', function () {
 				done();
 			});
 		});
+
+		describe('#query()', function () {
+			describe('#status()', function () {
+				it('should create a GET endpoint which accepts different querystrings using both methods of querystring specification', function (done) {
+					interfake.get('/fluent?query=1').query({ page: 1 }).status(400);
+					interfake.get('/fluent?query=1').query({ page: 2 }).status(500);
+					interfake.listen(3000);
+
+
+					Q.all([get({url:'http://localhost:3000/fluent?query=1&page=1',json:true}), get({url:'http://localhost:3000/fluent?query=1&page=2',json:true})])
+						.then(function (results) {
+							assert.equal(results[0][0].statusCode, 400);
+							assert.equal(results[1][0].statusCode, 500);
+							done();
+						});
+				});
+
+				it('should create a GET endpoint which accepts and does not accept a query string', function (done) {
+					interfake.get('/fluent');
+					interfake.get('/fluent').query({ page: 2 }).status(500);
+					interfake.listen(3000);
+
+
+					Q.all([get({url:'http://localhost:3000/fluent',json:true}), get({url:'http://localhost:3000/fluent?page=2',json:true})])
+						.then(function (results) {
+							assert.equal(results[0][0].statusCode, 200);
+							assert.equal(results[1][0].statusCode, 500);
+							done();
+						});
+				});
+			});
+
+			describe('#creates', function () {
+				it('should create a GET endpoint which creates another GET endpoint which accepts a query string', function (done) {
+					// interfake = new Interfake({debug:true});
+					interfake.get('/fluent').creates.get('/fluent').query({ page : 2 }).status(300);
+					interfake.listen(3000);
+
+					get('http://localhost:3000/fluent')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent?page=2');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 300);
+							return get('http://localhost:3000/fluent');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							done();
+						});
+				});
+			});
+		});
 	
 		describe('#status()', function () {
 			it('should create one GET endpoint with a particular status code', function (done) {
@@ -504,7 +558,7 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 
-			it('should create two similar GET endpoints with different querystrings and different statuses', function (done) {
+			it('should create a GET endpoint which accepts different querystrings', function (done) {
 				interfake.get('/fluent?query=1').status(400);
 				interfake.get('/fluent?query=2').status(500);
 				interfake.listen(3000);
@@ -709,6 +763,7 @@ describe('Interfake JavaScript API', function () {
 					done();
 				});
 			});
+
 			it('should create one POST endpoint with a delay range', function (done) {
 				var enoughTimeHasPassed = false;
 				var _this = this;
@@ -739,7 +794,7 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 		
-		describe('#then', function () {
+		describe('#creates', function () {
 			describe('#get()', function () {
 				it('should create one POST endpoint with a particular body and afterResponse endpoint', function (done) {
 					interfake.post('/fluent').creates.get('/fluent/1');
@@ -849,7 +904,7 @@ describe('Interfake JavaScript API', function () {
 					});
 				});
 
-				describe('#then()', function () {
+				describe('#creates', function () {
 					it('should create a post-response GET with another post-response GET', function (done) {
 						interfake.post('/fluent').creates.get('/fluent/1').creates.get('/fluent/2');
 						interfake.listen(3000);
