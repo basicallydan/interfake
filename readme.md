@@ -162,7 +162,6 @@ interfake.listen(3000); // The server will listen on port 3000
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
-  * -`#query`- This is **not yet supported** in the fluent interface
 
 ## Method 2: Command line
 
@@ -334,6 +333,7 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 [Dan Hough](https://github.com/basicallydan) ([Twitter](https://twitter.com/basicallydan) | [Website](http://danielhough.co.uk))
 [bruce-one](https://github.com/bruce-one)
+[rajit](https://github.com/rajit)
 
 ## Future work
 
