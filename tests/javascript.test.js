@@ -398,6 +398,16 @@ describe('Interfake JavaScript API', function () {
 				done();
 			});
 		});
+
+		it('should create one GET endpoint with a querystring', function (done) {
+			interfake.get('/fluent?query=1');
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/fluent?query=1', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
 	
 		describe('#status()', function () {
 			it('should create one GET endpoint with a particular status code', function (done) {
@@ -408,6 +418,20 @@ describe('Interfake JavaScript API', function () {
 					assert.equal(response.statusCode, 300);
 					done();
 				});
+			});
+
+			it('should create two similar GET endpoints with different querystrings and different statuses', function (done) {
+				interfake.get('/fluent?query=1').status(400);
+				interfake.get('/fluent?query=2').status(500);
+				interfake.listen(3000);
+
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 400);
+						assert.equal(results[1][0].statusCode, 500);
+						done();
+					});
 			});
 		});
 		
@@ -422,6 +446,20 @@ describe('Interfake JavaScript API', function () {
 					done();
 				});
 			});
+
+			it('should create two similar GET endpoints with different querystrings and different bodies', function (done) {
+				interfake.get('/fluent?query=1').body({ schfifty : 'five' });
+				interfake.get('/fluent?query=2').body({ gimme : 'shelter' });
+				interfake.listen(3000);
+
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][1].schfifty, 'five');
+						assert.equal(results[1][1].gimme, 'shelter');
+						done();
+					});
+			});
 		
 			describe('#status()', function () {
 				it('should create one GET endpoint with a particular body and particular status', function (done) {
@@ -434,16 +472,33 @@ describe('Interfake JavaScript API', function () {
 						done();
 					});
 				});
+
+				it('should create two similar GET endpoints with different querystrings and different bodies and status codes', function (done) {
+					interfake.get('/fluent?query=1&another=one').body({ schfifty : 'five' }).status(404);
+					interfake.get('/fluent?query=2').body({ gimme : 'shelter' }).status(503);
+					interfake.listen(3000);
+
+
+					Q.all([get({url:'http://localhost:3000/fluent?query=1&another=one',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+						.then(function (results) {
+							assert.equal(results[0][1].schfifty, 'five');
+							assert.equal(results[0][0].statusCode, 404);
+							assert.equal(results[1][1].gimme, 'shelter');
+							assert.equal(results[1][0].statusCode, 503);
+							done();
+						});
+				});
+
 				describe('#delay()', function() {
 					it('should create one GET endpoint with a particular body, status and delay', function (done) {
 						var enoughTimeHasPassed = false;
 						var _this = this;
-						this.slow(500)
+						this.slow(500);
 						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
 						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
-						}, 50)
+						}, 50);
 
 						request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 							assert.equal(response.statusCode, 300);
@@ -461,12 +516,12 @@ describe('Interfake JavaScript API', function () {
 			it('should create one GET endpoint with a particular delay', function (done) {
 				var enoughTimeHasPassed = false;
 				var _this = this;
-				this.slow(500)
+				this.slow(500);
 				interfake.get('/fluent').delay(50);
 				interfake.listen(3000);
 				setTimeout(function() {
 					enoughTimeHasPassed = true;
-				}, 50)
+				}, 50);
 
 				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 					if(!enoughTimeHasPassed) {
@@ -528,12 +583,12 @@ describe('Interfake JavaScript API', function () {
 					it('should create one POST endpoint with a particular body, status and delay', function (done) {
 						var enoughTimeHasPassed = false;
 						var _this = this;
-						this.slow(500)
+						this.slow(500);
 						interfake.post('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
 						interfake.listen(3000);
 						setTimeout(function() {
 							enoughTimeHasPassed = true;
-						}, 50)
+						}, 50);
 
 						request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
 							assert.equal(response.statusCode, 300);
