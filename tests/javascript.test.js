@@ -1,3 +1,4 @@
+/* globals describe, beforeEach, afterEach, it */
 var assert = require('assert');
 var request = require('request');
 var Q = require('q');
@@ -9,6 +10,7 @@ request.defaults({
 var get = Q.denodeify(request.get);
 var post = Q.denodeify(request.post);
 var put = Q.denodeify(request.put);
+var del = Q.denodeify(request.del);
 
 // The thing we're testing
 var Interfake = require('..');
@@ -437,7 +439,7 @@ describe('Interfake JavaScript API', function () {
 			var _this = this;
 			var timeout;
 			var tookTooLong = false;
-			this.slow(500)
+			this.slow(500);
 			interfake.createRoute({
 				request: {
 					url: '/test',
@@ -526,7 +528,6 @@ describe('Interfake JavaScript API', function () {
 
 			describe('#creates', function () {
 				it('should create a GET endpoint which creates another GET endpoint which accepts a query string', function (done) {
-					// interfake = new Interfake({debug:true});
 					interfake.get('/fluent').creates.get('/fluent').query({ page : 2 }).status(300);
 					interfake.listen(3000);
 
@@ -838,6 +839,86 @@ describe('Interfake JavaScript API', function () {
 							assert.equal(results[0].statusCode, 200);
 							done();
 						});
+				});
+
+				it('should create one POST endpoint with two afterResponse endpoints which accept querystrings', function (done) {
+					var postEndpoint = interfake.post('/fluent');
+					postEndpoint.creates.get('/fluent?q=1');
+					postEndpoint.creates.put('/fluent?q=1');
+					interfake.listen(3000);
+
+					get('http://localhost:3000/fluent?q=1')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 404);
+							return post('http://localhost:3000/fluent');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent?q=1');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return put('http://localhost:3000/fluent?q=1');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							done();
+						});
+				});
+
+				describe('#query()', function () {
+					it('should create multiple post-response GET endpoints which accept querystrings and also create endpoints (CRUD)', function (done) {
+						// CREATE
+						var postEndpoint = interfake.post('/fluent').status(201);
+						// READ
+						postEndpoint.creates.get('/fluent?q=1').status(200).body({ title : 'Hello!' });
+						// UPDATE
+						var putEndpoint = postEndpoint.creates.put('/fluent?q=1').status(200).body({ title : 'Hello again!' });
+						putEndpoint.creates.get('/fluent?q=1').status(200).body({ title : 'Hello again!' });
+						// DELETE
+						var deleteEndpoint = postEndpoint.creates.delete('/fluent?q=1').status(200);
+						deleteEndpoint.creates.get('/fluent?q=1').status(410);
+						deleteEndpoint.creates.put('/fluent?q=1').status(410);
+						interfake.listen(3000);
+
+						get('http://localhost:3000/fluent?q=1')
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 404, 'The GET should not exist yet');
+								return post('http://localhost:3000/fluent');
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 201, 'The POST should report creation');
+								return get({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200, 'The GET should now exist');
+								assert.equal(results[1].title, 'Hello!');
+								return put({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200, 'The PUT should have sucessfully updated');
+								assert.equal(results[1].title, 'Hello again!');
+								return get({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200, 'The GET should still exist');
+								assert.equal(results[1].title, 'Hello again!');
+								return del({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 200, 'The DELETE should report successful deletion');
+								return get({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 410, 'The GET should no longer exist');
+								return put({url: 'http://localhost:3000/fluent?q=1', json: true});
+							})
+							.then(function (results) {
+								assert.equal(results[0].statusCode, 410, 'The PUT should no longer exist');
+								done();
+							})
+							.fail(done);
+					});
 				});
 
 				describe('#status()', function () {
