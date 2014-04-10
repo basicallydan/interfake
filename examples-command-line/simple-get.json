@@ -13,6 +13,9 @@
 					"Jake"
 				],
 				"location": "ooo"
+			},
+			"headers": {
+				"X-Powered-By": "Interfake"
 			}
 		}
 	}

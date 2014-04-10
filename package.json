@@ -1,14 +1,14 @@
 {
   "name": "interfake",
   "preferGlobal": true,
-  "version": "1.5.1",
+  "version": "1.6.0",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
   "description": "A simple way to create dummy APIs",
   "contributors": [
     {
       "name": "Daniel Hough",
       "email": "daniel.hough@gmail.com",
-      "url": "https://danielhough.co.uk"
+      "url": "https://danhough.com"
     },
     {
       "name": "rajit",
@@ -17,6 +17,10 @@
     {
       "name": "bruce-one",
       "url": "https://github.com/bruce-one"
+    },
+    {
+      "name": "Sebastian Schürmann",
+      "url": "https://github.com/sebs"
     }
   ],
   "scripts": {
@@ -49,7 +53,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=0.6"
+    "node": ">=0.8.6"
   },
   "main": "./lib/server.js",
   "bin": "./index.js",

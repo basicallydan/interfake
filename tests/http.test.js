@@ -1,3 +1,4 @@
+/* globals describe, beforeEach, afterEach, it */
 var assert = require('assert');
 var request = require('request');
 var Q = require('q');

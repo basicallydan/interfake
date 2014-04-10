@@ -98,7 +98,7 @@ curl http://localhost:3000/items/1 -X GET
 */
 ```
 
-For JavaScript developers
+There's more options, though, including delays, custom response headers, and handling query string parameters.
 
 ---
 
@@ -134,6 +134,9 @@ interfake.createRoute({
 		delay: 50, // Delay in milliseconds
 		body: { // JSON Body Response
 			next:'more stuff'
+		},
+		headers: { // Optional headers
+			'X-Powered-By': 'Interfake'
 		}
 	}
 });
@@ -161,6 +164,7 @@ interfake.listen(3000); // The server will listen on port 3000
   * `#body(body)`: Set the JSON response body of the end point
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
+  * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
   * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
 
 ## Method 2: Command line
@@ -295,6 +299,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.6.0: Custom response headers (thanks to [Sebastian Schürmann](https://github.com/sebs)).
 * 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit)). Massive.
 * 1.4.0: Can specify delay range using `delay(10..50)` (by [bruce-one](https://github.com/bruce-one))
 * 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))

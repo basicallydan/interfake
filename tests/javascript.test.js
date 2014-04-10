@@ -47,6 +47,34 @@ describe('Interfake JavaScript API', function () {
 				done();
 			});
 		});
+		it('should create one GET endpoint which returns custom headers', function (done) {
+			interfake.createRoute({
+				request: {
+					url: '/test',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					body: {
+						hi: 'there'
+					},
+					headers: {
+						'X-Request-Type': 'test',
+						'X-lol-TEST': 'bleep'
+					}
+				}
+			});
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				assert.equal(response.headers['x-request-type'], 'test');
+				assert.equal(response.headers['x-lol-test'], 'bleep');
+				assert.equal(response.headers['x-undef'], undefined);
+				assert.equal(body.hi, 'there');
+				done();
+			});
+		});
 
 		it('should create a GET endpoint that accepts a query parameter', function (done) {
 			// interfake = new Interfake();
@@ -492,6 +520,21 @@ describe('Interfake JavaScript API', function () {
 			request({ url : 'http://localhost:3000/fluent?query=1', json : true }, function (error, response, body) {
 				assert.equal(response.statusCode, 200);
 				done();
+			});
+		});
+
+		describe('#headers()', function (done) {
+			it('should create one GET endpoint which returns custom headers', function (done) {
+				interfake.get('/fluent').responseHeaders({ 'X-Request-Type': 'test', 'X-lol-TEST': 'bleep' });
+				interfake.listen(3000);
+
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['x-request-type'], 'test');
+					assert.equal(response.headers['x-lol-test'], 'bleep');
+					assert.equal(response.headers['x-undef'], undefined);
+					done();
+				});
 			});
 		});
 
