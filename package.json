@@ -46,7 +46,7 @@
     "url": "git@github.com:basicallydan/interfake.git"
   },
   "dependencies": {
-    "express": "^3.4.8",
+    "express": "*",
     "commander": "2.1.0",
     "core-util-is": "^1.0.1",
     "merge": "^1.1.2"
