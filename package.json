@@ -46,10 +46,12 @@
     "url": "git@github.com:basicallydan/interfake.git"
   },
   "dependencies": {
-    "express": "*",
+    "express": "4.0.0",
     "commander": "2.1.0",
     "core-util-is": "^1.0.1",
-    "merge": "^1.1.2"
+    "merge": "^1.1.2",
+    "connect-json": "0.0.0",
+    "body-parser": "~1.0.2"
   },
   "license": "MIT",
   "engines": {
