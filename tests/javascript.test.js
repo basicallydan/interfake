@@ -25,6 +25,11 @@ describe('Interfake JavaScript API', function () {
 			interfake.stop();
 		}
 	});
+	describe('#listen', function() {
+		it('should should support a callback', function(done){
+			interfake.listen(3000, done);
+		});
+	});
 	describe('#createRoute()', function () {
 		it('should create one GET endpoint', function (done) {
 			interfake.createRoute({
