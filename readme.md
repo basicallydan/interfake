@@ -152,7 +152,7 @@ interfake.listen(3000); // The server will listen on port 3000
   * `request`
   * `response`
   * `afterResponse` (optional)
-* `#listen(port)`: Takes a port and starts the server
+* `#listen(port, callback)`: Takes a port and starts the server, and a callback which executes when the server is running
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
 
@@ -299,6 +299,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.6.2: Can add a callback to `listen` so that you know when the server has started (by [bruce-one](https://github.com/bruce-one))
 * 1.6.1: Upgraded to Express 4.0.0 (thanks to [Sebastian Schürmann](https://github.com/sebs)).
 * 1.6.0: Custom response headers (thanks to [Sebastian Schürmann](https://github.com/sebs)).
 * 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit)). Massive.
