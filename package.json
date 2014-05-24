@@ -51,7 +51,8 @@
     "core-util-is": "^1.0.1",
     "merge": "^1.1.2",
     "connect-json": "0.0.0",
-    "body-parser": "~1.0.2"
+    "body-parser": "~1.0.2",
+    "pegjs": "^0.8.0"
   },
   "license": "MIT",
   "engines": {
