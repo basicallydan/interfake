@@ -155,6 +155,7 @@ interfake.listen(3000); // The server will listen on port 3000
 * `#listen(port, callback)`: Takes a port and starts the server, and a callback which executes when the server is running
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
+* `#setAPIRoot(path)`: Set the root path of the API. E.g. if you use `/api` then a route created at `/users` will be accessible at `/api/users`
 
 #### Fluent Interface
 

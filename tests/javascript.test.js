@@ -505,6 +505,20 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 	});
+
+	// Testing the API root stuff
+	describe('#setAPIRoot()', function () {
+		it('should set the root path of the API', function (done) {
+			interfake.setAPIRoot('/api');
+			interfake.get('/endpoint').status(200);
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/api/endpoint', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
+	});
 	
 	// Testing the fluent interface
 	describe('#get()', function () {
