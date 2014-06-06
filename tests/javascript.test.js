@@ -507,16 +507,26 @@ describe('Interfake JavaScript API', function () {
 	});
 
 	// Testing the API root stuff
-	describe('#setAPIRoot()', function () {
+	describe('#Interfake({ path: [String] })', function () {
 		it('should set the root path of the API', function (done) {
-			interfake.setAPIRoot('/api');
-			interfake.get('/endpoint').status(200);
+			interfake = new Interfake({path:'/api'});
+			interfake.get('/endpoint').status(200).creates.get('/moar-endpoints');
 			interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/api/endpoint', json : true }, function (error, response, body) {
-				assert.equal(response.statusCode, 200);
-				done();
-			});
+			Q.all([get({url:'http://localhost:3000/api/endpoint',json:true}), get({url:'http://localhost:3000/endpoint',json:true})])
+				.then(function (results) {
+					assert.equal(results[0][0].statusCode, 200);
+					assert.equal(results[1][0].statusCode, 404);
+					return get('http://localhost:3000/api/endpoint');
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					return get('http://localhost:3000/api/moar-endpoints');
+				})
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					done();
+				});
 		});
 	});
 	

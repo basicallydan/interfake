@@ -148,6 +148,7 @@ interfake.listen(3000); // The server will listen on port 3000
 
 * `new Interfake(options)`: creates an Interfake object. Options are:
   * `debug`: If `true`, outputs lots of annoying but helpful log messages. Default is `false`.
+  * `path`: Sets the API root path. E.g. if `api` is used then the route at `/users` will be accessible at `/api/path`
 * `#createRoute(route)`: Takes a JSON object with the following:
   * `request`
   * `response`
@@ -155,7 +156,6 @@ interfake.listen(3000); // The server will listen on port 3000
 * `#listen(port, callback)`: Takes a port and starts the server, and a callback which executes when the server is running
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
-* `#setAPIRoot(path)`: Set the root path of the API. E.g. if you use `/api` then a route created at `/users` will be accessible at `/api/users`
 
 #### Fluent Interface
 
@@ -300,6 +300,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.7.1: Added ability to set a root path for the API only (skipped 1.7.0 which was a bit broken)
 * 1.6.2: Can add a callback to `listen` so that you know when the server has started (by [bruce-one](https://github.com/bruce-one))
 * 1.6.1: Upgraded to Express 4.0.0 (thanks to [Sebastian Schürmann](https://github.com/sebs)).
 * 1.6.0: Custom response headers (thanks to [Sebastian Schürmann](https://github.com/sebs)).
