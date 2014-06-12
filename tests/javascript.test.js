@@ -580,6 +580,48 @@ describe('Interfake JavaScript API', function () {
 					});
 			});
 
+			it('should use a RegExp to find a partially-matched query string param', function (done) {
+				interfake.get('/fluent').query({ query: /[0-9]+/ }).status(200);
+				interfake.listen(3000);
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 200);
+						assert.equal(results[1][0].statusCode, 200);
+						done();
+					});
+			});
+
+			it('should use a RegExp to find a partially-matched query string param and a fully-matched one', function (done) {
+				// interfake = new Interfake({debug:true});
+				interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
+				interfake.listen(3000);
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
+						assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
+						done();
+					});
+			});
+
+			it('should use a RegExp to find a partially-matched query string param and a fully-matched one, when there is also a query-free endpoint', function (done) {
+				// interfake = new Interfake({debug:true});
+				interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
+				interfake.get('/fluent').status(300);
+				interfake.get('/fluent?page=8').status(512);
+				interfake.listen(3000);
+
+				Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true}), get({url:'http://localhost:3000/fluent',json:true}), get({url:'http://localhost:3000/fluent?page=8',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
+						assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
+						assert.equal(results[2][0].statusCode, 300, 'The non-query-string page should be found');
+						assert.equal(results[3][0].statusCode, 512, 'The query-string page without additional params should be found');
+						done();
+					});
+			});
+
 			describe('#status()', function () {
 				it('should create a GET endpoint which accepts different querystrings using both methods of querystring specification', function (done) {
 					interfake.get('/fluent?query=1').query({ page: 1 }).status(400);
@@ -622,6 +664,30 @@ describe('Interfake JavaScript API', function () {
 						})
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 300);
+							return get('http://localhost:3000/fluent');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							done();
+						});
+				});
+				it('should create a GET endpoint which creates another GET endpoint which accepts a query string with a regex', function (done) {
+					var first = interfake.get('/fluent');
+					first.creates.get('/fluent').query({ page : 2 }).status(300);
+					first.creates.get('/fluent').query({ page : 2, name : /[a-z]+/ }).status(202);
+					interfake.listen(3000);
+
+					get('http://localhost:3000/fluent')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent?page=2');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 300);
+							return get('http://localhost:3000/fluent?page=2&name=whatever');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 202);
 							return get('http://localhost:3000/fluent');
 						})
 						.then(function (results) {
