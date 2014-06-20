@@ -300,11 +300,13 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.8.0: Querystring parameter values can now be regular expressions
+* 1.7.2: Fixed a bug where `.delay()` was not allowing chaining
 * 1.7.1: Added ability to set a root path for the API only (skipped 1.7.0 which was a bit broken)
 * 1.6.2: Can add a callback to `listen` so that you know when the server has started (by [bruce-one](https://github.com/bruce-one))
 * 1.6.1: Upgraded to Express 4.0.0 (thanks to [Sebastian Schürmann](https://github.com/sebs)).
 * 1.6.0: Custom response headers (thanks to [Sebastian Schürmann](https://github.com/sebs)).
-* 1.5.0: Can now use query strings (thanks to [rajit](https://github.com/rajit)). Massive.
+* 1.5.0: Can now use querystring params (thanks to [rajit](https://github.com/rajit)). Massive.
 * 1.4.0: Can specify delay range using `delay(10..50)` (by [bruce-one](https://github.com/bruce-one))
 * 1.3.0: Can mimic slow responses using `delay()` (by [bruce-one](https://github.com/bruce-one))
 * 1.2.0: Added ability to do static files
