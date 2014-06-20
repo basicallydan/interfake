@@ -738,7 +738,6 @@ describe('Interfake JavaScript API', function () {
 		describe('#delay()', function() {
 			it('should create one GET endpoint with a particular delay', function (done) {
 				var enoughTimeHasPassed = false;
-				var _this = this;
 				this.slow(500);
 				interfake.get('/fluent').delay(50);
 				interfake.listen(3000);
@@ -746,11 +745,33 @@ describe('Interfake JavaScript API', function () {
 					enoughTimeHasPassed = true;
 				}, 50);
 
-				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				request({ url : 'http://localhost:3000/fluent', json : true }, function () {
 					if(!enoughTimeHasPassed) {
 						throw new Error('Response wasn\'t delay for long enough');
 					}
 					done();
+				});
+			});
+
+			describe('#body()', function() {
+				it('should create one GET endpoint with a particular delay and body', function (done) {
+					var enoughTimeHasPassed = false;
+					this.slow(500);
+					interfake.get('/fluent').delay(50).body({
+						ok: 'yeah'
+					});
+					interfake.listen(3000);
+					setTimeout(function() {
+						enoughTimeHasPassed = true;
+					}, 50);
+
+					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+						if(!enoughTimeHasPassed) {
+							throw new Error('Response wasn\'t delay for long enough');
+						}
+						assert.equal(body.ok, 'yeah');
+						done();
+					});
 				});
 			});
 		});
