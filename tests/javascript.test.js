@@ -552,17 +552,32 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		describe('#headers()', function (done) {
+		describe('#responseHeaders()', function () {
 			it('should create one GET endpoint which returns custom headers', function (done) {
 				interfake.get('/fluent').responseHeaders({ 'X-Request-Type': 'test', 'X-lol-TEST': 'bleep' });
 				interfake.listen(3000);
 
-				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response) {
 					assert.equal(response.statusCode, 200);
 					assert.equal(response.headers['x-request-type'], 'test');
 					assert.equal(response.headers['x-lol-test'], 'bleep');
 					assert.equal(response.headers['x-undef'], undefined);
 					done();
+				});
+			});
+
+			describe('#status()', function () {
+				it('should return a 300 status', function (done) {
+					interfake.get('/fluent').responseHeaders({ 'X-Request-Type': 'test', 'X-lol-TEST': 'bleep' }).status(300);
+					interfake.listen(3000);
+
+					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response) {
+						assert.equal(response.statusCode, 300);
+						assert.equal(response.headers['x-request-type'], 'test');
+						assert.equal(response.headers['x-lol-test'], 'bleep');
+						assert.equal(response.headers['x-undef'], undefined);
+						done();
+					});
 				});
 			});
 		});
