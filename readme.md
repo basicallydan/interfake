@@ -300,6 +300,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.8.1: Bug fix for responseheaders
 * 1.8.0: Querystring parameter values can now be regular expressions
 * 1.7.2: Fixed a bug where `.delay()` was not allowing chaining
 * 1.7.1: Added ability to set a root path for the API only (skipped 1.7.0 which was a bit broken)
