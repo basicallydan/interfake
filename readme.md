@@ -352,4 +352,3 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 * Create a guide/some examples for how to integrate this with existing test frameworks, whether written in JavaScript or not
 * Improve the templating, so that a response might include a repeated structure with an incrementing counter or randomized data
-* Allow custom headers to be set
