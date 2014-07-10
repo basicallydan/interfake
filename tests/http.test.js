@@ -17,7 +17,7 @@ var Interfake = require('..');
 describe('Interfake HTTP API', function () {
 	describe('POST /_request', function () {
 		it('should create one GET endpoint', function (done) {
-			var interfake = new Interfake();
+			var interfake = new Interfake(/*{debug:true}*/);
 			interfake.listen(4000);
 
 			var endpoint = {
