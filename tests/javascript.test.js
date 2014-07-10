@@ -712,6 +712,29 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 		});
+
+		describe('#modifies', function () {
+			it('should create a GET endpoint which modifies its own body when it gets called', function (done) {
+				interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
+				interfake.listen(3000);
+
+				get('http://localhost:3000/fluent')
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].hello, 'there');
+						assert.equal(results[1].goodbye, 'for now');
+						assert.equal(results[2].what, undefined);
+						return get('http://localhost:3000/fluent');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].hello, 'there');
+						assert.equal(results[1].goodbye, 'for now');
+						assert.equal(results[2].what, 'ever');
+						done();
+					});
+			});
+		});
 	
 		describe('#status()', function () {
 			it('should create one GET endpoint with a particular status code', function (done) {
