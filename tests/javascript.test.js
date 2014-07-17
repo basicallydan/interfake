@@ -18,7 +18,7 @@ var interfake;
 
 describe('Interfake JavaScript API', function () {
 	beforeEach(function () {
-		interfake = new Interfake();
+		interfake = new Interfake(/*{debug:true}*/);
 	});
 	afterEach(function () {
 		if (interfake) {
@@ -152,6 +152,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint with a querystring in the url with different responses', function () {
+			// interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
@@ -191,6 +192,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint accepting query parameters using the url and options', function () {
+			// interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
