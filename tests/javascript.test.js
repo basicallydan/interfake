@@ -18,7 +18,7 @@ var interfake;
 
 describe('Interfake JavaScript API', function () {
 	beforeEach(function () {
-		interfake = new Interfake(/*{debug:true}*/);
+		interfake = new Interfake();
 	});
 	afterEach(function () {
 		if (interfake) {
@@ -109,7 +109,6 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint accepting query parameters with different responses', function () {
-			// interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter',
@@ -152,7 +151,6 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint with a querystring in the url with different responses', function () {
-			// interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
@@ -192,7 +190,6 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint accepting query parameters using the url and options', function () {
-			// interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
@@ -289,7 +286,6 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create a dynamic endpoint', function (done) {
-			interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/dynamic',
@@ -600,47 +596,45 @@ describe('Interfake JavaScript API', function () {
 					});
 			});
 
-			// it('should use a RegExp to find a partially-matched query string param', function (done) {
-			// 	interfake.get('/fluent').query({ query: /[0-9]+/ }).status(200);
-			// 	interfake.listen(3000);
+			it('should use a RegExp to find a partially-matched query string param', function (done) {
+				interfake.get('/fluent').query({ query: /[0-9]+/ }).status(200);
+				interfake.listen(3000);
 
-			// 	Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
-			// 		.then(function (results) {
-			// 			assert.equal(results[0][0].statusCode, 200);
-			// 			assert.equal(results[1][0].statusCode, 200);
-			// 			done();
-			// 		});
-			// });
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 200);
+						assert.equal(results[1][0].statusCode, 200);
+						done();
+					});
+			});
 
-			// it('should use a RegExp to find a partially-matched query string param and a fully-matched one', function (done) {
-			// 	// interfake = new Interfake({debug:true});
-			// 	interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
-			// 	interfake.listen(3000);
+			it('should use a RegExp to find a partially-matched query string param and a fully-matched one', function (done) {
+				interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
+				interfake.listen(3000);
 
-			// 	Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true})])
-			// 		.then(function (results) {
-			// 			assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
-			// 			assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
-			// 			done();
-			// 		});
-			// });
+				Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
+						assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
+						done();
+					});
+			});
 
-			// it('should use a RegExp to find a partially-matched query string param and a fully-matched one, when there is also a query-free endpoint', function (done) {
-			// 	// interfake = new Interfake({debug:true});
-			// 	interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
-			// 	interfake.get('/fluent').status(300);
-			// 	interfake.get('/fluent?page=8').status(512);
-			// 	interfake.listen(3000);
+			it('should use a RegExp to find a partially-matched query string param and a fully-matched one, when there is also a query-free endpoint', function (done) {
+				interfake.get('/fluent').query({ query: /[0-9]+/, page: 2 }).status(200);
+				interfake.get('/fluent').status(300);
+				interfake.get('/fluent?page=8').status(512);
+				interfake.listen(3000);
 
-			// 	Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true}), get({url:'http://localhost:3000/fluent',json:true}), get({url:'http://localhost:3000/fluent?page=8',json:true})])
-			// 		.then(function (results) {
-			// 			assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
-			// 			assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
-			// 			assert.equal(results[2][0].statusCode, 300, 'The non-query-string page should be found');
-			// 			assert.equal(results[3][0].statusCode, 512, 'The query-string page without additional params should be found');
-			// 			done();
-			// 		});
-			// });
+				Q.all([get({url:'http://localhost:3000/fluent?query=1&page=5',json:true}), get({url:'http://localhost:3000/fluent?query=2&page=2',json:true}), get({url:'http://localhost:3000/fluent',json:true}), get({url:'http://localhost:3000/fluent?page=8',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 404, 'The non-existent page should not be found');
+						assert.equal(results[1][0].statusCode, 200, 'The existing page should be found');
+						assert.equal(results[2][0].statusCode, 300, 'The non-query-string page should be found');
+						assert.equal(results[3][0].statusCode, 512, 'The query-string page without additional params should be found');
+						done();
+					});
+			});
 
 			describe('#status()', function () {
 				it('should create a GET endpoint which accepts different querystrings using both methods of querystring specification', function (done) {
@@ -658,7 +652,6 @@ describe('Interfake JavaScript API', function () {
 				});
 
 				it('should create a GET endpoint which accepts and does not accept a query string', function (done) {
-					interfake = new Interfake({debug:true});
 					interfake.get('/fluent');
 					interfake.get('/fluent').query({ page: 2 }).status(500);
 					interfake.listen(3000);
@@ -744,149 +737,149 @@ describe('Interfake JavaScript API', function () {
 		// 	});
 		// });
 	
-		// describe('#status()', function () {
-		// 	it('should create one GET endpoint with a particular status code', function (done) {
-		// 		interfake.get('/fluent').status(300);
-		// 		interfake.listen(3000);
+		describe('#status()', function () {
+			it('should create one GET endpoint with a particular status code', function (done) {
+				interfake.get('/fluent').status(300);
+				interfake.listen(3000);
 
-		// 		request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-		// 			assert.equal(response.statusCode, 300);
-		// 			done();
-		// 		});
-		// 	});
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 300);
+					done();
+				});
+			});
 
-		// 	it('should create a GET endpoint which accepts different querystrings', function (done) {
-		// 		interfake.get('/fluent?query=1').status(400);
-		// 		interfake.get('/fluent?query=2').status(500);
-		// 		interfake.listen(3000);
+			it('should create a GET endpoint which accepts different querystrings', function (done) {
+				interfake.get('/fluent?query=1').status(400);
+				interfake.get('/fluent?query=2').status(500);
+				interfake.listen(3000);
 
 
-		// 		Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
-		// 			.then(function (results) {
-		// 				assert.equal(results[0][0].statusCode, 400);
-		// 				assert.equal(results[1][0].statusCode, 500);
-		// 				done();
-		// 			});
-		// 	});
-		// });
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][0].statusCode, 400);
+						assert.equal(results[1][0].statusCode, 500);
+						done();
+					});
+			});
+		});
 		
-		// describe('#body()', function () {
-		// 	it('should create one GET endpoint with a particular body', function (done) {
-		// 		interfake.get('/fluent').body({ fluency : 'isgreat' });
-		// 		interfake.listen(3000);
+		describe('#body()', function () {
+			it('should create one GET endpoint with a particular body', function (done) {
+				interfake.get('/fluent').body({ fluency : 'isgreat' });
+				interfake.listen(3000);
 
-		// 		request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-		// 			assert.equal(response.statusCode, 200);
-		// 			assert.equal(body.fluency, 'isgreat');
-		// 			done();
-		// 		});
-		// 	});
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.fluency, 'isgreat');
+					done();
+				});
+			});
 
-		// 	it('should create two similar GET endpoints with different querystrings and different bodies', function (done) {
-		// 		interfake.get('/fluent?query=1').body({ schfifty : 'five' });
-		// 		interfake.get('/fluent?query=2').body({ gimme : 'shelter' });
-		// 		interfake.listen(3000);
+			it('should create two similar GET endpoints with different querystrings and different bodies', function (done) {
+				interfake.get('/fluent?query=1').body({ schfifty : 'five' });
+				interfake.get('/fluent?query=2').body({ gimme : 'shelter' });
+				interfake.listen(3000);
 
 
-		// 		Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
-		// 			.then(function (results) {
-		// 				assert.equal(results[0][1].schfifty, 'five');
-		// 				assert.equal(results[1][1].gimme, 'shelter');
-		// 				done();
-		// 			});
-		// 	});
+				Q.all([get({url:'http://localhost:3000/fluent?query=1',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+					.then(function (results) {
+						assert.equal(results[0][1].schfifty, 'five');
+						assert.equal(results[1][1].gimme, 'shelter');
+						done();
+					});
+			});
 		
-		// 	describe('#status()', function () {
-		// 		it('should create one GET endpoint with a particular body and particular status', function (done) {
-		// 			interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300);
-		// 			interfake.listen(3000);
+			describe('#status()', function () {
+				it('should create one GET endpoint with a particular body and particular status', function (done) {
+					interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300);
+					interfake.listen(3000);
 
-		// 			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-		// 				assert.equal(response.statusCode, 300);
-		// 				assert.equal(body.fluency, 'isgreat');
-		// 				done();
-		// 			});
-		// 		});
+					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+						assert.equal(response.statusCode, 300);
+						assert.equal(body.fluency, 'isgreat');
+						done();
+					});
+				});
 
-		// 		it('should create two similar GET endpoints with different querystrings and different bodies and status codes', function (done) {
-		// 			interfake.get('/fluent?query=1&another=one').body({ schfifty : 'five' }).status(404);
-		// 			interfake.get('/fluent?query=2').body({ gimme : 'shelter' }).status(503);
-		// 			interfake.listen(3000);
+				it('should create two similar GET endpoints with different querystrings and different bodies and status codes', function (done) {
+					interfake.get('/fluent?query=1&another=one').body({ schfifty : 'five' }).status(404);
+					interfake.get('/fluent?query=2').body({ gimme : 'shelter' }).status(503);
+					interfake.listen(3000);
 
 
-		// 			Q.all([get({url:'http://localhost:3000/fluent?query=1&another=one',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
-		// 				.then(function (results) {
-		// 					assert.equal(results[0][1].schfifty, 'five');
-		// 					assert.equal(results[0][0].statusCode, 404);
-		// 					assert.equal(results[1][1].gimme, 'shelter');
-		// 					assert.equal(results[1][0].statusCode, 503);
-		// 					done();
-		// 				});
-		// 		});
+					Q.all([get({url:'http://localhost:3000/fluent?query=1&another=one',json:true}), get({url:'http://localhost:3000/fluent?query=2',json:true})])
+						.then(function (results) {
+							assert.equal(results[0][1].schfifty, 'five');
+							assert.equal(results[0][0].statusCode, 404);
+							assert.equal(results[1][1].gimme, 'shelter');
+							assert.equal(results[1][0].statusCode, 503);
+							done();
+						});
+				});
 
-		// 		describe('#delay()', function() {
-		// 			it('should create one GET endpoint with a particular body, status and delay', function (done) {
-		// 				var enoughTimeHasPassed = false;
-		// 				var _this = this;
-		// 				this.slow(500);
-		// 				interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
-		// 				interfake.listen(3000);
-		// 				setTimeout(function() {
-		// 					enoughTimeHasPassed = true;
-		// 				}, 50);
+				describe('#delay()', function() {
+					it('should create one GET endpoint with a particular body, status and delay', function (done) {
+						var enoughTimeHasPassed = false;
+						var _this = this;
+						this.slow(500);
+						interfake.get('/fluent').body({ fluency : 'isgreat' }).status(300).delay(50);
+						interfake.listen(3000);
+						setTimeout(function() {
+							enoughTimeHasPassed = true;
+						}, 50);
 
-		// 				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-		// 					assert.equal(response.statusCode, 300);
-		// 					assert.equal(body.fluency, 'isgreat');
-		// 					if(!enoughTimeHasPassed) {
-		// 						throw new Error('Response wasn\'t delay for long enough');
-		// 					}
-		// 					done();
-		// 				});
-		// 			});
-		// 		});
-		// 	});
-		// });
-		// describe('#delay()', function() {
-		// 	it('should create one GET endpoint with a particular delay', function (done) {
-		// 		var enoughTimeHasPassed = false;
-		// 		this.slow(500);
-		// 		interfake.get('/fluent').delay(50);
-		// 		interfake.listen(3000);
-		// 		setTimeout(function() {
-		// 			enoughTimeHasPassed = true;
-		// 		}, 50);
+						request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+							assert.equal(response.statusCode, 300);
+							assert.equal(body.fluency, 'isgreat');
+							if(!enoughTimeHasPassed) {
+								throw new Error('Response wasn\'t delay for long enough');
+							}
+							done();
+						});
+					});
+				});
+			});
+		});
+		describe('#delay()', function() {
+			it('should create one GET endpoint with a particular delay', function (done) {
+				var enoughTimeHasPassed = false;
+				this.slow(500);
+				interfake.get('/fluent').delay(50);
+				interfake.listen(3000);
+				setTimeout(function() {
+					enoughTimeHasPassed = true;
+				}, 50);
 
-		// 		request({ url : 'http://localhost:3000/fluent', json : true }, function () {
-		// 			if(!enoughTimeHasPassed) {
-		// 				throw new Error('Response wasn\'t delay for long enough');
-		// 			}
-		// 			done();
-		// 		});
-		// 	});
+				request({ url : 'http://localhost:3000/fluent', json : true }, function () {
+					if(!enoughTimeHasPassed) {
+						throw new Error('Response wasn\'t delay for long enough');
+					}
+					done();
+				});
+			});
 
-		// 	describe('#body()', function() {
-		// 		it('should create one GET endpoint with a particular delay and body', function (done) {
-		// 			var enoughTimeHasPassed = false;
-		// 			this.slow(500);
-		// 			interfake.get('/fluent').delay(50).body({
-		// 				ok: 'yeah'
-		// 			});
-		// 			interfake.listen(3000);
-		// 			setTimeout(function() {
-		// 				enoughTimeHasPassed = true;
-		// 			}, 50);
+			describe('#body()', function() {
+				it('should create one GET endpoint with a particular delay and body', function (done) {
+					var enoughTimeHasPassed = false;
+					this.slow(500);
+					interfake.get('/fluent').delay(50).body({
+						ok: 'yeah'
+					});
+					interfake.listen(3000);
+					setTimeout(function() {
+						enoughTimeHasPassed = true;
+					}, 50);
 
-		// 			request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
-		// 				if(!enoughTimeHasPassed) {
-		// 					throw new Error('Response wasn\'t delay for long enough');
-		// 				}
-		// 				assert.equal(body.ok, 'yeah');
-		// 				done();
-		// 			});
-		// 		});
-		// 	});
-		// });
+					request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+						if(!enoughTimeHasPassed) {
+							throw new Error('Response wasn\'t delay for long enough');
+						}
+						assert.equal(body.ok, 'yeah');
+						done();
+					});
+				});
+			});
+		});
 	});
 
 	describe('#post()', function () {
