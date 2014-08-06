@@ -289,6 +289,7 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		it('should create a dynamic endpoint', function (done) {
+			interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/dynamic',
@@ -327,7 +328,8 @@ describe('Interfake JavaScript API', function () {
 				.then(function (results) {
 					assert.equal(results[0].statusCode, 200);
 					done();
-				});
+				})
+				.done();
 		});
 
 		it('should create a dynamic endpoint within a dynamic endpoint', function (done) {
@@ -688,7 +690,8 @@ describe('Interfake JavaScript API', function () {
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
 							done();
-						});
+						})
+						.done();
 				});
 				it('should create a GET endpoint which creates another GET endpoint which accepts a query string with a regex', function (done) {
 					var first = interfake.get('/fluent');
@@ -712,7 +715,8 @@ describe('Interfake JavaScript API', function () {
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
 							done();
-						});
+						})
+						.done();
 				});
 			});
 		});
