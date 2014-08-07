@@ -720,19 +720,20 @@ describe('Interfake JavaScript API', function () {
 				interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
 				interfake.listen(3000);
 
-				get('http://localhost:3000/fluent')
+				get({url:'http://localhost:3000/fluent',json:true})
 					.then(function (results) {
+						console.log('Results are', results[1]);
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].hello, 'there');
 						assert.equal(results[1].goodbye, 'for now');
-						assert.equal(results[2].what, undefined);
+						assert.equal(results[1].what, undefined);
 						return get('http://localhost:3000/fluent');
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].hello, 'there');
 						assert.equal(results[1].goodbye, 'for now');
-						assert.equal(results[2].what, 'ever');
+						assert.equal(results[1].what, 'ever');
 						done();
 					})
 					.done();
