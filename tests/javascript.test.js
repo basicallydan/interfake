@@ -727,7 +727,7 @@ describe('Interfake JavaScript API', function () {
 						assert.equal(results[1].hello, 'there');
 						assert.equal(results[1].goodbye, 'for now');
 						assert.equal(results[1].what, undefined);
-						return get('http://localhost:3000/fluent');
+						return get({url:'http://localhost:3000/fluent',json:true});
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 200);
