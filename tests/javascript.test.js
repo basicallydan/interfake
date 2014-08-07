@@ -716,7 +716,6 @@ describe('Interfake JavaScript API', function () {
 
 		describe('#modifies', function () {
 			it('should create a GET endpoint which modifies its own body when it gets called', function (done) {
-				interfake = new Interfake({debug:true});
 				interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
 				interfake.listen(3000);
 
@@ -775,7 +774,7 @@ describe('Interfake JavaScript API', function () {
 				interfake.get('/fluent').status(300);
 				interfake.listen(3000);
 
-				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				request({ url : 'http://localhost:3000/fluent', json : true }, function (error, response) {
 					assert.equal(response.statusCode, 300);
 					done();
 				});
