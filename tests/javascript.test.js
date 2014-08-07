@@ -738,6 +738,36 @@ describe('Interfake JavaScript API', function () {
 					})
 					.done();
 			});
+
+			describe('#creates', function () {
+				it('should create a GET endpoint which modifies itself to create a new endpoint next time it is called', function (done) {
+					interfake = new Interfake({debug:true});
+					interfake
+						.get('/fluent')
+						.modifies.get('/fluent')
+						.creates.get('/new-fluent');
+					interfake.listen(3000);
+
+					get({url:'http://localhost:3000/fluent',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get({url:'http://localhost:3000/new-fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 404);
+							return get({url:'http://localhost:3000/fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get({url:'http://localhost:3000/new-fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							done();
+						})
+						.done();
+				});
+			});
 		});
 	
 		describe('#status()', function () {
