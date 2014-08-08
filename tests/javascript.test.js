@@ -766,7 +766,7 @@ describe('Interfake JavaScript API', function () {
 			});
 
 			describe('#delay()', function () {
-				it('should create a GET endpoint which adds a delay when it gets called', function (done) {
+				it('should create a GET endpoint which adds a delay to itself when it gets called', function (done) {
 					var enoughTimeHasPassed;
 					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').delay(50);
 					interfake.listen(3000);
@@ -791,6 +791,44 @@ describe('Interfake JavaScript API', function () {
 							assert.equal(results[1].hello, 'there');
 							assert.equal(results[1].goodbye, 'for now');
 							assert.equal(results[1].what, undefined);
+							done();
+						})
+						.done();
+				});
+
+				it('should create a GET endpoint which adds a delay to a different endpoint when it gets called', function (done) {
+					var enoughTimeHasPassed, tookTooLong;
+					interfake.get('/fluent').modifies.get('/needs-delay').delay(50);
+					interfake.get('/needs-delay');
+					interfake.listen(3000);
+
+					setTimeout(function() {
+						tookTooLong = true;
+					}, 50);
+
+					get({url:'http://localhost:3000/needs-delay',json:true})
+						.then(function (results) {
+							if (tookTooLong) {
+								throws new Error('The response took too long the first time');
+							}
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
+							return get({url:'http://localhost:3000/fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							setTimeout(function() {
+								enoughTimeHasPassed = true;
+							}, 50);
+							return get({url:'http://localhost:3000/needs-delay',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							if(!enoughTimeHasPassed) {
+								throw new Error('Response wasn\'t delay for long enough');
+							}
 							done();
 						})
 						.done();
