@@ -715,58 +715,118 @@ describe('Interfake JavaScript API', function () {
 		});
 
 		describe('#modifies', function () {
-			it('should create a GET endpoint which modifies its own body when it gets called', function (done) {
-				interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
-				interfake.listen(3000);
-
-				get({url:'http://localhost:3000/fluent',json:true})
-					.then(function (results) {
-						console.log('Results are', results[1]);
-						assert.equal(results[0].statusCode, 200);
-						assert.equal(results[1].hello, 'there');
-						assert.equal(results[1].goodbye, 'for now');
-						assert.equal(results[1].what, undefined);
-						return get({url:'http://localhost:3000/fluent',json:true});
-					})
-					.then(function (results) {
-						assert.equal(results[0].statusCode, 200);
-						assert.equal(results[1].hello, 'there');
-						assert.equal(results[1].goodbye, 'for now');
-						assert.equal(results[1].what, 'ever');
-						done();
-					})
-					.done();
-			});
-
-			describe('#creates', function () {
-				it('should create a GET endpoint which modifies itself to create a new endpoint next time it is called', function (done) {
-					interfake = new Interfake({debug:true});
-					interfake
-						.get('/fluent')
-						.modifies.get('/fluent')
-						.creates.get('/new-fluent');
+			describe('#body()', function () {
+				it('should create a GET endpoint which modifies its own body when it gets called', function (done) {
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
 					interfake.listen(3000);
 
 					get({url:'http://localhost:3000/fluent',json:true})
 						.then(function (results) {
+							console.log('Results are', results[1]);
 							assert.equal(results[0].statusCode, 200);
-							return get({url:'http://localhost:3000/new-fluent',json:true});
-						})
-						.then(function (results) {
-							assert.equal(results[0].statusCode, 404);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
 							return get({url:'http://localhost:3000/fluent',json:true});
 						})
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
-							return get({url:'http://localhost:3000/new-fluent',json:true});
-						})
-						.then(function (results) {
-							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, 'ever');
 							done();
 						})
 						.done();
 				});
 			});
+
+			describe('#status()', function () {
+				it('should create a GET endpoint which modifies its own status when it gets called', function (done) {
+					interfake = new Interfake({debug:true});
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').status(401);
+					interfake.listen(3000);
+
+					get({url:'http://localhost:3000/fluent',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
+							return get({url:'http://localhost:3000/fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 401);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
+							done();
+						})
+						.done();
+				});
+			});
+
+			describe('#delay()', function () {
+				it('should create a GET endpoint which adds a delay when it gets called', function (done) {
+					var enoughTimeHasPassed;
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').delay(50);
+					interfake.listen(3000);
+
+					setTimeout(function() {
+						enoughTimeHasPassed = true;
+					}, 50);
+
+					get({url:'http://localhost:3000/fluent',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
+							return get({url:'http://localhost:3000/fluent',json:true});
+						})
+						.then(function (results) {
+							if(!enoughTimeHasPassed) {
+								throw new Error('Response wasn\'t delay for long enough');
+							}
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].hello, 'there');
+							assert.equal(results[1].goodbye, 'for now');
+							assert.equal(results[1].what, undefined);
+							done();
+						})
+						.done();
+				});
+			});
+
+			// TODO: Do this later
+			// describe('#creates', function () {
+			// 	it('should create a GET endpoint which modifies itself to create a new endpoint next time it is called', function (done) {
+			// 		interfake = new Interfake({debug:true});
+			// 		interfake
+			// 			.get('/fluent')
+			// 			.modifies.get('/fluent')
+			// 			.creates.get('/new-fluent');
+			// 		interfake.listen(3000);
+
+			// 		get({url:'http://localhost:3000/fluent',json:true})
+			// 			.then(function (results) {
+			// 				assert.equal(results[0].statusCode, 200);
+			// 				return get({url:'http://localhost:3000/new-fluent',json:true});
+			// 			})
+			// 			.then(function (results) {
+			// 				assert.equal(results[0].statusCode, 404);
+			// 				return get({url:'http://localhost:3000/fluent',json:true});
+			// 			})
+			// 			.then(function (results) {
+			// 				assert.equal(results[0].statusCode, 200);
+			// 				return get({url:'http://localhost:3000/new-fluent',json:true});
+			// 			})
+			// 			.then(function (results) {
+			// 				assert.equal(results[0].statusCode, 200);
+			// 				done();
+			// 			})
+			// 			.done();
+			// 	});
+			// });
 		});
 	
 		describe('#status()', function () {
