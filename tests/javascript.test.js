@@ -850,6 +850,24 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 
+			describe('#query()', function () {
+				it('should create a GET endpoint with a query which modifies its own status', function (done) {
+					interfake.get('/fluent').query({ page : 2 }).status(200).modifies.get('/fluent').query({ page : 2 }).status(300);
+					interfake.listen(3000);
+
+					get('http://localhost:3000/fluent?page=2')
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							return get('http://localhost:3000/fluent?page=2');
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 300);
+							done();
+						})
+						.done();
+				});
+			});
+
 			// TODO: Do this later
 			// describe('#creates', function () {
 			// 	it('should create a GET endpoint which modifies itself to create a new endpoint next time it is called', function (done) {
