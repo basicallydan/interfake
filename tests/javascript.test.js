@@ -742,7 +742,6 @@ describe('Interfake JavaScript API', function () {
 
 			describe('#status()', function () {
 				it('should create a GET endpoint which modifies its own status when it gets called', function (done) {
-					interfake = new Interfake({debug:true});
 					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').status(401);
 					interfake.listen(3000);
 
@@ -806,23 +805,20 @@ describe('Interfake JavaScript API', function () {
 						tookTooLong = true;
 					}, 50);
 
-					get({url:'http://localhost:3000/needs-delay',json:true})
+					get({url:'http://localhost:3000/needs-delay', json:true})
 						.then(function (results) {
-							if (tookTooLong) {
-								throws new Error('The response took too long the first time');
-							}
 							assert.equal(results[0].statusCode, 200);
-							assert.equal(results[1].hello, 'there');
-							assert.equal(results[1].goodbye, 'for now');
-							assert.equal(results[1].what, undefined);
-							return get({url:'http://localhost:3000/fluent',json:true});
+							if (tookTooLong) {
+								throw new Error('The response took too long the first time');
+							}
+							return get({url:'http://localhost:3000/fluent', json:true});
 						})
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
 							setTimeout(function() {
 								enoughTimeHasPassed = true;
 							}, 50);
-							return get({url:'http://localhost:3000/needs-delay',json:true});
+							return get({url:'http://localhost:3000/needs-delay', json:true});
 						})
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
