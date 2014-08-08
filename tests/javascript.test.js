@@ -868,6 +868,100 @@ describe('Interfake JavaScript API', function () {
 				});
 			});
 
+			describe('#creates', function () {
+				describe('#get', function () {
+					it('should produce a useful error when trying to spawn a GET endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').creates.get('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#post', function () {
+					it('should produce a useful error when trying to spawn a POST endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').creates.post('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#put', function () {
+					it('should produce a useful error when trying to spawn a PUT endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').creates.put('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#delete', function () {
+					it('should produce a useful error when trying to spawn a DELETE endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').creates.delete('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+			});
+
+			describe('#modifies', function () {
+				describe('#get', function () {
+					it('should produce a useful error when trying to modify an existing GET endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').modifies.get('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#post', function () {
+					it('should produce a useful error when trying to modify an existing POST endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').modifies.post('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#put', function () {
+					it('should produce a useful error when trying to modify an existing PUT endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').modifies.put('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+				describe('#delete', function () {
+					it('should produce a useful error when trying to modify an existing DELETE endpoint from a modified endpoint', function (done) {
+						assert.throws(function () {
+							interfake.get('/fluent').modifies.get('/fluent').modifies.delete('/error');
+						}, function (err) {
+							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
+							done();
+							return true;
+						});
+					});
+				});
+			});
+
 			// TODO: Do this later
 			// describe('#creates', function () {
 			// 	it('should create a GET endpoint which modifies itself to create a new endpoint next time it is called', function (done) {
