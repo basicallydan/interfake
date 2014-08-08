@@ -722,7 +722,6 @@ describe('Interfake JavaScript API', function () {
 
 					get({url:'http://localhost:3000/fluent',json:true})
 						.then(function (results) {
-							console.log('Results are', results[1]);
 							assert.equal(results[0].statusCode, 200);
 							assert.equal(results[1].hello, 'there');
 							assert.equal(results[1].goodbye, 'for now');
@@ -758,6 +757,26 @@ describe('Interfake JavaScript API', function () {
 							assert.equal(results[1].hello, 'there');
 							assert.equal(results[1].goodbye, 'for now');
 							assert.equal(results[1].what, undefined);
+							done();
+						})
+						.done();
+				});
+			});
+
+			describe('#responseHeaders()', function () {
+				it('should create a GET endpoint which modifies its own response headers when it gets called', function (done) {
+					interfake.get('/fluent').responseHeaders({ 'Awesome-Header' : 'Awesome Value' }).modifies.get('/fluent').responseHeaders({ 'Lame-Header' : 'Lame Value' });
+					interfake.listen(3000);
+
+					get({url:'http://localhost:3000/fluent',json:true})
+						.then(function (results) {
+							assert.equal(results[0].headers['awesome-header'], 'Awesome Value');
+							assert.equal(results[0].headers['lame-header'], undefined);
+							return get({url:'http://localhost:3000/fluent',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].headers['awesome-header'], 'Awesome Value');
+							assert.equal(results[0].headers['lame-header'], 'Lame Value');
 							done();
 						})
 						.done();
