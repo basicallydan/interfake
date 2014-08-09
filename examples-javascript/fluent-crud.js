@@ -11,8 +11,10 @@ var postRequest = interfake.post('/items').status(201);
 postRequest.creates.get('/items').body({ items: [
 	{ id: 1, name: 'Item 1' }
 ]});
+
 // And also create an endpoint for our new item
 postRequest.creates.get('/items/1').body({ id: 1, name: 'Item 1' });
+
 // Also create a PUT request for our new item so we can edit it
 var putRequest = postRequest.creates.put('/items/1').body({ items: [
 	{ id: 1, name: 'Item One' }
@@ -20,11 +22,12 @@ var putRequest = postRequest.creates.put('/items/1').body({ items: [
 var deleteRequest = postRequest.creates.delete('/items/1').status(204);
 
 // But when the put request is hit we need to edit both
-putRequest.creates.get('/items').body({ items: [
-	{ id: 1, name: 'Item One' }
-]});
+putRequest.extends.get('/items').body({ items: {
+	0 : { id: 1, name: 'Item One' }
+}});
+
 // And also create an endpoint for our new item
-putRequest.creates.get('/items/1').body({ id: 1, name: 'Item One' });
+putRequest.extends.get('/items/1').body({ name: 'Item One' });
 
 deleteRequest.creates.get('/items/1').status(410);
 

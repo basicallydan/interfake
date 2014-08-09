@@ -53,7 +53,7 @@
     "connect-json": "0.0.0",
     "body-parser": "~1.0.2",
     "pegjs": "^0.8.0",
-    "deepmerge": "git://github.com/basicallydan/deepmerge.git#12f172671b56449522d5c1b54a8517ffeaab61e7"
+    "deepmerge": "git://github.com/basicallydan/deepmerge.git#126cc82a695cc804120cbfd1545003582e1728ed"
   },
   "license": "MIT",
   "engines": {

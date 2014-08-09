@@ -300,7 +300,7 @@ When the API needs to mutate responses, such as after a POST, PUT or DELETE requ
 					},
 					"response": {
 						"code": 200,
-						"body": { items : [] }
+						"body": { "items" : [] }
 					}
 				}
 			]
