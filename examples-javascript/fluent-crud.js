@@ -23,7 +23,7 @@ var deleteRequest = postRequest.creates.delete('/items/1').status(204);
 
 // But when the put request is hit we need to edit both
 putRequest.extends.get('/items').body({ items: {
-	0 : { id: 1, name: 'Item One' }
+	0 : { name: 'Item One' }
 }});
 
 // And also create an endpoint for our new item

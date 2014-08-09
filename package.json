@@ -52,7 +52,6 @@
     "merge": "^1.1.2",
     "connect-json": "0.0.0",
     "body-parser": "~1.0.2",
-    "pegjs": "^0.8.0",
     "deepmerge": "git://github.com/basicallydan/deepmerge.git#126cc82a695cc804120cbfd1545003582e1728ed"
   },
   "license": "MIT",
