@@ -246,7 +246,7 @@ Interfake is a labour of love, created for front-end and mobile developers to in
 
 It's important that the tests all pass so we can keep this little badge green:
 
-[[!Travis](http://img.shields.io/travis/basicallydan/interfake.svg)](https://travis-ci.org/basicallydan/interfake)
+[![Travis](http://img.shields.io/travis/basicallydan/interfake.svg)](https://travis-ci.org/basicallydan/interfake)
 
 <3 Open Source!
 
