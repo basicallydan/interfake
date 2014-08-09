@@ -464,7 +464,7 @@ describe('Interfake Fluent JavaScript API', function () {
 					tookTooLong = true;
 				}, 55);
 
-				request.post({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				request.post({ url : 'http://localhost:3000/fluent', json : true }, function () {
 					clearTimeout(timeout);
 					if(!enoughTimeHasPassed) {
 						throw new Error('Response wasn\'t delay for long enough');
@@ -695,12 +695,12 @@ describe('Interfake Fluent JavaScript API', function () {
 		});
 	});
 	
-	// Testing #modifies stuff
-	describe('#modifies', function () {
+	// Testing #extends stuff
+	describe('#extends', function () {
 		describe('#get()', function() {
 			describe('#body()', function () {
-				it('should create a GET endpoint which modifies its own body when it gets called', function (done) {
-					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').body({ what: 'ever' });
+				it('should create a GET endpoint which extends its own body when it gets called', function (done) {
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).extends.get('/fluent').body({ what: 'ever' });
 					interfake.listen(3000);
 
 					get({url:'http://localhost:3000/fluent',json:true})
@@ -720,11 +720,62 @@ describe('Interfake Fluent JavaScript API', function () {
 						})
 						.done();
 				});
+
+				it('should create a POST endpoint which adds to a GET endpoint with deep array when it gets called', function (done) {
+					interfake.get('/items').body({ items : [ { id: 1 } ] });
+					interfake.post('/items').status(201).extends.get('/items').body({ items : [ { id : 2 } ] });
+					interfake.listen(3000);
+
+					get({url:'http://localhost:3000/items',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].items[0].id, 1);
+							assert.equal(results[1].items.length, 1);
+							return post({url:'http://localhost:3000/items',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 201);
+							return get({url:'http://localhost:3000/items',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].items[0].id, 1);
+							assert.equal(results[1].items[1].id, 2);
+							assert.equal(results[1].items.length, 2);
+							done();
+						})
+						.done();
+				});
+
+				it('should create a POST endpoint which adds to a GET endpoint with top-level array when it gets called', function (done) {
+					interfake.get('/items').body([ { id: 1 } ]);
+					interfake.post('/items').status(201).extends.get('/items').body([ { id : 2 } ]);
+					interfake.listen(3000);
+
+					get({url:'http://localhost:3000/items',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1][0].id, 1);
+							assert.equal(results[1][1], undefined);
+							return post({url:'http://localhost:3000/items',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 201);
+							return get({url:'http://localhost:3000/items',json:true});
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1][0].id, 1);
+							assert.equal(results[1][1].id, 2);
+							done();
+						})
+						.done();
+				});
 			});
 
 			describe('#status()', function () {
-				it('should create a GET endpoint which modifies its own status when it gets called', function (done) {
-					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').status(401);
+				it('should create a GET endpoint which extends its own status when it gets called', function (done) {
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).extends.get('/fluent').status(401);
 					interfake.listen(3000);
 
 					get({url:'http://localhost:3000/fluent',json:true})
@@ -747,8 +798,8 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 
 			describe('#responseHeaders()', function () {
-				it('should create a GET endpoint which modifies its own response headers when it gets called', function (done) {
-					interfake.get('/fluent').responseHeaders({ 'Awesome-Header' : 'Awesome Value' }).modifies.get('/fluent').responseHeaders({ 'Lame-Header' : 'Lame Value' });
+				it('should create a GET endpoint which extends its own response headers when it gets called', function (done) {
+					interfake.get('/fluent').responseHeaders({ 'Awesome-Header' : 'Awesome Value' }).extends.get('/fluent').responseHeaders({ 'Lame-Header' : 'Lame Value' });
 					interfake.listen(3000);
 
 					get({url:'http://localhost:3000/fluent',json:true})
@@ -769,7 +820,7 @@ describe('Interfake Fluent JavaScript API', function () {
 			describe('#delay()', function () {
 				it('should create a GET endpoint which adds a delay to itself when it gets called', function (done) {
 					var enoughTimeHasPassed;
-					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).modifies.get('/fluent').delay(50);
+					interfake.get('/fluent').body({ hello : 'there', goodbye: 'for now' }).extends.get('/fluent').delay(50);
 					interfake.listen(3000);
 
 					setTimeout(function() {
@@ -799,7 +850,7 @@ describe('Interfake Fluent JavaScript API', function () {
 
 				it('should create a GET endpoint which adds a delay to a different endpoint when it gets called', function (done) {
 					var enoughTimeHasPassed, tookTooLong;
-					interfake.get('/fluent').modifies.get('/needs-delay').delay(50);
+					interfake.get('/fluent').extends.get('/needs-delay').delay(50);
 					interfake.get('/needs-delay');
 					interfake.listen(3000);
 
@@ -834,8 +885,8 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 
 			describe('#query()', function () {
-				it('should create a GET endpoint with a query which modifies its own status', function (done) {
-					interfake.get('/fluent').query({ page : 2 }).status(200).modifies.get('/fluent').query({ page : 2 }).status(300);
+				it('should create a GET endpoint with a query which extends its own status', function (done) {
+					interfake.get('/fluent').query({ page : 2 }).status(200).extends.get('/fluent').query({ page : 2 }).status(300);
 					interfake.listen(3000);
 
 					get('http://localhost:3000/fluent?page=2')
@@ -855,7 +906,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#get', function () {
 					it('should produce a useful error when trying to spawn a GET endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').creates.get('/error');
+							interfake.get('/fluent').extends.get('/fluent').creates.get('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -866,7 +917,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#post', function () {
 					it('should produce a useful error when trying to spawn a POST endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').creates.post('/error');
+							interfake.get('/fluent').extends.get('/fluent').creates.post('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -877,7 +928,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#put', function () {
 					it('should produce a useful error when trying to spawn a PUT endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').creates.put('/error');
+							interfake.get('/fluent').extends.get('/fluent').creates.put('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -888,7 +939,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#delete', function () {
 					it('should produce a useful error when trying to spawn a DELETE endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').creates.delete('/error');
+							interfake.get('/fluent').extends.get('/fluent').creates.delete('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet create new routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -898,11 +949,11 @@ describe('Interfake Fluent JavaScript API', function () {
 				});
 			});
 
-			describe('#modifies', function () {
+			describe('#extends', function () {
 				describe('#get', function () {
 					it('should produce a useful error when trying to modify an existing GET endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').modifies.get('/error');
+							interfake.get('/fluent').extends.get('/fluent').extends.get('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -913,7 +964,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#post', function () {
 					it('should produce a useful error when trying to modify an existing POST endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').modifies.post('/error');
+							interfake.get('/fluent').extends.get('/fluent').extends.post('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -924,7 +975,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#put', function () {
 					it('should produce a useful error when trying to modify an existing PUT endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').modifies.put('/error');
+							interfake.get('/fluent').extends.get('/fluent').extends.put('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -935,7 +986,7 @@ describe('Interfake Fluent JavaScript API', function () {
 				describe('#delete', function () {
 					it('should produce a useful error when trying to modify an existing DELETE endpoint from a modified endpoint', function (done) {
 						assert.throws(function () {
-							interfake.get('/fluent').modifies.get('/fluent').modifies.delete('/error');
+							interfake.get('/fluent').extends.get('/fluent').extends.delete('/error');
 						}, function (err) {
 							assert.equal(err.message, 'Sorry, but modified routes cannot yet modify existing routes after their response. This is planned for a future version of Interfake.');
 							done();
@@ -948,8 +999,8 @@ describe('Interfake Fluent JavaScript API', function () {
 
 		describe('#put()', function () {
 			describe('#body()', function () {
-				it('should create a PUT endpoint which modifies its own body when it gets called', function (done) {
-					interfake.put('/fluent').body({ version : 1 }).modifies.put('/fluent').body({ version: 2 });
+				it('should create a PUT endpoint which extends its own body when it gets called', function (done) {
+					interfake.put('/fluent').body({ version : 1 }).extends.put('/fluent').body({ version: 2 });
 					interfake.listen(3000);
 
 					put({url:'http://localhost:3000/fluent',json:true})
@@ -970,8 +1021,8 @@ describe('Interfake Fluent JavaScript API', function () {
 
 		describe('#post()', function () {
 			describe('#body()', function () {
-				it('should create a POST endpoint which modifies its own body when it gets called', function (done) {
-					interfake.post('/fluent').body({ version : 1 }).modifies.post('/fluent').body({ version: 2 });
+				it('should create a POST endpoint which extends its own body when it gets called', function (done) {
+					interfake.post('/fluent').body({ version : 1 }).extends.post('/fluent').body({ version: 2 });
 					interfake.listen(3000);
 
 					post({url:'http://localhost:3000/fluent',json:true})
@@ -992,8 +1043,8 @@ describe('Interfake Fluent JavaScript API', function () {
 
 		describe('#delete()', function () {
 			describe('#body()', function () {
-				it('should create a DELETE endpoint which modifies its own body when it gets called', function (done) {
-					interfake.delete('/fluent').body({ version : 1 }).modifies.delete('/fluent').body({ version: 2 });
+				it('should create a DELETE endpoint which extends its own body when it gets called', function (done) {
+					interfake.delete('/fluent').body({ version : 1 }).extends.delete('/fluent').body({ version: 2 });
 					interfake.listen(3000);
 
 					del({url:'http://localhost:3000/fluent',json:true})

@@ -67,7 +67,7 @@ curl http://localhost:3000/next-items -X POST
 */
 ```
 
-And you can specify endpoints which should only be created once other ones have been hit (conditional endpoints):
+You can specify endpoints which should only be **created** once other ones have been hit.
 
 ```js
 var Interfake = require('interfake');
@@ -75,6 +75,39 @@ var interfake = new Interfake();
 var postResponse = interfake.post('/next-items').status(201).body({ created : true });
 postResponse.creates.get('/items/1').status(200).body({ id: 1, name: 'Item 1' });
 postResponse.creates.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
+interfake.listen(3000);
+
+/*
+# Request:
+curl http://localhost:3000/next-items -X POST
+# Response:
+201
+{
+	"created":true
+}
+
+
+# Request:
+curl http://localhost:3000/items/1 -X GET
+# Response:
+200
+{
+	"id":1
+	"name":"Item 1"
+}
+*/
+```
+
+You can even specify how endpoints should be **modified** once others have been hit.
+
+```js
+var Interfake = require('interfake');
+var interfake = new Interfake();
+interfake.get('/next-items').status(200).body({ items: [ { id: 1, name: 'Item 1' } ] });
+interfake.get('/items/2').status(200).body({ id: 1, name: 'Item 1' });
+var postResponse = interfake.post('/next-items').status(201).body({ created : true });
+postResponse.creates.get('/items/2').status(200).body({ id: 2, name: 'Item 2' });
+postResponse.extends.get('/next-items').status(200).body({ items: [ { id: 2, name: 'Item 2' } ] });
 interfake.listen(3000);
 
 /*
@@ -167,6 +200,7 @@ interfake.listen(3000); // The server will listen on port 3000
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
   * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+  * `#extends#get|post|put|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The URLs that you modify are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the modifiable bits.
 
 ## Method 2: Command line
 
