@@ -400,10 +400,10 @@ If you make any pull requests, please do try to write tests, or at the very leas
 
 ## Author & Contributors
 
-[Dan Hough](https://github.com/basicallydan) ([Twitter](https://twitter.com/basicallydan) | [Website](http://danielhough.co.uk))
-[bruce-one](https://github.com/bruce-one)
-[rajit](https://github.com/rajit)
-[Sebastian Schürmann](https://github.com/sebs)
+* [Dan Hough](https://github.com/basicallydan) ([Twitter](https://twitter.com/basicallydan) | [Website](http://danielhough.co.uk))
+* [bruce-one](https://github.com/bruce-one)
+* [rajit](https://github.com/rajit)
+* [Sebastian Schürmann](https://github.com/sebs)
 
 ## Future work
 
