@@ -8,7 +8,7 @@ interfake.get('/items').body({ items: [] });
 
 // When an item is created, update the items set request
 var postRequest = interfake.post('/items').status(201);
-postRequest.creates.get('/items').body({ items: [
+postRequest.extends.get('/items').body({ items: [
 	{ id: 1, name: 'Item 1' }
 ]});
 
