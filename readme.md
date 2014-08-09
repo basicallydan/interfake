@@ -244,6 +244,10 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 Interfake is a labour of love, created for front-end and mobile developers to increase their prototyping and development speeds. If you can contribute by getting through some issues, I would be very grateful. Please read more about how to contribute in the [CONTRIBUTING.md](https://github.com/basicallydan/interfake/blob/master/CONTRIBUTING.md) document.
 
+It's important that the tests all pass so we can keep this little badge green:
+
+[[!Travis](http://img.shields.io/travis/basicallydan/interfake.svg)](https://travis-ci.org/basicallydan/interfake)
+
 <3 Open Source!
 
 [![I Love Open Source](http://www.iloveopensource.io/images/logo-lightbg.png)](http://www.iloveopensource.io/projects/5319884587659fce66000943)
