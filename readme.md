@@ -39,7 +39,7 @@ interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3000/whats-next -X GET
+$ curl http://localhost:3000/whats-next -X GET
 # Response:
 400
 {
@@ -58,7 +58,7 @@ interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3000/next-items -X POST
+$ curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -79,7 +79,7 @@ interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3000/next-items -X POST
+$ curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -88,7 +88,7 @@ curl http://localhost:3000/next-items -X POST
 
 
 # Request:
-curl http://localhost:3000/items/1 -X GET
+$ curl http://localhost:3000/items/1 -X GET
 # Response:
 200
 {
@@ -112,7 +112,7 @@ interfake.listen(3000);
 
 /*
 # Request:
-curl http://localhost:3000/next-items -X POST
+$ curl http://localhost:3000/next-items -X POST
 # Response:
 201
 {
@@ -121,7 +121,7 @@ curl http://localhost:3000/next-items -X POST
 
 
 # Request:
-curl http://localhost:3000/items/1 -X GET
+$ curl http://localhost:3000/items/1 -X GET
 # Response:
 200
 {
@@ -200,7 +200,7 @@ interfake.listen(3000); // The server will listen on port 3000
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
   * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
-  * `#extends#get|post|put|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The URLs that you modify are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the modifiable bits.
+  * `#extends#get|post|put|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The endpoints you extend are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the extendable bits. Keep in mind that keys will be replaced, and arrays will be added to.
 
 ## Method 2: Command line
 
@@ -299,7 +299,7 @@ While the server is running, you can create new endpoints on-the-fly. You can ma
 While Interfake is running, make this request using `curl`.
 
 ```
-curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_requests --header "Content-Type:application/json"
+$ curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response":{"code":200,"body":{ "theTime" : "Adventure Time!" } } }' http://localhost:3000/_requests --header "Content-Type:application/json"
 ```
 
 ## JSONP
@@ -307,7 +307,7 @@ curl -X POST -d '{ "request":{"url":"/whattimeisit", "method":"get"}, "response"
 Interfake supports [JSONP](http://en.wikipedia.org/wiki/JSONP). Just put `?callback` on the end of the URLs being called.
 
 ```
-curl http://localhost:3000/whattimeisit?callback=handleSomeJson
+$ curl http://localhost:3000/whattimeisit?callback=handleSomeJson
 ```
 
 ## Use Cases
@@ -334,6 +334,8 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.9.0: Created the `.extends` methods to extend existing endpoints
+* 1.8.2: Bug fix for Windows
 * 1.8.1: Bug fix for responseheaders
 * 1.8.0: Querystring parameter values can now be regular expressions
 * 1.7.2: Fixed a bug where `.delay()` was not allowing chaining
