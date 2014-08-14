@@ -48,6 +48,17 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 		});
 
+		it('should create one GET endpoint with a RegExp path', function (done) {
+			interfake = new Interfake({debug:true});
+			interfake.get(/\/fluent\/.*/);
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/fluent/whatever', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
+
 		describe('#responseHeaders()', function () {
 			it('should create one GET endpoint which returns custom headers', function (done) {
 				interfake.get('/fluent').responseHeaders({ 'X-Request-Type': 'test', 'X-lol-TEST': 'bleep' });
