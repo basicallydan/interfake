@@ -221,6 +221,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.9.2: Updated deepmerge dependency, since it included a bug
 * 1.9.1: Updated dependencies, and fixed a bug where `.serveStatic` was not working on Windows because of the directory being wrong.
 * 1.9.0: Created the `.extends` methods to extend existing endpoints
 * 1.8.2: Bug fix for Windows - paths were screwed up
