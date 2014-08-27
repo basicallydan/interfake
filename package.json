@@ -46,13 +46,14 @@
     "url": "git@github.com:basicallydan/interfake.git"
   },
   "dependencies": {
-    "express": "4.0.0",
-    "commander": "2.1.0",
+    "express": "~4.8.5",
+    "commander": "2.3.0",
     "core-util-is": "^1.0.1",
-    "merge": "^1.1.2",
+    "merge": "^1.1.3",
     "connect-json": "0.0.0",
-    "body-parser": "~1.0.2",
-    "deepmerge": "git://github.com/basicallydan/deepmerge.git#126cc82a695cc804120cbfd1545003582e1728ed"
+    "deepmerge": "git://github.com/basicallydan/deepmerge.git",
+    "serve-static": "~1.5.3",
+    "body-parser": "~1.6.5"
   },
   "license": "MIT",
   "engines": {
@@ -62,10 +63,10 @@
   "bin": "./index.js",
   "devDependencies": {
     "api-easy": "^0.3.8",
-    "mocha": "^1.18.0",
-    "request": "^2.34.0",
-    "q": "^1.0.1",
+    "mocha": "^1.21.4",
+    "request": "^2.40.0",
     "zombie": "^2.0.0-alpha31",
-    "connect": "^2.14.2"
+    "connect": "^2.25.7",
+    "q": "~1.0.1"
   }
 }
