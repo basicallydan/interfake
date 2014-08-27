@@ -51,7 +51,7 @@
     "core-util-is": "^1.0.1",
     "merge": "^1.1.3",
     "connect-json": "0.0.0",
-    "deepmerge": "git://github.com/basicallydan/deepmerge.git",
+    "deepmerge": "git://github.com/basicallydan/deepmerge.git#c8d22b",
     "serve-static": "~1.5.3",
     "body-parser": "~1.6.5"
   },
