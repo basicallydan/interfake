@@ -1,4 +1,5 @@
 # Interfake: Quick JSON APIs
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/basicallydan/interfake?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Interfake is a tool which allows developers of client-side applications of *any* platform to easily create dummy HTTP APIs to develop against. Let's get started with a simple example.
 
