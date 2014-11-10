@@ -1,0 +1,45 @@
+[
+	{
+		"request": {
+			"url": "/posts/1",
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body" : {
+				"title": "First post",
+				"version": 1,
+				"links": {
+					"self": "/posts/1"
+				}
+			}
+		}
+	},
+	{
+		"request": {
+			"url": "/posts/1",
+			"method": "patch"
+		},
+		"response": {
+			"code": 200,
+			"body" : {}
+		},
+		"afterResponse": {
+			"modifications": [
+				{
+					"request": {
+						"url": "/posts/1",
+						"method": "get"
+					},
+					"response": {
+						"body": {
+							"links": {
+								"next": "/posts/2"
+							}
+						}
+					}
+				}
+			]
+		}
+	}
+]

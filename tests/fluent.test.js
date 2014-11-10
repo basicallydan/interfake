@@ -11,6 +11,7 @@ var get = Q.denodeify(request.get);
 var post = Q.denodeify(request.post);
 var put = Q.denodeify(request.put);
 var del = Q.denodeify(request.del);
+var patch = Q.denodeify(request.patch);
 
 // The thing we're testing
 var Interfake = require('..');
@@ -691,6 +692,51 @@ describe('Interfake Fluent JavaScript API', function () {
 							});
 					});
 				});
+			});
+		});
+	});
+
+	describe('#patch()', function () {
+		it('should create one PATCH endpoint', function (done) {
+			interfake.patch('/fluent');
+			interfake.listen(3000);
+
+			request.patch({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
+
+		describe('#extends', function () {
+			it('should create a PATCH endpoint which allows itself to be extended', function (done) {
+				interfake.get('/users').body([
+					{
+						name: 'Max Headroom'
+					}
+				]);
+
+				interfake.patch('/users').extends.get('/users').body([{
+						name: 'Min Headroom'
+					}
+				]);
+
+				interfake.listen(3000);
+
+				get({ url : 'http://localhost:3000/users', json : true })
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].length, 1);
+						return patch({ url : 'http://localhost:3000/users', json : true });
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						return get({ url : 'http://localhost:3000/users', json : true });
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].length, 2);
+						done();
+					});
 			});
 		});
 	});
