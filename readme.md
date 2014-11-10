@@ -176,15 +176,15 @@ The majority of Interfake users will probably be interested in the JavaScript AP
 
 #### Fluent Interface
 
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
+* `#get|post|put|patch|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
   * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
-  * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
-  * `#extends#get|post|put|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The endpoints you extend are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the extendable bits. Keep in mind that keys will be replaced, and arrays will be added to.
+  * `#creates#get|post|put|patch|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+  * `#extends#get|post|put|patch|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The endpoints you extend are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the extendable bits. Keep in mind that keys will be replaced, and arrays will be added to.
 
 ## JSONP
 
