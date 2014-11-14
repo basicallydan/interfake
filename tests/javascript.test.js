@@ -3,8 +3,8 @@ var assert = require('assert');
 var request = require('request');
 var Q = require('q');
 
-request.defaults({
-	json:true
+request = request.defaults({
+	json: true
 });
 
 var get = Q.denodeify(request.get);
@@ -16,22 +16,22 @@ var del = Q.denodeify(request.del);
 var Interfake = require('..');
 var interfake;
 
-describe('Interfake JavaScript API', function () {
-	beforeEach(function () {
+describe('Interfake JavaScript API', function() {
+	beforeEach(function() {
 		interfake = new Interfake();
 	});
-	afterEach(function () {
+	afterEach(function() {
 		if (interfake) {
 			interfake.stop();
 		}
 	});
 	describe('#listen', function() {
-		it('should should support a callback', function(done){
+		it('should should support a callback', function(done) {
 			interfake.listen(3000, done);
 		});
 	});
-	describe('#createRoute()', function () {
-		it('should create one GET endpoint', function (done) {
+	describe('#createRoute()', function() {
+		it('should create one GET endpoint', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/test/it/out',
@@ -46,14 +46,17 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/test/it/out', json : true }, function (error, response, body) {
+			request({
+				url: 'http://localhost:3000/test/it/out',
+				json: true
+			}, function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
 				done();
 			});
 		});
 
-		it('should create one GET endpoint which returns custom headers', function (done) {
+		it('should create one GET endpoint which returns custom headers', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/test',
@@ -72,7 +75,10 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+			request({
+				url: 'http://localhost:3000/test',
+				json: true
+			}, function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(response.headers['x-request-type'], 'test');
 				assert.equal(response.headers['x-lol-test'], 'bleep');
@@ -82,12 +88,14 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		it('should create a GET endpoint that accepts a query parameter', function (done) {
+		it('should create a GET endpoint that accepts a query parameter', function(done) {
 			// interfake = new Interfake();
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter',
-					query: { query: '1234' },
+					query: {
+						query: '1234'
+					},
 					method: 'get'
 
 				},
@@ -100,7 +108,10 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			request({ url : 'http://localhost:3000/wantsQueryParameter?query=1234', json : true }, function (error, response, body) {
+			request({
+				url: 'http://localhost:3000/wantsQueryParameter?query=1234',
+				json: true
+			}, function(error, response, body) {
 				assert.equal(error, undefined);
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.high, 'hoe');
@@ -108,11 +119,13 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		it('should create one GET endpoint accepting query parameters with different responses', function () {
+		it('should create one GET endpoint accepting query parameters with different responses', function() {
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter',
-					query: { query: '1234' },
+					query: {
+						query: '1234'
+					},
 					method: 'get'
 
 				},
@@ -126,7 +139,10 @@ describe('Interfake JavaScript API', function () {
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter',
-					query: { query: '5678', anotherQuery: '4321' },
+					query: {
+						query: '5678',
+						anotherQuery: '4321'
+					},
 					method: 'get'
 				},
 				response: {
@@ -138,10 +154,19 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
-			]).then(function (results) {
+			return Q.all([get({
+					url: 'http://localhost:3000/wantsQueryParameter?query=1234',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter',
+					json: true
+				})
+			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
 				assert.equal(results[1][0].statusCode, 200);
@@ -150,7 +175,7 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		it('should create one GET endpoint with a querystring in the url with different responses', function () {
+		it('should create one GET endpoint with a querystring in the url with different responses', function() {
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
@@ -177,10 +202,19 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=5678', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
-			]).then(function (results) {
+			return Q.all([get({
+					url: 'http://localhost:3000/wantsQueryParameter?query=1234',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=5678',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter',
+					json: true
+				})
+			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
 				assert.equal(results[1][0].statusCode, 200);
@@ -189,7 +223,7 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		it('should create one GET endpoint accepting query parameters using the url and options', function () {
+		it('should create one GET endpoint accepting query parameters using the url and options', function() {
 			interfake.createRoute({
 				request: {
 					url: '/wantsQueryParameter?query=1234',
@@ -222,10 +256,19 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=1', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=2', json: true}),
-					get({url: 'http://localhost:3000/wantsQueryParameter', json: true})
-			]).then(function (results) {
+			return Q.all([get({
+					url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=1',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=2',
+					json: true
+				}),
+				get({
+					url: 'http://localhost:3000/wantsQueryParameter',
+					json: true
+				})
+			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
 				assert.equal(results[1][0].statusCode, 200);
@@ -234,7 +277,7 @@ describe('Interfake JavaScript API', function () {
 			});
 		});
 
-		it('should create three GET endpoints with different status codes', function (done) {
+		it('should create three GET endpoints with different status codes', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/test1',
@@ -273,8 +316,17 @@ describe('Interfake JavaScript API', function () {
 			});
 			interfake.listen(3000);
 
-			Q.all([get({url:'http://localhost:3000/test1',json:true}), get({url:'http://localhost:3000/test2',json:true}), get({url:'http://localhost:3000/test3',json:true})])
-				.then(function (results) {
+			Q.all([get({
+					url: 'http://localhost:3000/test1',
+					json: true
+				}), get({
+					url: 'http://localhost:3000/test2',
+					json: true
+				}), get({
+					url: 'http://localhost:3000/test3',
+					json: true
+				})])
+				.then(function(results) {
 					assert.equal(results[0][0].statusCode, 200);
 					assert.equal(results[0][1].its, 'one');
 					assert.equal(results[1][0].statusCode, 300);
@@ -285,7 +337,7 @@ describe('Interfake JavaScript API', function () {
 				});
 		});
 
-		it('should create a dynamic endpoint', function (done) {
+		it('should create a dynamic endpoint', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/dynamic',
@@ -296,39 +348,37 @@ describe('Interfake JavaScript API', function () {
 					body: {}
 				},
 				afterResponse: {
-					endpoints: [
-						{
-							request: {
-								url: '/dynamic/1',
-								method: 'get'
-							},
-							response: {
-								code:200,
-								body: {}
-							}
+					endpoints: [{
+						request: {
+							url: '/dynamic/1',
+							method: 'get'
+						},
+						response: {
+							code: 200,
+							body: {}
 						}
-					]
+					}]
 				}
 			});
 			interfake.listen(3000);
 
 			get('http://localhost:3000/dynamic/1')
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 404);
 					return post('http://localhost:3000/dynamic');
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 201);
 					return get('http://localhost:3000/dynamic/1');
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					done();
 				})
 				.done();
 		});
 
-		it('should create a dynamic endpoint within a dynamic endpoint', function (done) {
+		it('should create a dynamic endpoint within a dynamic endpoint', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/dynamic',
@@ -337,81 +387,91 @@ describe('Interfake JavaScript API', function () {
 				response: {
 					code: 201,
 					body: {
-						all:'done'
+						all: 'done'
 					}
 				},
 				afterResponse: {
-					endpoints: [
-						{
-							request: {
-								url: '/dynamic/1',
-								method: 'get'
-							},
-							response: {
-								code:200,
-								body: {
-									yes: 'indeedy'
-								}
-							}
+					endpoints: [{
+						request: {
+							url: '/dynamic/1',
+							method: 'get'
 						},
-						{
-							request: {
-								url: '/dynamic/1',
-								method: 'put'
-							},
-							response: {
-								code:200,
-								body: {}
-							},
-							afterResponse: {
-								endpoints: [
-									{
-										request: {
-											url: '/dynamic/1',
-											method: 'get'
-										},
-										response: {
-											code:200,
-											body: {
-												yes: 'indiddly'
-											}
-										}
-									}
-								]
+						response: {
+							code: 200,
+							body: {
+								yes: 'indeedy'
 							}
 						}
-					]
+					}, {
+						request: {
+							url: '/dynamic/1',
+							method: 'put'
+						},
+						response: {
+							code: 200,
+							body: {}
+						},
+						afterResponse: {
+							endpoints: [{
+								request: {
+									url: '/dynamic/1',
+									method: 'get'
+								},
+								response: {
+									code: 200,
+									body: {
+										yes: 'indiddly'
+									}
+								}
+							}]
+						}
+					}]
 				}
 			});
 			interfake.listen(3000);
 
-			get({url:'http://localhost:3000/dynamic/1', json:true})
-				.then(function (results) {
-					assert.equal(results[0].statusCode, 404);
-					return post({url:'http://localhost:3000/dynamic', json:true});
+			get({
+					url: 'http://localhost:3000/dynamic/1',
+					json: true
 				})
-				.then(function (results) {
+				.then(function(results) {
+					assert.equal(results[0].statusCode, 404);
+					return post({
+						url: 'http://localhost:3000/dynamic',
+						json: true
+					});
+				})
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 201);
 					assert.equal(results[1].all, 'done');
-					return get({url:'http://localhost:3000/dynamic/1', json:true});
+					return get({
+						url: 'http://localhost:3000/dynamic/1',
+						json: true
+					});
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].yes, 'indeedy');
-					return put({url:'http://localhost:3000/dynamic/1', json:true});
+					return put({
+						url: 'http://localhost:3000/dynamic/1',
+						json: true
+					});
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
-					return get({url:'http://localhost:3000/dynamic/1', json:true});
+					return get({
+						url: 'http://localhost:3000/dynamic/1',
+						json: true
+					});
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].yes, 'indiddly');
 					done();
 				});
 		});
 
-		it('should return JSONP if requested', function (done) {
+		it('should return JSONP if requested', function(done) {
 			interfake.createRoute({
 				request: {
 					url: '/stuff',
@@ -427,18 +487,22 @@ describe('Interfake JavaScript API', function () {
 			interfake.listen(3000);
 
 			get('http://localhost:3000/stuff?callback=yo')
-				.then(function (results) {
-					assert.equal('hello', 'yo(' + JSON.stringify({ stuff : 'hello' }) + ');');
+				.then(function(results) {
+					assert.equal('hello', 'yo(' + JSON.stringify({
+						stuff: 'hello'
+					}) + ');');
 					done();
 				});
 
-			request('http://localhost:3000/stuff?callback=yo', function (error, response, body) {
-				assert.equal(body, 'yo(' + JSON.stringify({ stuff : 'hello' }) + ');');
+			request('http://localhost:3000/stuff?callback=yo', function(error, response, body) {
+				assert.equal(body, 'yo(' + JSON.stringify({
+					stuff: 'hello'
+				}) + ');');
 				done();
 			});
 		});
 
-		it('should create one GET endpoint with support for delaying the response', function (done) {
+		it('should create one GET endpoint with support for delaying the response', function(done) {
 			var enoughTimeHasPassed = false;
 			var _this = this;
 			this.slow(500);
@@ -459,16 +523,19 @@ describe('Interfake JavaScript API', function () {
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
 			}, 50);
-			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+			request({
+				url: 'http://localhost:3000/test',
+				json: true
+			}, function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
-				if(!enoughTimeHasPassed) {
+				if (!enoughTimeHasPassed) {
 					throw new Error('Response wasn\'t delay for long enough');
 				}
 				done();
 			});
 		});
-		it('should create one GET endpoint with support for delaying the response with a delay range', function (done) {
+		it('should create one GET endpoint with support for delaying the response with a delay range', function(done) {
 			var enoughTimeHasPassed = false;
 			var _this = this;
 			var timeout;
@@ -494,58 +561,86 @@ describe('Interfake JavaScript API', function () {
 			timeout = setTimeout(function() {
 				tookTooLong = true;
 			}, 55);
-			request({ url : 'http://localhost:3000/test', json : true }, function (error, response, body) {
+			request({
+				url: 'http://localhost:3000/test',
+				json: true
+			}, function(error, response, body) {
 				clearTimeout(timeout);
-				if(!enoughTimeHasPassed) {
+				if (!enoughTimeHasPassed) {
 					throw new Error('Response wasn\'t delay for long enough');
 				}
-				if(tookTooLong) {
+				if (tookTooLong) {
 					throw new Error('Response was delayed for too long');
 				}
 				done();
 			});
 		});
 	});
-	
+
 	// Testing the API root stuff
-	describe('#Interfake({ path: [String] })', function () {
-		it('should set the root path of the API', function (done) {
-			interfake = new Interfake({path:'/api'});
+	describe('#Interfake({ path: [String] })', function() {
+		it('should set the root path of the API', function(done) {
+			interfake = new Interfake({
+				path: '/api'
+			});
 			interfake.get('/endpoint').status(200).creates.get('/moar-endpoints');
 			interfake.listen(3000);
 
-			Q.all([get({url:'http://localhost:3000/api/endpoint',json:true}), get({url:'http://localhost:3000/endpoint',json:true})])
-				.then(function (results) {
+			Q.all([get({
+					url: 'http://localhost:3000/api/endpoint',
+					json: true
+				}), get({
+					url: 'http://localhost:3000/endpoint',
+					json: true
+				})])
+				.then(function(results) {
 					assert.equal(results[0][0].statusCode, 200);
 					assert.equal(results[1][0].statusCode, 404);
 					return get('http://localhost:3000/api/endpoint');
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					return get('http://localhost:3000/api/moar-endpoints');
 				})
-				.then(function (results) {
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					done();
 				});
 		});
 	});
 
-	describe('#loadFile()', function () {
-		it('should load a JSON file and the routes within it', function (done) {
+	describe('#loadFile()', function() {
+		it('should load a JSON file and the routes within it', function(done) {
 			interfake = new Interfake();
 			interfake.loadFile('./tests/loadFileTest-1.json');
-			// interfake.get('/whattimeisit').status(200).creates.get('/moar-endpoints');
 			interfake.listen(3000);
 
-
-			get({ url: 'http://localhost:3000/whattimeisit', json: true })
-				.then(function (results) {
+			get({
+					url: 'http://localhost:3000/whattimeisit',
+					json: true
+				})
+				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].theTime, 'Adventure Time!');
 					done();
 				})
 				.done();
+		});
+
+		describe('#clearRoutes()', function() {
+			it('should load a file and then clear the routes out', function(done) {
+				interfake = new Interfake();
+				interfake.loadFile('./tests/loadFileTest-1.json');
+				interfake.listen(3000);
+
+				get('http://localhost:3000/whattimeisit')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theTime, 'Adventure Time!');
+						done();
+					})
+					.done();
+			});
 		});
 	});
 });
