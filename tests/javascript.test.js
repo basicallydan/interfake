@@ -562,6 +562,12 @@ describe('Interfake JavaScript API', function() {
 					.then(function(results) {
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].theTime, 'Adventure Time!');
+						interfake.clearRoutes();
+						return get('http://localhost:3000/whattimeisit');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 404);
+						assert.equal(results[1], undefined);
 						done();
 					})
 					.done();
