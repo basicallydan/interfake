@@ -530,4 +530,22 @@ describe('Interfake JavaScript API', function () {
 				});
 		});
 	});
+
+	describe('#loadFile()', function () {
+		it('should load a JSON file and the routes within it', function (done) {
+			interfake = new Interfake();
+			interfake.loadFile('./tests/loadFileTest-1.json');
+			// interfake.get('/whattimeisit').status(200).creates.get('/moar-endpoints');
+			interfake.listen(3000);
+
+
+			get({ url: 'http://localhost:3000/whattimeisit', json: true })
+				.then(function (results) {
+					assert.equal(results[0].statusCode, 200);
+					assert.equal(results[1].theTime, 'Adventure Time!');
+					done();
+				})
+				.done();
+		});
+	});
 });
