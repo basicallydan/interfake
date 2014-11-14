@@ -509,6 +509,106 @@ describe('Interfake JavaScript API', function() {
 				done();
 			});
 		});
+
+		describe('#removeRoute', function () {
+			it('should remove a created route based on a reference to the Route object', function (done) {
+				var route = interfake.createRoute({
+					request: {
+						url: '/remove/me',
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							please: 'remove'
+						}
+					}
+				});
+				interfake.createRoute({
+					request: {
+						url: '/keep/me',
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							please: 'keep'
+						}
+					}
+				});
+				interfake.listen(3000);
+
+				get('http://localhost:3000/remove/me')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].please, 'remove');
+						interfake.removeRoute(route);
+						return get('http://localhost:3000/remove/me');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 404);
+						assert.equal(results[1], undefined);
+						return get('http://localhost:3000/keep/me');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].please, 'keep');
+						done();
+					})
+					.done();
+			});
+
+			it('should remove a created route based on the descriptor', function (done) {
+				var routeDescriptor = {
+					request: {
+						url: '/remove/me',
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							please: 'remove'
+						}
+					}
+				};
+
+				interfake.createRoute(routeDescriptor);
+
+				interfake.createRoute({
+					request: {
+						url: '/keep/me',
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							please: 'keep'
+						}
+					}
+				});
+
+				interfake.listen(3000);
+
+				get('http://localhost:3000/remove/me')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].please, 'remove');
+						interfake.removeRoute(routeDescriptor);
+						return get('http://localhost:3000/remove/me');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 404);
+						assert.equal(results[1], undefined);
+						return get('http://localhost:3000/keep/me');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].please, 'keep');
+						done();
+					})
+					.done();
+			});
+		});
 	});
 
 	// Testing the API root stuff
@@ -552,7 +652,7 @@ describe('Interfake JavaScript API', function() {
 				.done();
 		});
 
-		describe('#clearRoutes()', function() {
+		describe('#clearAllRoutes()', function() {
 			it('should load a file and then clear the routes out', function(done) {
 				interfake = new Interfake();
 				interfake.loadFile('./tests/loadFileTest-1.json');
@@ -562,7 +662,7 @@ describe('Interfake JavaScript API', function() {
 					.then(function(results) {
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].theTime, 'Adventure Time!');
-						interfake.clearRoutes();
+						interfake.clearAllRoutes();
 						return get('http://localhost:3000/whattimeisit');
 					})
 					.then(function (results) {
@@ -582,7 +682,7 @@ describe('Interfake JavaScript API', function() {
 					.then(function(results) {
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].theTime, 'Adventure Time!');
-						interfake.clearRoutes();
+						interfake.clearAllRoutes();
 						return get('http://localhost:3000/whattimeisit');
 					})
 					.then(function (results) {

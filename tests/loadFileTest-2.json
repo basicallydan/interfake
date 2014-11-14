@@ -1,0 +1,17 @@
+[
+	{
+		"request": {
+			"url": "/whostheboss",
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body": {
+				"theBoss": "Angela"
+			},
+			"headers": {
+				"X-Powered-By": "Interfake"
+			}
+		}
+	}
+]
