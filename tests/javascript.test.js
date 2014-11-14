@@ -572,6 +572,32 @@ describe('Interfake JavaScript API', function() {
 					})
 					.done();
 			});
+
+			it('should load a file and clear the routes out then load another one', function(done) {
+				interfake = new Interfake();
+				interfake.loadFile('./tests/loadFileTest-1.json');
+				interfake.listen(3000);
+
+				get('http://localhost:3000/whattimeisit')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theTime, 'Adventure Time!');
+						interfake.clearRoutes();
+						return get('http://localhost:3000/whattimeisit');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 404);
+						assert.equal(results[1], undefined);
+						interfake.loadFile('./tests/loadFileTest-2.json');
+						return get('http://localhost:3000/whostheboss');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theBoss, 'Angela');
+						done();
+					})
+					.done();
+			});
 		});
 	});
 });
