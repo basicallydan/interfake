@@ -46,10 +46,7 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			request({
-				url: 'http://localhost:3000/test/it/out',
-				json: true
-			}, function(error, response, body) {
+			request('http://localhost:3000/test/it/out', function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
 				done();
@@ -75,10 +72,7 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			request({
-				url: 'http://localhost:3000/test',
-				json: true
-			}, function(error, response, body) {
+			request('http://localhost:3000/test', function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(response.headers['x-request-type'], 'test');
 				assert.equal(response.headers['x-lol-test'], 'bleep');
@@ -108,10 +102,7 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			request({
-				url: 'http://localhost:3000/wantsQueryParameter?query=1234',
-				json: true
-			}, function(error, response, body) {
+			request('http://localhost:3000/wantsQueryParameter?query=1234', function(error, response, body) {
 				assert.equal(error, undefined);
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.high, 'hoe');
@@ -154,18 +145,9 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({
-					url: 'http://localhost:3000/wantsQueryParameter?query=1234',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter',
-					json: true
-				})
+			return Q.all([get('http://localhost:3000/wantsQueryParameter?query=1234'),
+				get('http://localhost:3000/wantsQueryParameter?anotherQuery=4321&query=5678'),
+				get('http://localhost:3000/wantsQueryParameter')
 			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
@@ -202,18 +184,9 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({
-					url: 'http://localhost:3000/wantsQueryParameter?query=1234',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter?anotherQuery=5678',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter',
-					json: true
-				})
+			return Q.all([get('http://localhost:3000/wantsQueryParameter?query=1234'),
+				get('http://localhost:3000/wantsQueryParameter?anotherQuery=5678'),
+				get('http://localhost:3000/wantsQueryParameter')
 			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
@@ -256,18 +229,9 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			return Q.all([get({
-					url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=1',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter?query=1234&page=2',
-					json: true
-				}),
-				get({
-					url: 'http://localhost:3000/wantsQueryParameter',
-					json: true
-				})
+			return Q.all([get('http://localhost:3000/wantsQueryParameter?query=1234&page=1'),
+				get('http://localhost:3000/wantsQueryParameter?query=1234&page=2'),
+				get('http://localhost:3000/wantsQueryParameter')
 			]).then(function(results) {
 				assert.equal(results[0][0].statusCode, 200);
 				assert.equal(results[0][1].high, 'hoe');
@@ -316,16 +280,7 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			Q.all([get({
-					url: 'http://localhost:3000/test1',
-					json: true
-				}), get({
-					url: 'http://localhost:3000/test2',
-					json: true
-				}), get({
-					url: 'http://localhost:3000/test3',
-					json: true
-				})])
+			Q.all([get('http://localhost:3000/test1'), get('http://localhost:3000/test2'), get('http://localhost:3000/test3')])
 				.then(function(results) {
 					assert.equal(results[0][0].statusCode, 200);
 					assert.equal(results[0][1].its, 'one');
@@ -430,39 +385,24 @@ describe('Interfake JavaScript API', function() {
 			});
 			interfake.listen(3000);
 
-			get({
-					url: 'http://localhost:3000/dynamic/1',
-					json: true
-				})
+			get('http://localhost:3000/dynamic/1')
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 404);
-					return post({
-						url: 'http://localhost:3000/dynamic',
-						json: true
-					});
+					return post('http://localhost:3000/dynamic');
 				})
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 201);
 					assert.equal(results[1].all, 'done');
-					return get({
-						url: 'http://localhost:3000/dynamic/1',
-						json: true
-					});
+					return get('http://localhost:3000/dynamic/1');
 				})
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].yes, 'indeedy');
-					return put({
-						url: 'http://localhost:3000/dynamic/1',
-						json: true
-					});
+					return put('http://localhost:3000/dynamic/1');
 				})
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
-					return get({
-						url: 'http://localhost:3000/dynamic/1',
-						json: true
-					});
+					return get('http://localhost:3000/dynamic/1');
 				})
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
@@ -523,10 +463,7 @@ describe('Interfake JavaScript API', function() {
 			setTimeout(function() {
 				enoughTimeHasPassed = true;
 			}, 50);
-			request({
-				url: 'http://localhost:3000/test',
-				json: true
-			}, function(error, response, body) {
+			request('http://localhost:3000/test', function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
 				if (!enoughTimeHasPassed) {
@@ -561,10 +498,7 @@ describe('Interfake JavaScript API', function() {
 			timeout = setTimeout(function() {
 				tookTooLong = true;
 			}, 55);
-			request({
-				url: 'http://localhost:3000/test',
-				json: true
-			}, function(error, response, body) {
+			request('http://localhost:3000/test', function(error, response, body) {
 				clearTimeout(timeout);
 				if (!enoughTimeHasPassed) {
 					throw new Error('Response wasn\'t delay for long enough');
@@ -586,13 +520,7 @@ describe('Interfake JavaScript API', function() {
 			interfake.get('/endpoint').status(200).creates.get('/moar-endpoints');
 			interfake.listen(3000);
 
-			Q.all([get({
-					url: 'http://localhost:3000/api/endpoint',
-					json: true
-				}), get({
-					url: 'http://localhost:3000/endpoint',
-					json: true
-				})])
+			Q.all([get('http://localhost:3000/api/endpoint'), get('http://localhost:3000/endpoint')])
 				.then(function(results) {
 					assert.equal(results[0][0].statusCode, 200);
 					assert.equal(results[1][0].statusCode, 404);
@@ -615,10 +543,7 @@ describe('Interfake JavaScript API', function() {
 			interfake.loadFile('./tests/loadFileTest-1.json');
 			interfake.listen(3000);
 
-			get({
-					url: 'http://localhost:3000/whattimeisit',
-					json: true
-				})
+			get('http://localhost:3000/whattimeisit')
 				.then(function(results) {
 					assert.equal(results[0].statusCode, 200);
 					assert.equal(results[1].theTime, 'Adventure Time!');
