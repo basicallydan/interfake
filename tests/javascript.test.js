@@ -652,6 +652,64 @@ describe('Interfake JavaScript API', function() {
 				.done();
 		});
 
+		describe('#unload', function () {
+			it('should unload a single file', function (done) {
+				interfake = new Interfake();
+				var firstFile = interfake.loadFile('./tests/loadFileTest-1.json');
+				interfake.loadFile('./tests/loadFileTest-2.json');
+				interfake.listen(3000);
+
+				get('http://localhost:3000/whattimeisit')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theTime, 'Adventure Time!');
+						firstFile.unload();
+						return get('http://localhost:3000/whattimeisit');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 404);
+						assert.equal(results[1], undefined);
+						interfake.loadFile('./tests/loadFileTest-2.json');
+						return get('http://localhost:3000/whostheboss');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theBoss, 'Angela');
+						done();
+					})
+					.done();
+			});
+		});
+
+		describe('#unload', function () {
+			it('should be able to unload a single file (note, this cannot actually test functionality, just make sure nothing breaks)', function (done) {
+				interfake = new Interfake();
+				var firstFile = interfake.loadFile('./tests/loadFileTest-1.json');
+				interfake.loadFile('./tests/loadFileTest-2.json');
+				interfake.listen(3000);
+
+				get('http://localhost:3000/whattimeisit')
+					.then(function(results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theTime, 'Adventure Time!');
+						firstFile.reload();
+						return get('http://localhost:3000/whattimeisit');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theTime, 'Adventure Time!');
+						interfake.loadFile('./tests/loadFileTest-2.json');
+						return get('http://localhost:3000/whostheboss');
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].theBoss, 'Angela');
+						done();
+					})
+					.done();
+			});
+		});
+
 		describe('#clearAllRoutes()', function() {
 			it('should load a file and then clear the routes out', function(done) {
 				interfake = new Interfake();
