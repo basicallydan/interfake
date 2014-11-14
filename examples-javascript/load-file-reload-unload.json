@@ -1,0 +1,22 @@
+[
+	{
+		"request": {
+			"url": "/whattimeisit",
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body": {
+				"theTime": "Adventure Time!",
+				"starring": [
+					"Finn",
+					"Jake"
+				],
+				"location": "ooo"
+			},
+			"headers": {
+				"X-Powered-By": "Interfake"
+			}
+		}
+	}
+]
