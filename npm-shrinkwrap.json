@@ -1,6 +1,6 @@
 {
   "name": "interfake",
-  "version": "1.9.2",
+  "version": "1.10.0",
   "dependencies": {
     "body-parser": {
       "version": "1.6.5",
@@ -488,6 +488,83 @@
           "version": "1.0.0",
           "from": "utils-merge@1.0.0",
           "resolved": "https://registry.npmjs.org/utils-merge/-/utils-merge-1.0.0.tgz"
+        }
+      }
+    },
+    "watchr": {
+      "version": "2.4.11",
+      "from": "watchr@",
+      "resolved": "https://registry.npmjs.org/watchr/-/watchr-2.4.11.tgz",
+      "dependencies": {
+        "bal-util": {
+          "version": "2.4.1",
+          "from": "bal-util@~2.4.1",
+          "resolved": "https://registry.npmjs.org/bal-util/-/bal-util-2.4.1.tgz",
+          "dependencies": {
+            "ambi": {
+              "version": "2.1.6",
+              "from": "ambi@~2.1.6",
+              "resolved": "https://registry.npmjs.org/ambi/-/ambi-2.1.6.tgz"
+            }
+          }
+        },
+        "typechecker": {
+          "version": "2.0.8",
+          "from": "typechecker@~2.0.8"
+        },
+        "extendr": {
+          "version": "2.1.0",
+          "from": "extendr@~2.1.0",
+          "resolved": "https://registry.npmjs.org/extendr/-/extendr-2.1.0.tgz"
+        },
+        "eachr": {
+          "version": "2.0.2",
+          "from": "eachr@~2.0.2",
+          "resolved": "https://registry.npmjs.org/eachr/-/eachr-2.0.2.tgz"
+        },
+        "safefs": {
+          "version": "3.1.1",
+          "from": "safefs@~3.1.1",
+          "resolved": "https://registry.npmjs.org/safefs/-/safefs-3.1.1.tgz",
+          "dependencies": {
+            "graceful-fs": {
+              "version": "2.0.3",
+              "from": "graceful-fs@~2.0.1"
+            }
+          }
+        },
+        "taskgroup": {
+          "version": "3.3.9",
+          "from": "taskgroup@~3.3.8",
+          "resolved": "https://registry.npmjs.org/taskgroup/-/taskgroup-3.3.9.tgz",
+          "dependencies": {
+            "ambi": {
+              "version": "2.1.6",
+              "from": "ambi@~2.1.6",
+              "resolved": "https://registry.npmjs.org/ambi/-/ambi-2.1.6.tgz"
+            },
+            "extendonclass": {
+              "version": "1.0.1",
+              "from": "extendonclass@~1.0.0",
+              "resolved": "https://registry.npmjs.org/extendonclass/-/extendonclass-1.0.1.tgz"
+            }
+          }
+        },
+        "ignorefs": {
+          "version": "1.0.0",
+          "from": "ignorefs@~1.0.0",
+          "resolved": "https://registry.npmjs.org/ignorefs/-/ignorefs-1.0.0.tgz",
+          "dependencies": {
+            "ignorepatterns": {
+              "version": "1.0.1",
+              "from": "ignorepatterns@~1.0.0",
+              "resolved": "https://registry.npmjs.org/ignorepatterns/-/ignorepatterns-1.0.1.tgz"
+            }
+          }
+        },
+        "extract-opts": {
+          "version": "2.2.0",
+          "from": "extract-opts@~2.2.0"
         }
       }
     }
