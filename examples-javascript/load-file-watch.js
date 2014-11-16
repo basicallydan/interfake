@@ -1,7 +1,7 @@
 var Interfake = require('..');
 var request = require('request'); // Let's use request for this example
 
-var interfake = new Interfake({ debug : true });
+var interfake = new Interfake({  });
 var file = interfake.loadFile(require.resolve('./load-file-reload-unload.json'), { watch : true });
 
 interfake.listen(3000);
