@@ -173,6 +173,7 @@ The majority of Interfake users will probably be interested in the JavaScript AP
 * `#listen(port, callback)`: Takes a port and starts the server, and a callback which executes when the server is running
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
+* `#loadFile(path, options)`: Load a JSON file containing an Interfake-shaped API configuration. Options includes `watch`, which, if true, means that the file loaded there will be reloaded when it changes.
 
 #### Fluent Interface
 
