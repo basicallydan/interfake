@@ -442,7 +442,7 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
-		it('should create a proxy endpoint', function(done) {
+		it('should create a proxy endpoint with a GET method', function(done) {
 			var proxiedInterfake = new Interfake();
 			proxiedInterfake.get('/whatever').status(404).body({
 				message: 'This is something you proxied!'
@@ -462,6 +462,36 @@ describe('Interfake JavaScript API', function() {
 			interfake.listen(3000);
 
 			request('http://localhost:3000/stuff', function (error, response, body) {
+				assert.equal(response.statusCode, 404);
+				assert.equal(body.message, 'This is something you proxied!');
+				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
+				done();
+			});
+			afterEach(function () {
+				proxiedInterfake.stop();
+			});
+		});
+
+		it('should create a proxy endpoint with a POST method', function(done) {
+			var proxiedInterfake = new Interfake();
+			proxiedInterfake.post('/whatever').status(404).body({
+				message: 'This is something you proxied!'
+			}).responseHeaders({
+				'loving you':'Isnt the right thing to do'
+			});
+			interfake = new Interfake({debug:true});
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'post'
+				},
+				response: {
+					proxy: 'http://localhost:3050/whatever'
+				}
+			});
+			interfake.listen(3000);
+
+			request.post('http://localhost:3000/stuff', function (error, response, body) {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
 				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
