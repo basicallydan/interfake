@@ -86,7 +86,6 @@ describe('Interfake Fluent JavaScript API', function () {
 					message: 'This is something you proxied!'
 				});
 				proxiedInterfake.listen(3051);
-				interfake = new Interfake({debug:true});
 				interfake.get('/proxy').proxy('http://localhost:3051/whatever');
 				interfake.listen(3000);
 
