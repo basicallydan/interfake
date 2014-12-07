@@ -3,8 +3,8 @@ var assert = require('assert');
 var request = require('request');
 var Q = require('q');
 
-request.defaults({
-	json:true
+request = request.defaults({
+	json: true
 });
 
 var get = Q.denodeify(request.get);
@@ -86,10 +86,11 @@ describe('Interfake Fluent JavaScript API', function () {
 					message: 'This is something you proxied!'
 				});
 				proxiedInterfake.listen(3051);
+				interfake = new Interfake({debug:true});
 				interfake.get('/proxy').proxy('http://localhost:3051/whatever');
 				interfake.listen(3000);
 
-				request('http://localhost:3000/stuff', function (error, response, body) {
+				request('http://localhost:3000/proxy', function (error, response, body) {
 					assert.equal(response.statusCode, 404);
 					assert.equal(body.message, 'This is something you proxied!');
 					proxiedInterfake.stop();
