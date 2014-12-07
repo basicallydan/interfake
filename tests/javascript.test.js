@@ -446,8 +446,10 @@ describe('Interfake JavaScript API', function() {
 			var proxiedInterfake = new Interfake();
 			proxiedInterfake.get('/whatever').status(404).body({
 				message: 'This is something you proxied!'
+			}).responseHeaders({
+				'loving you':'Isnt the right thing to do'
 			});
-			proxiedInterfake.listen(3050);
+			interfake = new Interfake({debug:true});
 			interfake.createRoute({
 				request: {
 					url: '/stuff',
@@ -462,8 +464,11 @@ describe('Interfake JavaScript API', function() {
 			request('http://localhost:3000/stuff', function (error, response, body) {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
-				proxiedInterfake.stop();
+				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
 				done();
+			});
+			afterEach(function () {
+				proxiedInterfake.stop();
 			});
 		});
 
