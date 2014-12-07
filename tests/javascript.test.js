@@ -442,6 +442,58 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
+		it('should create a proxy endpoint', function(done) {
+			var proxiedInterfake = new Interfake();
+			proxiedInterfake.get('/whatever').status(404).body({
+				message: 'This is something you proxied!'
+			});
+			proxiedInterfake.listen(3050);
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'get'
+				},
+				response: {
+					proxy: 'http://localhost:3050/whatever'
+				}
+			});
+			interfake.listen(3000);
+
+			request('http://localhost:3000/stuff', function (error, response, body) {
+				assert.equal(response.statusCode, 404);
+				assert.equal(body.message, 'This is something you proxied!');
+				proxiedInterfake.stop();
+				done();
+			});
+		});
+
+		it('should create a proxy endpoint which supports JSONP', function(done) {
+			var proxiedInterfake = new Interfake();
+			proxiedInterfake.get('/whatever').status(404).body({
+				message: 'This is something you proxied!'
+			});
+			proxiedInterfake.listen(3050);
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'get'
+				},
+				response: {
+					proxy: 'http://localhost:3050/whatever'
+				}
+			});
+			interfake.listen(3000);
+
+			request('http://localhost:3000/stuff?callback=whatever', function (error, response, body) {
+				assert.equal(response.statusCode, 404);
+				assert.equal(body, 'whatever(' + JSON.stringify({
+					message: 'This is something you proxied!'
+				}) + ');');
+				proxiedInterfake.stop();
+				done();
+			});
+		});
+
 		it('should create one GET endpoint with support for delaying the response', function(done) {
 			var enoughTimeHasPassed = false;
 			var _this = this;
@@ -497,7 +549,7 @@ describe('Interfake JavaScript API', function() {
 			}, 20);
 			timeout = setTimeout(function() {
 				tookTooLong = true;
-			}, 55);
+			}, 60);
 			request('http://localhost:3000/test', function(error, response, body) {
 				clearTimeout(timeout);
 				if (!enoughTimeHasPassed) {

@@ -79,6 +79,25 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 		});
 
+		describe('#proxy()', function () {
+			it('should create one GET endpoint which acts as a proxy for another', function (done) {
+				var proxiedInterfake = new Interfake();
+				proxiedInterfake.get('/whatever').status(404).body({
+					message: 'This is something you proxied!'
+				});
+				proxiedInterfake.listen(3051);
+				interfake.get('/proxy').proxy('http://localhost:3051/whatever');
+				interfake.listen(3000);
+
+				request('http://localhost:3000/stuff', function (error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body.message, 'This is something you proxied!');
+					proxiedInterfake.stop();
+					done();
+				});
+			});
+		});
+
 		describe('#query()', function () {
 			it('should use the query object as priority', function (done) {
 				interfake.get('/fluent?query=1').query({ query: 2 }).status(200);
