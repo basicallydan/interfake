@@ -1,7 +1,12 @@
 /* globals describe, beforeEach, afterEach, it */
 var assert = require('assert');
-var request = require('request');
+var proxyquire = require('proxyquire');
 var Q = require('q');
+var requestStub = {};
+var proxiedRequestModule = proxyquire('../lib/server', {
+	'request' : requestStub
+});
+var request = require('request');
 
 request = request.defaults({
 	json: true
@@ -469,6 +474,42 @@ describe('Interfake JavaScript API', function() {
 			});
 			afterEach(function () {
 				proxiedInterfake.stop();
+			});
+		});
+
+		it('should create a proxy endpoint with a GET method using the proxy object syntax', function(done) {
+			// interfake = new Interfake({debug:true});
+			var proxiedInterfake = new Interfake();
+			proxiedInterfake.get('/whatever').status(404).body({
+				message: 'This is something you proxied!'
+			}).responseHeaders({
+				'loving you':'Isnt the right thing to do'
+			});
+
+			requestStub.get = function (options) {
+				console.log(options);
+				done();
+			};
+
+			proxiedInterfake.listen(3050);
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'get'
+				},
+				response: {
+					proxy: 'http://localhost:3050/whatever',
+				}
+			});
+			interfake.listen(3000);
+
+			request('http://localhost:3000/stuff');
+			afterEach(function () {
+				proxiedInterfake.stop();
+				requestStub = {};
+				proxiedRequestModule = proxyquire('../lib/server', {
+					'request' : requestStub
+				});
 			});
 		});
 

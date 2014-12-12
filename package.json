@@ -65,10 +65,11 @@
   "bin": "./index.js",
   "devDependencies": {
     "api-easy": "^0.3.8",
-    "mocha": "^1.21.4",
-    "request": "^2.47.0",
-    "zombie": "^2.0.0-alpha31",
     "connect": "^2.25.7",
-    "q": "~1.0.1"
+    "mocha": "^1.21.4",
+    "proxyquire": "^1.3.0",
+    "q": "~1.0.1",
+    "request": "^2.47.0",
+    "zombie": "^2.0.0-alpha31"
   }
 }
