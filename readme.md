@@ -181,6 +181,7 @@ The majority of Interfake users will probably be interested in the JavaScript AP
   * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
+  * `#proxy(url|options)`: The reponse should be a proxy of another URL. Currently, options accepts both `url` and `headers` properties. The `headers` property specfies the headers which should be sent in the request to the proxy URL
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
@@ -212,6 +213,33 @@ You can use Interfake to create dummy APIs which use data from your test setup w
 The HTTP API is particularly useful for developing iOS Applications which uses Automated tests written in JavaScript, or developing Node.js applications which rely on external APIs.
 
 For an example of how to do this, please see the [web page test example](/examples-javascript/fluent-web-page-test.js).
+
+### Proxying another API
+
+There are a number of reasons you might want to proxy another API. Three of the more common ones are:
+
+* It requires some authorization options which you want to hide from a client-side script but nonetheless want to use every time you make a request
+* There is a [cross-origin request sharing (CORS)](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) issue which prevents your client-side code from using the API
+* It requires some tedious header setup
+
+Interfake allows you to proxy another URL quite easily and also specify any headers you like while doing so, using the `proxy` option.
+
+```js
+interfake.get('/github-issues').proxy('https://api.github.com/repos/basicallydan/interfake/tags');
+```
+
+The example above creates a simple proxy against the URL `https://api.github.com/repos/basicallydan/interfake/tags` and will return whatever a public, non-authorized user will see. However, consider an endpoint which requires authorization.
+
+```js
+interfake.get('/github-issues').proxy({
+	url: 'https://api.github.com/repos/basicallydan/interfake/tags',
+	headers: {
+		'Authorization': 'Token qoinfiu13jfcikwkhf1od091dj0'
+	}
+});
+```
+
+This example uses an authorization token to authorize the request. This is one of the common use-cases. However, the first one will easily solve CORS issues, and any other headers apart from `Authorization` can be specified instead.
 
 ### Creating a static API
 
