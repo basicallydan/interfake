@@ -483,8 +483,13 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
-		it('should create a proxy endpoint with a GET method using the proxy object syntax', function(done) {
-			var proxiedInterfake = new Interfake();
+		it('should create a proxy endpoint with a GET method which sends the specified headers', function(done) {
+			var proxiedInterfake = new Interfake({
+				onRequest: function (req) {
+					assert.equal(req.get('Authorization'), 'Basic username:password');
+					done();
+				}
+			});
 			proxiedInterfake.get('/whatever').status(404).body({
 				message: 'This is something you proxied!'
 			}).responseHeaders({
@@ -498,7 +503,10 @@ describe('Interfake JavaScript API', function() {
 				},
 				response: {
 					proxy: {
-						url:'http://localhost:3050/whatever'
+						url:'http://localhost:3050/whatever',
+						headers:{
+							'Authorization': 'Basic username:password'
+						}
 					}
 				}
 			});
@@ -508,8 +516,8 @@ describe('Interfake JavaScript API', function() {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
 				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
-				done();
 			});
+
 			afterEach(function () {
 				proxiedInterfake.stop();
 			});
