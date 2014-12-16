@@ -96,6 +96,32 @@ describe('Interfake Fluent JavaScript API', function () {
 					done();
 				});
 			});
+
+			it('should create one GET endpoint which acts as a proxy for another and sends the specified header', function (done) {
+				var proxiedInterfake = new Interfake({
+					onRequest: function (req) {
+						assert.equal(req.get('Authorization'), 'Basic username:password');
+						proxiedInterfake.stop();
+						done();
+					}
+				});
+				proxiedInterfake.get('/whatever').status(404).body({
+					message: 'This is something you proxied!'
+				});
+				proxiedInterfake.listen(3051);
+				interfake.get('/proxy').proxy({
+					url: 'http://localhost:3051/whatever',
+					headers: {
+						'Authorization': 'Basic username:password'
+					}
+				});
+				interfake.listen(3000);
+
+				request('http://localhost:3000/proxy', function (error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body.message, 'This is something you proxied!');
+				});
+			});
 		});
 
 		describe('#query()', function () {
