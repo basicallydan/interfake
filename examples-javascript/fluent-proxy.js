@@ -6,7 +6,7 @@ interfake.get('/interfake-tags').proxy({
 	url: 'https://api.github.com/repos/basicallydan/interfake/tags',
 	headers: {
 		'User-Agent': 'Interfake Proxy Whoop',
-		// 'Accept': 'application/vnd.github.full+json'
+		'Accept': 'application/vnd.github.full+json'
 	}
 });
 interfake.listen(3030); // The server will listen on port 3030
