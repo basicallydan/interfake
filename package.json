@@ -67,7 +67,6 @@
     "api-easy": "^0.3.8",
     "connect": "^2.25.7",
     "mocha": "^1.21.4",
-    "proxyquire": "^1.3.0",
     "q": "~1.0.1",
     "request": "^2.47.0",
     "zombie": "^2.0.0-alpha31"

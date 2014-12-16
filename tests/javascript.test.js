@@ -1,13 +1,6 @@
 /* globals describe, beforeEach, afterEach, it */
 var assert = require('assert');
-var proxyquire = require('proxyquire');
 var Q = require('q');
-var requestStub = {};
-
-var proxiedRequestModule = proxyquire('../lib/server', {
-	'request' : requestStub
-});
-
 var request = require('request');
 
 request = request.defaults({
@@ -31,10 +24,6 @@ describe('Interfake JavaScript API', function() {
 		if (interfake) {
 			interfake.stop();
 		}
-		requestStub = {};
-		proxyquire('../lib/server', {
-			'request' : requestStub
-		});
 	});
 	describe('#listen', function() {
 		it('should should support a callback', function(done) {
