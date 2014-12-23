@@ -181,7 +181,7 @@ The majority of Interfake users will probably be interested in the JavaScript AP
   * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
-  * `#proxy(url|options)`: The reponse should be a proxy of another URL. Currently, options accepts both `url` and `headers` properties. The `headers` property specfies the headers which should be sent in the request to the proxy URL
+  * `#proxy(url|options)`: The response should be a proxy of another URL. Currently, options accepts both `url` and `headers` properties. The `headers` property specifies the headers which should be sent in the request to the proxy URL
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
