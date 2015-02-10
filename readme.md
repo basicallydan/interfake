@@ -251,6 +251,8 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.12.1: Bug fix from [Alexander Pope](https://github.com/popeindustries), proxy and query params not playing well together
+* 1.12.0: Proxy support
 * 1.11.0: Config reload
 * 1.10.0: Support for PATCH
 * 1.9.2: Updated deepmerge dependency, since it included a bug
