@@ -548,6 +548,42 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
+		it('should create a proxy endpoint with a GET method and retain query parameters and their value', function(done) {
+			var proxiedInterfake = new Interfake();
+			proxiedInterfake.get('/whatever').query({
+				q: 'hello',
+				isit: 'me',
+				youre: 'lookingfor'
+			}).status(404).body({
+				message: 'I can see it in your eyes'
+			});
+			proxiedInterfake.listen(3050);
+			interfake.createRoute({
+				request: {
+					url: '/stuff',
+					method: 'get',
+					query: {
+						q: /\w+/,
+						isit: /\w+/,
+						youre: /\w+/
+					}
+				},
+				response: {
+					proxy: 'http://localhost:3050/whatever'
+				}
+			});
+			interfake.listen(3000);
+
+			request('http://localhost:3000/stuff?q=hello&isit=me&youre=lookingfor', function (error, response, body) {
+				assert.equal(response.statusCode, 404);
+				assert.equal(body.message, 'I can see it in your eyes');
+				done();
+			});
+			afterEach(function () {
+				proxiedInterfake.stop();
+			});
+		});
+
 		it('should create a proxy endpoint with a POST method', function(done) {
 			var proxiedInterfake = new Interfake();
 			proxiedInterfake.post('/whatever').status(404).body({
