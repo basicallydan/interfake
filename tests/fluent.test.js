@@ -3,14 +3,15 @@ var assert = require('assert');
 var request = require('request');
 var Q = require('q');
 
-request.defaults({
-	json:true
+request = request.defaults({
+	json: true
 });
 
 var get = Q.denodeify(request.get);
 var post = Q.denodeify(request.post);
 var put = Q.denodeify(request.put);
 var del = Q.denodeify(request.del);
+var patch = Q.denodeify(request.patch);
 
 // The thing we're testing
 var Interfake = require('..');
@@ -85,6 +86,51 @@ describe('Interfake Fluent JavaScript API', function () {
 						assert.equal(response.headers['x-undef'], undefined);
 						done();
 					});
+				});
+			});
+		});
+
+		describe('#proxy()', function () {
+			it('should create one GET endpoint which acts as a proxy for another', function (done) {
+				var proxiedInterfake = new Interfake();
+				proxiedInterfake.get('/whatever').status(404).body({
+					message: 'This is something you proxied!'
+				});
+				proxiedInterfake.listen(3051);
+				interfake.get('/proxy').proxy('http://localhost:3051/whatever');
+				interfake.listen(3000);
+
+				request('http://localhost:3000/proxy', function (error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body.message, 'This is something you proxied!');
+					proxiedInterfake.stop();
+					done();
+				});
+			});
+
+			it('should create one GET endpoint which acts as a proxy for another and sends the specified header', function (done) {
+				var proxiedInterfake = new Interfake({
+					onRequest: function (req) {
+						assert.equal(req.get('Authorization'), 'Basic username:password');
+						proxiedInterfake.stop();
+						done();
+					}
+				});
+				proxiedInterfake.get('/whatever').status(404).body({
+					message: 'This is something you proxied!'
+				});
+				proxiedInterfake.listen(3051);
+				interfake.get('/proxy').proxy({
+					url: 'http://localhost:3051/whatever',
+					headers: {
+						'Authorization': 'Basic username:password'
+					}
+				});
+				interfake.listen(3000);
+
+				request('http://localhost:3000/proxy', function (error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body.message, 'This is something you proxied!');
 				});
 			});
 		});
@@ -702,6 +748,51 @@ describe('Interfake Fluent JavaScript API', function () {
 							});
 					});
 				});
+			});
+		});
+	});
+
+	describe('#patch()', function () {
+		it('should create one PATCH endpoint', function (done) {
+			interfake.patch('/fluent');
+			interfake.listen(3000);
+
+			request.patch({ url : 'http://localhost:3000/fluent', json : true }, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
+
+		describe('#extends', function () {
+			it('should create a PATCH endpoint which allows itself to be extended', function (done) {
+				interfake.get('/users').body([
+					{
+						name: 'Max Headroom'
+					}
+				]);
+
+				interfake.patch('/users').extends.get('/users').body([{
+						name: 'Min Headroom'
+					}
+				]);
+
+				interfake.listen(3000);
+
+				get({ url : 'http://localhost:3000/users', json : true })
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].length, 1);
+						return patch({ url : 'http://localhost:3000/users', json : true });
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						return get({ url : 'http://localhost:3000/users', json : true });
+					})
+					.then(function (results) {
+						assert.equal(results[0].statusCode, 200);
+						assert.equal(results[1].length, 2);
+						done();
+					});
 			});
 		});
 	});

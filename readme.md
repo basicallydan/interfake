@@ -1,4 +1,5 @@
 # Interfake: Quick JSON APIs
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/basicallydan/interfake?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/basicallydan/interfake/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 Interfake is a tool which allows developers of client-side applications of *any* platform to easily create dummy HTTP APIs to develop against. Let's get started with a simple example.
 
@@ -172,18 +173,20 @@ The majority of Interfake users will probably be interested in the JavaScript AP
 * `#listen(port, callback)`: Takes a port and starts the server, and a callback which executes when the server is running
 * `#stop()`: Stops the server if it's been started
 * `#serveStatic(path, directory)`: Serve static (usually a website) files from a certain path. This is useful for testing [SPAs](http://en.wikipedia.org/wiki/Single-page_application). ([Example use.](/examples-javascript/fluent-web-page-test.js))
+* `#loadFile(path, options)`: Load a JSON file containing an Interfake-shaped API configuration. Options includes `watch`, which, if true, means that the file loaded there will be reloaded when it changes.
 
 #### Fluent Interface
 
-* `#get|post|put|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
+* `#get|post|put|patch|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
   * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
+  * `#proxy(url|options)`: The response should be a proxy of another URL. Currently, options accepts both `url` and `headers` properties. The `headers` property specifies the headers which should be sent in the request to the proxy URL
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
   * `#responseHeaders(headers)`: An object containing response headers. The keys are header names.
-  * `#creates#get|post|put|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
-  * `#extends#get|post|put|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The endpoints you extend are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the extendable bits. Keep in mind that keys will be replaced, and arrays will be added to.
+  * `#creates#get|post|put|patch|delete(url)`: Specify an endpoint to create *after* the first execution of this one. API is the same as above.
+  * `#extends#get|post|put|patch|delete(url)`: Specify an endpoint to modify *after* the first execution of this one. API is the same as above. The endpoints you extend are matched based on `url` and `query`. The `status`, `body`, `delay` and `responseHeaders` are the extendable bits. Keep in mind that keys will be replaced, and arrays will be added to.
 
 ## JSONP
 
@@ -211,6 +214,33 @@ The HTTP API is particularly useful for developing iOS Applications which uses A
 
 For an example of how to do this, please see the [web page test example](/examples-javascript/fluent-web-page-test.js).
 
+### Proxying another API
+
+There are a number of reasons you might want to proxy another API. Three of the more common ones are:
+
+* It requires some authorization options which you want to hide from a client-side script but nonetheless want to use every time you make a request
+* There is a [cross-origin request sharing (CORS)](http://en.wikipedia.org/wiki/Cross-origin_resource_sharing) issue which prevents your client-side code from using the API
+* It requires some tedious header setup
+
+Interfake allows you to proxy another URL quite easily and also specify any headers you like while doing so, using the `proxy` option.
+
+```js
+interfake.get('/github-issues').proxy('https://api.github.com/repos/basicallydan/interfake/tags');
+```
+
+The example above creates a simple proxy against the URL `https://api.github.com/repos/basicallydan/interfake/tags` and will return whatever a public, non-authorized user will see. However, consider an endpoint which requires authorization.
+
+```js
+interfake.get('/github-issues').proxy({
+	url: 'https://api.github.com/repos/basicallydan/interfake/tags',
+	headers: {
+		'Authorization': 'Token qoinfiu13jfcikwkhf1od091dj0'
+	}
+});
+```
+
+This example uses an authorization token to authorize the request. This is one of the common use-cases. However, the first one will easily solve CORS issues, and any other headers apart from `Authorization` can be specified instead.
+
 ### Creating a static API
 
 If you have a website or mobile application which only needs static data, deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
@@ -221,6 +251,12 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.12.1: Bug fix from [Alexander Pope](https://github.com/popeindustries), proxy and query params not playing well together
+* 1.12.0: Proxy support
+* 1.11.0: Config reload
+* 1.10.0: Support for PATCH
+* 1.9.2: Updated deepmerge dependency, since it included a bug
+* 1.9.1: Updated dependencies, and fixed a bug where `.serveStatic` was not working on Windows because of the directory being wrong.
 * 1.9.0: Created the `.extends` methods to extend existing endpoints
 * 1.8.2: Bug fix for Windows - paths were screwed up
 * 1.8.1: Bug fix for responseheaders
