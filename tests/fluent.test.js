@@ -50,7 +50,7 @@ describe('Interfake Fluent JavaScript API', function () {
 		});
 
 		it('should create one GET endpoint with a RegExp path', function (done) {
-			interfake = new Interfake({debug:true});
+			interfake = new Interfake();
 			interfake.get(/\/fluent\/.*/);
 			interfake.listen(3000);
 
