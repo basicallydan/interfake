@@ -694,6 +694,7 @@ describe('Interfake JavaScript API', function() {
 				done();
 			});
 		});
+
 		it('should create one GET endpoint with support for delaying the response with a delay range', function(done) {
 			var enoughTimeHasPassed = false;
 			var _this = this;
@@ -729,6 +730,35 @@ describe('Interfake JavaScript API', function() {
 					throw new Error('Response was delayed for too long');
 				}
 				done();
+			});
+		});
+
+		describe('response with { echo : true }', function () {
+			it('should return the request body', function (done) {
+				interfake.createRoute({
+					request: {
+						url: '/stuff',
+						method: 'post'
+					},
+					response: {
+						echo : true
+					}
+				});
+
+				interfake.listen(3000);
+
+				request.post({
+					url :'http://localhost:3000/stuff',
+					json : true,
+					body : {
+						message : 'Echo!'
+					},
+				},
+				function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.message, 'Echo!');
+					done();
+				});
 			});
 		});
 
