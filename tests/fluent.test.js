@@ -1165,7 +1165,6 @@ describe('Interfake Fluent JavaScript API', function () {
 
 			describe('#echo()', function () {
 				it('should create a POST endpoint which becomes an echo endpoint when it gets called', function (done) {
-					interfake = new Interfake({ debug : true });
 					interfake.post('/fluent').body({ version : 1 }).extends.post('/fluent').echo();
 					interfake.listen(3000);
 
@@ -1178,6 +1177,24 @@ describe('Interfake Fluent JavaScript API', function () {
 						.then(function (results) {
 							assert.equal(results[0].statusCode, 200);
 							assert.equal(results[1].version, 5);
+							done();
+						})
+						.done();
+				});
+
+				it('should create a POST endpoint which was an echo endpoint but becomes a non-echo endpoint when it gets called', function (done) {
+					interfake.post('/fluent').echo().extends.post('/fluent').body({ version : 2 }).echo(false);
+					interfake.listen(3000);
+
+					post({ url:'http://localhost:3000/fluent', json : true, body : { version : 5 } })
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].version, 5);
+							return post({ url:'http://localhost:3000/fluent', json : true, body : { version : 5 } });
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].version, 2);
 							done();
 						})
 						.done();
