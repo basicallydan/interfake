@@ -2,6 +2,7 @@
 var assert = require('assert');
 var Q = require('q');
 var request = require('request');
+var path = require('path');
 
 request = request.defaults({
 	json: true
@@ -49,6 +50,28 @@ describe('Interfake JavaScript API', function() {
 			request('http://localhost:3000/test/it/out', function(error, response, body) {
 				assert.equal(response.statusCode, 200);
 				assert.equal(body.hi, 'there');
+				done();
+			});
+		});
+
+		it('should not create unexpected endpoints', function(done) {
+			interfake.createRoute({
+				request: {
+					url: '/test/it/out',
+					method: 'get'
+				},
+				response: {
+					code: 200,
+					body: {
+						hi: 'there'
+					}
+				}
+			});
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
+				assert.equal(response.statusCode, 404);
+				assert.equal(body, 'Cannot GET /donottest/it/out\n');
 				done();
 			});
 		});
@@ -746,7 +769,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], undefined);
+						assert.equal(results[1], 'Cannot GET /remove/me\n');
 						return get('http://localhost:3000/keep/me');
 					})
 					.then(function (results) {
@@ -797,7 +820,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], undefined);
+						assert.equal(results[1], 'Cannot GET /remove/me\n');
 						return get('http://localhost:3000/keep/me');
 					})
 					.then(function (results) {
@@ -867,7 +890,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], undefined);
+						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
 						interfake.loadFile('./tests/loadFileTest-2.json');
 						return get('http://localhost:3000/whostheboss');
 					})
@@ -924,7 +947,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], undefined);
+						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
 						done();
 					})
 					.done();
@@ -944,7 +967,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], undefined);
+						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
 						interfake.loadFile('./tests/loadFileTest-2.json');
 						return get('http://localhost:3000/whostheboss');
 					})
@@ -954,6 +977,20 @@ describe('Interfake JavaScript API', function() {
 						done();
 					})
 					.done();
+			});
+		});
+	});
+
+	describe('#serveStatic()', function () {
+		it('should serve up a file in the given folder', function (done) {
+			var filePath = path.join(__dirname, './');
+			interfake.serveStatic('/static', filePath);
+			interfake.listen(3000);
+
+			request({ url : 'http://localhost:3000/static/static-test.txt', json : false }, function(error, response, body) {
+				assert.equal(response.statusCode, 200);
+				assert.equal(body, 'Testing');
+				done();
 			});
 		});
 	});
