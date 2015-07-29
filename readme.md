@@ -181,6 +181,7 @@ The majority of Interfake users will probably be interested in the JavaScript AP
   * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
+  * `#echo(true|false)`: The response body should be the same as the request body. Can be used after `extends` too. ([Example use](/examples-javascript/fluent-echo.js))
   * `#proxy(url|options)`: The response should be a proxy of another URL. Currently, options accepts both `url` and `headers` properties. The `headers` property specifies the headers which should be sent in the request to the proxy URL
   * `#delay(milliseconds)`: Set the number of milliseconds to delay the response by to mimic network of processing lag
     * Also accepts a delay range in the format 'ms..ms' e.g. '50..100'
@@ -241,6 +242,24 @@ interfake.get('/github-issues').proxy({
 
 This example uses an authorization token to authorize the request. This is one of the common use-cases. However, the first one will easily solve CORS issues, and any other headers apart from `Authorization` can be specified instead.
 
+### Echoing the request body
+
+This can be easily achieved using the `.echo()` method in the fluent interface, or by specifying the following for route options:
+
+```json
+{
+	request : {
+		url : '/echo',
+		method: 'post'
+	},
+	response : {
+		echo : true	
+	}
+}
+```
+
+A request to the `/echo` endpint will return whatever body it is sent. You can see more examples of this in the [examples folder](/examples-javascript/).
+
 ### Creating a static API
 
 If you have a website or mobile application which only needs static data, deploy Interfake to a server somewhere with a JSON file serving up the data, and point your application at it.
@@ -251,6 +270,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.15.0: Added `.echo` or `{ echo : true }` support for response. Now, the response body can an echo of the request body.
 * 1.14.0: Fixed `serveStatic` but also accidental new feature. Now, 404 responses include some text: the default express text too.
 * 1.13.0: Regex URL support
 * 1.12.1: Bug fix from [Alexander Pope](https://github.com/popeindustries), proxy and query params not playing well together
