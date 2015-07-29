@@ -1162,6 +1162,27 @@ describe('Interfake Fluent JavaScript API', function () {
 						.done();
 				});
 			});
+
+			describe('#echo()', function () {
+				it('should create a POST endpoint which becomes an echo endpoint when it gets called', function (done) {
+					interfake = new Interfake({ debug : true });
+					interfake.post('/fluent').body({ version : 1 }).extends.post('/fluent').echo();
+					interfake.listen(3000);
+
+					post({url:'http://localhost:3000/fluent',json:true})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].version, 1);
+							return post({ url:'http://localhost:3000/fluent', json : true, body : { version : 5 } });
+						})
+						.then(function (results) {
+							assert.equal(results[0].statusCode, 200);
+							assert.equal(results[1].version, 5);
+							done();
+						})
+						.done();
+				});
+			});
 		});
 
 		describe('#delete()', function () {
