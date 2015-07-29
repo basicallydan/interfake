@@ -433,6 +433,27 @@ describe('Interfake Fluent JavaScript API', function () {
 				});
 			});
 		});
+
+		describe('#echo()', function () {
+			it('should return the request body', function (done) {
+				interfake.post('/stuff').echo();
+
+				interfake.listen(3000);
+
+				request.post({
+					url :'http://localhost:3000/stuff',
+					json : true,
+					body : {
+						message : 'Echo!'
+					},
+				},
+				function (error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.message, 'Echo!');
+					done();
+				});
+			});
+		});
 		
 		describe('#body()', function () {
 			it('should create one POST endpoint with a particular body', function (done) {
