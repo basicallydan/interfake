@@ -206,6 +206,74 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
+		describe('when the URL is already a regular expression', function () {
+			beforeEach(function (done) {
+				interfake.createRoute({
+					request: {
+						url: /\/test\/it\/(up|out)/,
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							hi: 'there'
+						}
+					}
+				});
+				interfake.listen(3000, done);
+			});
+
+			it('should not create unexpected endpoints', function(done) {
+				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body, 'Cannot GET /donottest/it/out\n');
+					done();
+				});
+			});
+
+			it('should not advertise unexpected endpoints', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body, 'Cannot OPTIONS /donottest/it/out\n');
+					done();
+				});
+			});
+
+			it('should allow requests to one varition on the regular expression', function(done) {
+				request('http://localhost:3000/test/it/out', function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.hi, 'there');
+					done();
+				});
+			});
+
+			it('should allow requests to another varition on the regular expression', function(done) {
+				request('http://localhost:3000/test/it/up', function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.hi, 'there');
+					done();
+				});
+			});
+
+			it('should advertise the GET in an OPTIONS request for the first variation', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
+					assert.equal(response.headers['access-control-allow-origin'], '*');
+					done();
+				});
+			});
+
+			it('should advertise the GET in an OPTIONS request for the second variation', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/test/it/up' }, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
+					assert.equal(response.headers['access-control-allow-origin'], '*');
+					done();
+				});
+			});
+		});
+
 		it('should create one GET endpoint which returns custom headers', function(done) {
 			interfake.createRoute({
 				request: {
