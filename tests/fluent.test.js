@@ -817,6 +817,24 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 		});
 	});
+
+	describe('#options()', function () {
+		it('should create one OPTIONS endpoint', function (done) {
+			interfake.options('/fluent');
+			interfake.listen(3000);
+
+			var options = {
+				url: 'http://localhost:3000/fluent',
+				method: 'options',
+				json: true
+			};
+
+			request(options, function (error, response, body) {
+				assert.equal(response.statusCode, 200);
+				done();
+			});
+		});
+	});
 	
 	// Testing #extends stuff
 	describe('#extends', function () {
