@@ -57,6 +57,22 @@ describe('Interfake JavaScript API', function() {
 				});
 			});
 
+			it('should not create unexpected endpoints', function(done) {
+				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body, 'Cannot GET /donottest/it/out\n');
+					done();
+				});
+			});
+
+			it('should not advertise unexpected endpoints', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
+					assert.equal(response.statusCode, 404);
+					assert.equal(body, 'Cannot OPTIONS /donottest/it/out\n');
+					done();
+				});
+			});
+
 			it('should create one GET endpoint', function(done) {
 				request('http://localhost:3000/test/it/out', function(error, response, body) {
 					assert.equal(response.statusCode, 200);
@@ -113,28 +129,6 @@ describe('Interfake JavaScript API', function() {
 						});
 					});
 				});
-			});
-		});
-
-		it('should not create unexpected endpoints', function(done) {
-			interfake.createRoute({
-				request: {
-					url: '/test/it/out',
-					method: 'get'
-				},
-				response: {
-					code: 200,
-					body: {
-						hi: 'there'
-					}
-				}
-			});
-			interfake.listen(3000);
-
-			request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
-				assert.equal(response.statusCode, 404);
-				assert.equal(body, 'Cannot GET /donottest/it/out\n');
-				done();
 			});
 		});
 
