@@ -32,25 +32,37 @@ describe('Interfake JavaScript API', function() {
 		});
 	});
 	describe('#createRoute()', function() {
-		it('should create one GET endpoint', function(done) {
-			interfake.createRoute({
-				request: {
-					url: '/test/it/out',
-					method: 'get'
-				},
-				response: {
-					code: 200,
-					body: {
-						hi: 'there'
+		describe('when a GET endpoint is specified', function () {
+			beforeEach(function () {
+				interfake.createRoute({
+					request: {
+						url: '/test/it/out',
+						method: 'get'
+					},
+					response: {
+						code: 200,
+						body: {
+							hi: 'there'
+						}
 					}
-				}
+				});
+				interfake.listen(3000);
 			});
-			interfake.listen(3000);
 
-			request('http://localhost:3000/test/it/out', function(error, response, body) {
-				assert.equal(response.statusCode, 200);
-				assert.equal(body.hi, 'there');
-				done();
+			it('should advertise the GET in an OPTIONS request', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['Access-Control-Allow-Methods'], 'GET, OPTIONS');
+					done();
+				});
+			});
+
+			it('should create one GET endpoint', function(done) {
+				request('http://localhost:3000/test/it/out', function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.hi, 'there');
+					done();
+				});
 			});
 		});
 
