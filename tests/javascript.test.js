@@ -33,7 +33,7 @@ describe('Interfake JavaScript API', function() {
 	});
 	describe('#createRoute()', function() {
 		describe('when a GET endpoint is specified', function () {
-			beforeEach(function () {
+			beforeEach(function (done) {
 				interfake.createRoute({
 					request: {
 						url: '/test/it/out',
@@ -46,13 +46,13 @@ describe('Interfake JavaScript API', function() {
 						}
 					}
 				});
-				interfake.listen(3000);
+				interfake.listen(3000, done);
 			});
 
 			it('should advertise the GET in an OPTIONS request', function(done) {
 				request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
 					assert.equal(response.statusCode, 200);
-					assert.equal(response.headers['Access-Control-Allow-Methods'], 'GET, OPTIONS');
+					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
 					done();
 				});
 			});
@@ -62,6 +62,56 @@ describe('Interfake JavaScript API', function() {
 					assert.equal(response.statusCode, 200);
 					assert.equal(body.hi, 'there');
 					done();
+				});
+			});
+
+			describe('when a POST option is added to the same endpoint', function () {
+				beforeEach(function () {
+					interfake.createRoute({
+						request: {
+							url: '/test/it/out',
+							method: 'post'
+						},
+						response: {
+							code: 200,
+							body: {
+								hi: 'there'
+							}
+						}
+					});
+				});
+
+				it('should advertise the GET and the POST in an OPTIONS request', function(done) {
+					request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
+						assert.equal(response.statusCode, 200);
+						assert.equal(response.headers['access-control-allow-methods'], 'GET, POST, OPTIONS');
+						done();
+					});
+				});
+
+				describe('when a POST option is added to the same endpoint', function () {
+					beforeEach(function () {
+						interfake.createRoute({
+							request: {
+								url: '/test/it/out',
+								method: 'patch'
+							},
+							response: {
+								code: 200,
+								body: {
+									hi: 'there'
+								}
+							}
+						});
+					});
+
+					it('should advertise the GET, POST and PATCH in an OPTIONS request', function(done) {
+						request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
+							assert.equal(response.statusCode, 200);
+							assert.equal(response.headers['access-control-allow-methods'], 'GET, POST, PATCH, OPTIONS');
+							done();
+						});
+					});
 				});
 			});
 		});
