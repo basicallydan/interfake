@@ -215,6 +215,35 @@ The HTTP API is particularly useful for developing iOS Applications which uses A
 
 For an example of how to do this, please see the [web page test example](/examples-javascript/fluent-web-page-test.js).
 
+### Regular Expressions for URLs
+
+Regular expressions can be used to specify endpoint URLs in two different ways depending on which interface you use. For the fluent API, you simply put a JavaScript regular expression as the URL, e.g.
+
+```javascript
+interfake.get(/\/regular\/expression/).status(200);
+```
+
+This is also supported when using `createRoute`, but since JSON does not support regular expressions, a different method must be used here:
+
+```json
+[
+	{
+		"request": {
+			"url": {
+				"pattern" : "/what/the/.*",
+				"regexp" : true
+			},
+			"method": "get"
+		},
+		"response": {
+			"code": 200
+		}
+	}
+]
+```
+
+The pattern specified in the `request.url.pattern` string will be parsed and treated as a regular expression.
+
 ### Proxying another API
 
 There are a number of reasons you might want to proxy another API. Three of the more common ones are:
@@ -270,6 +299,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.17.0: Regular expressions can now be specified in JSON route files and in the normal JavaScript API (`.createRoute()`) using `{ url : { pattern : '', regexp : true } }`
 * 1.16.0: Added automatic `OPTIONS` support for any routes specified (e.g. if `GET` has been defined then `OPTIONS` will say so. Also includes `access-control-allow-origin`)
 * 1.15.0: Added `.echo` or `{ echo : true }` support for response. Now, the response body can an echo of the request body.
 * 1.14.0: Fixed `serveStatic` but also accidental new feature. Now, 404 responses include some text: the default express text too.
