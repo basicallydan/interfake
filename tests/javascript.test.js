@@ -1102,6 +1102,25 @@ describe('Interfake JavaScript API', function() {
 				.done();
 		});
 
+		it('should load a JSON file and the with regex routes in it', function(done) {
+			interfake = new Interfake();
+			interfake.loadFile('./tests/loadFileTest-3.json');
+			interfake.listen(3000);
+
+			get('http://localhost:3000/whostheboss')
+				.then(function(results) {
+					assert.equal(results[0].statusCode, 200);
+					assert.equal(results[1].theBoss, 'Angela');
+					return get('http://localhost:3000/whostheleader');
+				})
+				.then(function(results) {
+					assert.equal(results[0].statusCode, 200);
+					assert.equal(results[1].theBoss, 'Angela');
+					done();
+				})
+				.done();
+		});
+
 		describe('#unload', function () {
 			it('should unload a single file', function (done) {
 				interfake = new Interfake();

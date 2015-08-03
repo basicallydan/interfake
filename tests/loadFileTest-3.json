@@ -1,0 +1,20 @@
+[
+	{
+		"request": {
+			"url": {
+				"pattern" : "/whosthe(boss|leader)",
+				"regexp" : true
+			},
+			"method": "get"
+		},
+		"response": {
+			"code": 200,
+			"body": {
+				"theBoss": "Angela"
+			},
+			"headers": {
+				"X-Powered-By": "Interfake"
+			}
+		}
+	}
+]
