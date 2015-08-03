@@ -17,8 +17,8 @@ var Interfake = require('..');
 describe('Interfake HTTP API', function () {
 	describe('POST /_request', function () {
 		it('should create one GET endpoint', function (done) {
-			var interfake = new Interfake(/*{debug:true}*/);
-			interfake.listen(4000);
+			var interfake = new Interfake({debug:true});
+			interfake.listen(3000);
 
 			var endpoint = {
 				request: {
@@ -36,11 +36,11 @@ describe('Interfake HTTP API', function () {
 				}
 			};
 
-			post({url: 'http://localhost:4000/_request', json: true, body: endpoint})
+			post({url: 'http://localhost:3000/_request', json: true, body: endpoint})
 				.then(function (results) {
 					assert.equal(results[0].statusCode, 201);
 					assert.equal(results[1].done, true);
-					return get({url:'http://localhost:4000/test', json: true});
+					return get({url:'http://localhost:3000/test', json: true});
 				})
 				.then(function (results) {
                     assert.equal(results[0].headers['foo'], 'bar');
