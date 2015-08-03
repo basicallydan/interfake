@@ -49,14 +49,6 @@ describe('Interfake JavaScript API', function() {
 				interfake.listen(3000, done);
 			});
 
-			it('should advertise the GET in an OPTIONS request', function(done) {
-				request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
-					assert.equal(response.statusCode, 200);
-					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
-					done();
-				});
-			});
-
 			it('should not create unexpected endpoints', function(done) {
 				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
@@ -81,6 +73,15 @@ describe('Interfake JavaScript API', function() {
 				});
 			});
 
+			it('should advertise the GET in an OPTIONS request', function(done) {
+				request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
+					assert.equal(response.headers['access-control-allow-origin'], '*');
+					done();
+				});
+			});
+
 			describe('when a POST option is added to the same endpoint', function () {
 				beforeEach(function () {
 					interfake.createRoute({
@@ -101,6 +102,7 @@ describe('Interfake JavaScript API', function() {
 					request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
 						assert.equal(response.statusCode, 200);
 						assert.equal(response.headers['access-control-allow-methods'], 'GET, POST, OPTIONS');
+						assert.equal(response.headers['access-control-allow-origin'], '*');
 						done();
 					});
 				});
@@ -125,6 +127,7 @@ describe('Interfake JavaScript API', function() {
 						request({ method : 'options', url : 'http://localhost:3000/test/it/out' }, function(error, response, body) {
 							assert.equal(response.statusCode, 200);
 							assert.equal(response.headers['access-control-allow-methods'], 'GET, POST, PATCH, OPTIONS');
+							assert.equal(response.headers['access-control-allow-origin'], '*');
 							done();
 						});
 					});
