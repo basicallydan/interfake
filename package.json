@@ -46,17 +46,17 @@
     "url": "git@github.com:basicallydan/interfake.git"
   },
   "dependencies": {
-    "body-parser": "~1.6.5",
+    "body-parser": "^1.6.7",
     "commander": "2.3.0",
     "connect-json": "0.0.0",
     "core-util-is": "^1.0.1",
     "deepmerge": "git://github.com/basicallydan/deepmerge.git#c8d22b",
-    "express": "~4.8.5",
-    "lodash": "^3.9.1",
-    "merge": "^1.1.3",
-    "request": "^2.47.0",
-    "serve-static": "~1.5.3",
-    "watchr": "^2.4.11"
+    "express": "^4.8.8",
+    "lodash": "^3.10.0",
+    "merge": "^1.2.0",
+    "request": "^2.60.0",
+    "serve-static": "^1.5.4",
+    "watchr": "^2.4.13"
   },
   "license": "MIT",
   "engines": {
