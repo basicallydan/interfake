@@ -270,6 +270,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.16.0: Added automatic `OPTIONS` support for any routes specified (e.g. if `GET` has been defined then `OPTIONS` will say so. Also includes `access-control-allow-origin`)
 * 1.15.0: Added `.echo` or `{ echo : true }` support for response. Now, the response body can an echo of the request body.
 * 1.14.0: Fixed `serveStatic` but also accidental new feature. Now, 404 responses include some text: the default express text too.
 * 1.13.0: Regex URL support
