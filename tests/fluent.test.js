@@ -189,7 +189,7 @@ describe('Interfake Fluent JavaScript API', function () {
 			});
 
 			it('should use an array to find array query string params, regardless of order', function (done) {
-				interfake.get('/fluent').query({ pages: [ "1", "2" ]}).status(200);
+				interfake.get('/fluent').query({ pages: [ '1', '2' ]}).status(200);
 				interfake.listen(3000);
 
 				Q.all([get({url:'http://localhost:3000/fluent?pages=1&pages=2',json:true}), get({url:'http://localhost:3000/fluent?pages=2&pages=1',json:true})])
