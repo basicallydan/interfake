@@ -694,7 +694,7 @@ describe('Interfake JavaScript API', function() {
 			proxiedInterfake.get('/whatever').status(404).body({
 				message: 'This is something you proxied!'
 			}).responseHeaders({
-				'loving you':'Isnt the right thing to do'
+				'loving-you':'Isnt the right thing to do'
 			});
 			proxiedInterfake.listen(3050);
 			interfake.createRoute({
@@ -711,7 +711,7 @@ describe('Interfake JavaScript API', function() {
 			request('http://localhost:3000/stuff', function (error, response, body) {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
-				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
+				assert.equal(response.headers['loving-you'], 'Isnt the right thing to do');
 				done();
 			});
 			afterEach(function () {
@@ -729,7 +729,7 @@ describe('Interfake JavaScript API', function() {
 			proxiedInterfake.get('/whatever').status(404).body({
 				message: 'This is something you proxied!'
 			}).responseHeaders({
-				'loving you':'Isnt the right thing to do'
+				'loving-you':'Isnt the right thing to do'
 			});
 			proxiedInterfake.listen(3050);
 			interfake.createRoute({
@@ -751,7 +751,7 @@ describe('Interfake JavaScript API', function() {
 			request('http://localhost:3000/stuff', function (error, response, body) {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
-				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
+				assert.equal(response.headers['loving-you'], 'Isnt the right thing to do');
 			});
 
 			afterEach(function () {
@@ -836,7 +836,7 @@ describe('Interfake JavaScript API', function() {
 			proxiedInterfake.post('/whatever').status(404).body({
 				message: 'This is something you proxied!'
 			}).responseHeaders({
-				'loving you':'Isnt the right thing to do'
+				'loving-you':'Isnt the right thing to do'
 			});
 			proxiedInterfake.listen(3050);
 			interfake.createRoute({
@@ -853,7 +853,7 @@ describe('Interfake JavaScript API', function() {
 			request.post('http://localhost:3000/stuff', function (error, response, body) {
 				assert.equal(response.statusCode, 404);
 				assert.equal(body.message, 'This is something you proxied!');
-				assert.equal(response.headers['loving you'], 'Isnt the right thing to do');
+				assert.equal(response.headers['loving-you'], 'Isnt the right thing to do');
 				done();
 			});
 			afterEach(function () {
