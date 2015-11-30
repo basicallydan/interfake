@@ -331,6 +331,32 @@ describe('Interfake JavaScript API', function() {
 			});
 		});
 
+		it('should create a GET endpoint that accepts a query array parameter', function(done) {
+			interfake.createRoute({
+				request: {
+					url: '/wantsQueryArrayParameter',
+					query: {
+						pages: ['1', '2']
+					},
+					method: 'get'
+				},
+				response: {
+        			code: 200,
+					body: {
+						high: 'hoe'
+					}
+				}
+			});
+			interfake.listen(3000);
+
+			request('http://localhost:3000/wantsQueryArrayParameter?pages=1&pages=2', function(error, response, body) {
+				assert.equal(error, undefined);
+				assert.equal(response.statusCode, 200);
+				assert.equal(body.high, 'hoe');
+				done();
+			});
+		});
+
 		it('should create one GET endpoint accepting query parameters with different responses', function() {
 			interfake.createRoute({
 				request: {
