@@ -178,7 +178,7 @@ The majority of Interfake users will probably be interested in the JavaScript AP
 #### Fluent Interface
 
 * `#get|post|put|patch|delete(url)`: Create an endpoint at the specified URL. Can then be followed by each of the following, which can follow each other too e.g. `get().query().body().status().body().creates.get()` etc.
-  * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not.
+  * `#query(queryParameters)`: An object containing query parameters to accept. Overwrites matching URL params. E.g. `get('/a?b=1').query({b:2})` means `/a?b=2` will work but `/a?b=1` will not. You can also use arrays as the value, e.g. `.query({b:[1,2]})` which will be matched regardless of order.
   * `#status(statusCode)`: Set the response status code for the endpoint
   * `#body(body)`: Set the JSON response body of the end point
   * `#echo(true|false)`: The response body should be the same as the request body. Can be used after `extends` too. ([Example use](/examples-javascript/fluent-echo.js))
@@ -299,6 +299,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.18.0: Array support in query string params added thanks to [@roychoo](https://github.com/roychoo). Also, fixed a couple of tests which broke in Node 5.0.
 * 1.17.0: Regular expressions can now be specified in JSON route files and in the normal JavaScript API (`.createRoute()`) using `{ url : { pattern : '', regexp : true } }`
 * 1.16.0: Added automatic `OPTIONS` support for any routes specified (e.g. if `GET` has been defined then `OPTIONS` will say so. Also includes `access-control-allow-origin`)
 * 1.15.0: Added `.echo` or `{ echo : true }` support for response. Now, the response body can an echo of the request body.
@@ -366,6 +367,7 @@ It's important that the tests all pass so we can keep this little badge green:
 * [bruce-one](https://github.com/bruce-one)
 * [rajit](https://github.com/rajit)
 * [Sebastian Schürmann](https://github.com/sebs)
+* [roychoo](https://github.com/roychoo)
 
 ## Future work
 
