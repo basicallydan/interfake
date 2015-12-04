@@ -7,9 +7,11 @@ interfake.get('/pee-en-gee').image('./examples-javascript/assets/20x20-image-red
 interfake.listen(3030); // The server will listen on port 3030
 
 request('http://localhost:3030/jay-peg', function (error, response, body) {
+    console.log(response.headers['content-disposition']); // prints undefined
     console.log(response.headers['content-type']); // prints image/jpeg
 });
 
 request('http://localhost:3030/pee-en-gee', function (error, response, body) {
+    console.log(response.headers['content-disposition']); // prints undefined
     console.log(response.headers['content-type']); // prints image/png
 });
