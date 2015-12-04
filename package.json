@@ -50,7 +50,7 @@
     "commander": "2.3.0",
     "connect-json": "0.0.0",
     "core-util-is": "^1.0.1",
-    "deepmerge": "git://github.com/basicallydan/deepmerge.git#c8d22b",
+    "deepmerge": "^0.2.10",
     "express": "^4.8.8",
     "lodash": "^3.10.0",
     "merge": "^1.2.0",
