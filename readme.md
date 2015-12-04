@@ -299,6 +299,7 @@ I tested this on my Mac. If you have trouble on Windows or any other platform, [
 
 ## Version History
 
+* 1.19.0: Using the npm version of `deepmerge`, not my fork on gh. Exposing underlying express app as instance variable `expressApp`
 * 1.18.0: Array support in query string params added thanks to [@roychoo](https://github.com/roychoo). Also, fixed a couple of tests which broke in Node 5.0.
 * 1.17.0: Regular expressions can now be specified in JSON route files and in the normal JavaScript API (`.createRoute()`) using `{ url : { pattern : '', regexp : true } }`
 * 1.16.0: Added automatic `OPTIONS` support for any routes specified (e.g. if `GET` has been defined then `OPTIONS` will say so. Also includes `access-control-allow-origin`)
