@@ -74,5 +74,29 @@ describe('Interfake File Response Tests', function() {
 				});
 			});
 		});
+
+		describe('#file()', function() {
+			it('should respond with a jpg image as a file rather than as an image', function(done) {
+				interfake.get('/image').file('./tests/assets/10x10-imagejpg.jpg');
+				interfake.listen(3000);
+
+				request({
+					url: 'http://localhost:3000/image',
+					json: true
+				}, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['content-type'], 'image/jpeg');
+					fs.readFile('./tests/assets/10x10-imagejpg.jpg', function(err, correctData) {
+						if (err) throw err;
+						assert.equal(correctData, body);
+						fs.readFile('./tests/assets/20x20-image-redpng.png', function(err, incorrectData) {
+							if (err) throw err;
+							assert.notEqual(incorrectData, body);
+							done();
+						});
+					});
+				});
+			});
+		});
 	});
 });
