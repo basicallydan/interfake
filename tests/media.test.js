@@ -28,10 +28,9 @@ describe('Interfake File Response Tests', function() {
 		}
 	});
 
-	// Testing the fluent interface
 	describe('#get()', function() {
 		describe('#image()', function() {
-			it('should respond with the same image', function(done) {
+			it('should respond with a jpg image', function(done) {
 				interfake.get('/image').image('./tests/assets/10x10-imagejpg.jpg');
 				interfake.listen(3000);
 
@@ -44,7 +43,29 @@ describe('Interfake File Response Tests', function() {
 					fs.readFile('./tests/assets/10x10-imagejpg.jpg', function(err, correctData) {
 						if (err) throw err;
 						assert.equal(correctData, body);
-						fs.readFile('./tests/assets/20x20-image-redjpg.jpg', function(err, incorrectData) {
+						fs.readFile('./tests/assets/20x20-image-redpng.png', function(err, incorrectData) {
+							if (err) throw err;
+							assert.notEqual(incorrectData, body);
+							done();
+						});
+					});
+				});
+			});
+
+			it('should respond with a png image', function(done) {
+				interfake.get('/image').image('./tests/assets/20x20-image-redpng.png');
+				interfake.listen(3000);
+
+				request({
+					url: 'http://localhost:3000/image',
+					json: true
+				}, function(error, response, body) {
+					assert.equal(response.statusCode, 200);
+					assert.equal(response.headers['content-type'], 'image/png');
+					fs.readFile('./tests/assets/20x20-image-redpng.png', function(err, correctData) {
+						if (err) throw err;
+						assert.equal(correctData, body);
+						fs.readFile('./tests/assets/10x10-imagejpg.jpg', function(err, incorrectData) {
 							if (err) throw err;
 							assert.notEqual(incorrectData, body);
 							done();
