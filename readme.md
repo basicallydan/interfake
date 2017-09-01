@@ -355,7 +355,7 @@ It's important that the tests all pass so we can keep this little badge green:
 
 ## Works well with
 
-* [Mocha](http://visionmedia.github.io/mocha/) - the test framework
+* [Mocha](http://mochajs.org/) - the test framework
 * [Zombie.js](http://zombie.labnotes.org/) - the Node.js-powered headless web browser
 
 ## Thank yous
