@@ -51,11 +51,10 @@
     "connect-json": "0.0.0",
     "core-util-is": "^1.0.1",
     "deepmerge": "^0.2.10",
-    "express": "^4.8.8",
-    "lodash": "^3.10.0",
-    "merge": "^1.2.0",
-    "request": "^2.60.0",
-    "serve-static": "^1.5.4",
+    "express": "^4.16.4",
+    "lodash": "^4.17.11",
+    "merge": "^1.2.1",
+    "serve-static": "^1.13.2",
     "watchr": "^2.4.13"
   },
   "license": "MIT",
@@ -65,10 +64,10 @@
   "main": "./lib/server.js",
   "bin": "./index.js",
   "devDependencies": {
-    "api-easy": "^0.3.8",
-    "connect": "^2.25.7",
-    "mocha": "^1.21.4",
+    "api-easy": "^0.4.0",
+    "connect": "^3.6.6",
+    "mocha": "^5.2.0",
     "q": "~1.0.1",
-    "request": "^2.47.0"
+    "request": "^2.88.0"
   }
 }
