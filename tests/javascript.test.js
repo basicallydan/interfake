@@ -52,7 +52,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not create unexpected endpoints', function(done) {
 				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot GET /donottest/it/out\n');
+					assert(body.match('Cannot GET /donottest/it/out'));
 					done();
 				});
 			});
@@ -60,7 +60,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not advertise unexpected endpoints', function(done) {
 				request({ method : 'options', url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot OPTIONS /donottest/it/out\n');
+					assert(body.match('Cannot OPTIONS /donottest/it/out'));
 					done();
 				});
 			});
@@ -158,7 +158,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not create unexpected endpoints', function(done) {
 				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot GET /donottest/it/out\n');
+					assert(body.match('Cannot GET /donottest/it/out'))
 					done();
 				});
 			});
@@ -166,7 +166,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not advertise unexpected endpoints', function(done) {
 				request({ method : 'options', url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot OPTIONS /donottest/it/out\n');
+					assert(body.match('Cannot OPTIONS /donottest/it/out'))
 					done();
 				});
 			});
@@ -226,7 +226,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not create unexpected endpoints', function(done) {
 				request({ url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot GET /donottest/it/out\n');
+					assert(body.match('Cannot GET /donottest/it/out'))
 					done();
 				});
 			});
@@ -234,7 +234,7 @@ describe('Interfake JavaScript API', function() {
 			it('should not advertise unexpected endpoints', function(done) {
 				request({ method : 'options', url : 'http://localhost:3000/donottest/it/out', json : false }, function(error, response, body) {
 					assert.equal(response.statusCode, 404);
-					assert.equal(body, 'Cannot OPTIONS /donottest/it/out\n');
+					assert(body.match('Cannot OPTIONS /donottest/it/out'))
 					done();
 				});
 			});
@@ -1023,7 +1023,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], 'Cannot GET /remove/me\n');
+						assert(results[1].match('Cannot GET /remove/me'))
 						return get('http://localhost:3000/keep/me');
 					})
 					.then(function (results) {
@@ -1074,7 +1074,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], 'Cannot GET /remove/me\n');
+						assert(results[1].match('Cannot GET /remove/me'))
 						return get('http://localhost:3000/keep/me');
 					})
 					.then(function (results) {
@@ -1163,7 +1163,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
+						assert(results[1].match('Cannot GET /whattimeisit'))
 						interfake.loadFile('./tests/loadFileTest-2.json');
 						return get('http://localhost:3000/whostheboss');
 					})
@@ -1220,7 +1220,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
+						assert(results[1].match('Cannot GET /whattimeisit'))
 						done();
 					})
 					.done();
@@ -1240,7 +1240,7 @@ describe('Interfake JavaScript API', function() {
 					})
 					.then(function (results) {
 						assert.equal(results[0].statusCode, 404);
-						assert.equal(results[1], 'Cannot GET /whattimeisit\n');
+						assert(results[1].match('Cannot GET /whattimeisit'))
 						interfake.loadFile('./tests/loadFileTest-2.json');
 						return get('http://localhost:3000/whostheboss');
 					})
