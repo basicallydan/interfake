@@ -52,7 +52,7 @@
     "core-util-is": "^1.0.1",
     "deepmerge": "^0.2.10",
     "express": "^4.16.4",
-    "lodash": "^4.17.11",
+    "lodash": ">=4.17.11",
     "merge": "^1.2.1",
     "serve-static": "^1.13.2",
     "watchr": "^2.4.13"
