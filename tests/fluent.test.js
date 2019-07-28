@@ -839,7 +839,8 @@ describe('Interfake Fluent JavaScript API', function () {
 						assert.equal(results[0].statusCode, 200);
 						assert.equal(results[1].length, 2);
 						done();
-					});
+					})
+					.catch(done);
 			});
 		});
 	});
