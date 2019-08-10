@@ -107,7 +107,7 @@ describe('Interfake JavaScript API', function() {
 					});
 				});
 
-				describe('when a POST option is added to the same endpoint', function () {
+				describe('when a PATCH option is added to the same endpoint', function () {
 					beforeEach(function () {
 						interfake.createRoute({
 							request: {
