@@ -19,7 +19,7 @@ var interfake;
 
 describe('Interfake JavaScript API', function() {
 	beforeEach(function() {
-		interfake = new Interfake();
+		interfake = new Interfake({ debug: true });
 	});
 	afterEach(function() {
 		if (interfake) {
@@ -201,6 +201,48 @@ describe('Interfake JavaScript API', function() {
 					assert.equal(response.statusCode, 200);
 					assert.equal(response.headers['access-control-allow-methods'], 'GET, OPTIONS');
 					assert.equal(response.headers['access-control-allow-origin'], '*');
+					done();
+				});
+			});
+		});
+
+		describe('when a body is specified in the request', function () {
+			beforeEach(function (done) {
+				interfake.createRoute({
+					request: {
+						url: /match-body/,
+						method: 'get',
+						body: { ping: 'pong' }
+					},
+					response: {
+						code: 200,
+						body: {
+							pong: 'ping'
+						}
+					}
+				});
+				interfake.listen(3000, done);
+			});
+
+			it('should match on the expected body and return the specified response', (done) => {
+				request({
+					url: 'http://localhost:3000/match-body/',
+					json : true,
+					body: { ping: 'pong' },
+				}, (err, response, body) => {
+					assert.equal(response.statusCode, 200);
+					assert.equal(body.pong, 'ping');
+					done();
+				});
+			});
+
+			it.only('should return a 404 by default if nothing matches', (done) => {
+				request({
+					url: 'http://localhost:3000/match-body/',
+					json : true,
+					body: { bing: 'bong' },
+				}, (err, response) => {
+					assert.equal(response.statusCode, 404);
 					done();
 				});
 			});
