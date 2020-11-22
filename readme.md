@@ -2,8 +2,6 @@
 
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/basicallydan/interfake?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/basicallydan/interfake/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
-
 Interfake is a tool which allows developers of client-side applications of *any* platform to easily create dummy HTTP APIs to develop against. Let's get started with a simple example.
 
 ## Get started
