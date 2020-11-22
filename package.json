@@ -1,7 +1,7 @@
 {
   "name": "interfake",
   "preferGlobal": true,
-  "version": "1.19.1",
+  "version": "1.20.0",
   "author": "Daniel Hough <daniel.hough@gmail.com>",
   "description": "A simple way to create dummy APIs",
   "contributors": [
