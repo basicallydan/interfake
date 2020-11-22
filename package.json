@@ -59,7 +59,7 @@
   },
   "license": "MIT",
   "engines": {
-    "node": ">=4 <7"
+    "node": ">=4"
   },
   "main": "./lib/server.js",
   "bin": "./index.js",
